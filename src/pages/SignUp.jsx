@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
-import { signUpSchema } from "../schemas/signup";
+import { signUpSchema } from "../schemas/signupValidation";
 
 export default function SignUp() {
   const onSubmit = () => {
