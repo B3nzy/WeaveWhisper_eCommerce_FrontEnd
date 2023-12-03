@@ -27,7 +27,6 @@ export default function SignIn() {
         dispatch(signInFaliure());
         return;
       }
-      console.log(res.data);
       setLoading(false);
       setUserError(null);
       dispatch(signInSuccess(res.data));

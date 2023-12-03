@@ -5,7 +5,8 @@ import { BsPerson } from "react-icons/bs";
 import { IoSearch } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
 import { GoSignOut } from "react-icons/go";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Menu,
   MenuHandler,
@@ -13,8 +14,20 @@ import {
   MenuItem,
   Typography,
 } from "@material-tailwind/react";
+import { signOutSuccess } from "../redux/user/userSlice";
 
 export default function Header() {
+  const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleSignOut = () => {
+    try {
+      dispatch(signOutSuccess());
+      navigate("/sign-in");
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className="bg-white shadow-md p-4 flex flex-row items-center justify-between">
       <Link to={"/"} className="font-bold sm:ml-10 sm:text-xl">
@@ -43,32 +56,51 @@ export default function Header() {
             </ul>
           </MenuHandler>
           <MenuList className="p-6 flex flex-col gap-2 text-gray-600 outline-none shadow-md">
-            <MenuItem className="flex items-center gap-4 hover:text-orange-600">
-              <BsPerson className="text-xl" />
-              <Typography variant="small" className="font-medium">
-                My Profile
-              </Typography>
-            </MenuItem>
-            <MenuItem className="flex items-center gap-4 hover:text-orange-600">
-              <IoSettingsOutline className="text-xl" />
-              <Typography variant="small" className="font-medium">
-                Edit Profile
-              </Typography>
-            </MenuItem>
+            {currentUser ? (
+              <>
+                <MenuItem className="flex items-center gap-4 hover:text-orange-600">
+                  <BsPerson className="text-xl" />
+                  <Typography variant="small" className="font-medium">
+                    My Profile
+                  </Typography>
+                </MenuItem>
+                <MenuItem className="flex items-center gap-4 hover:text-orange-600">
+                  <IoSettingsOutline className="text-xl" />
+                  <Typography variant="small" className="font-medium">
+                    Edit Profile
+                  </Typography>
+                </MenuItem>
 
-            <MenuItem className="flex items-center gap-4 hover:text-orange-600">
-              <LiaShoppingBagSolid className="text-2xl" />
-              <Typography variant="small" className="font-medium">
-                My Orders
-              </Typography>
-            </MenuItem>
-            <hr className="my-2 border-blue-gray-50" />
-            <MenuItem className="flex items-center gap-4 text-orange-400 hover:text-orange-600">
-              <GoSignOut className="text-xl" />
-              <Typography variant="small" className="font-medium">
-                Sign Out
-              </Typography>
-            </MenuItem>
+                <MenuItem className="flex items-center gap-4 hover:text-orange-600">
+                  <LiaShoppingBagSolid className="text-2xl" />
+                  <Typography variant="small" className="font-medium">
+                    My Orders
+                  </Typography>
+                </MenuItem>
+                <hr className="my-2 border-blue-gray-50" />
+                <MenuItem
+                  className="flex items-center gap-4 text-orange-400 hover:text-orange-600"
+                  onClick={handleSignOut}
+                >
+                  <GoSignOut className="text-xl" />
+                  <Typography variant="small" className="font-medium">
+                    Sign Out
+                  </Typography>
+                </MenuItem>
+              </>
+            ) : (
+              <MenuItem className=" text-slate-600 hover:text-orange-600">
+                <Link
+                  to={"/sign-in"}
+                  className="flex items-center flex-row gap-4"
+                >
+                  <GoSignOut className="text-xl" />
+                  <Typography variant="small" className="font-medium">
+                    Sign In
+                  </Typography>
+                </Link>
+              </MenuItem>
+            )}
           </MenuList>
         </Menu>
 
