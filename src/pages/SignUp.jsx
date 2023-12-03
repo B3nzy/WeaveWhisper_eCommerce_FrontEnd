@@ -5,8 +5,9 @@ import { signUpSchema } from "../schemas/signupValidation";
 
 export default function SignUp() {
   const onSubmit = () => {
-    console.log("submiited");
+    console.log("submitted");
   };
+
   const { values, handleChange, handleBlur, handleSubmit, errors, touched } =
     useFormik({
       initialValues: {
@@ -14,6 +15,7 @@ export default function SignUp() {
         email: "",
         password: "",
         confirm_password: "",
+        type: "",
       },
       validationSchema: signUpSchema,
       onSubmit,
@@ -99,6 +101,33 @@ export default function SignUp() {
             {errors.confirm_password}
           </p>
         )}
+        <div className="flex flex-row whitespace-nowrap items-center gap-5 flex-wrap">
+          <p className="w-36">Sign up as :</p>
+          <label className="flex flex-row whitespace-nowrap gap-2 items-center">
+            <input
+              className="w-5 h-5"
+              type="radio"
+              name="type"
+              value="customer"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              checked={values.type === "customer"}
+            />
+            Customer
+          </label>
+          <label className="flex flex-row whitespace-nowrap gap-2 items-center">
+            <input
+              className="w-5 h-5"
+              type="radio"
+              name="type"
+              value="manufacturer"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              checked={values.type === "manufacturer"}
+            />
+            Manufaturer/Brand
+          </label>
+        </div>
         <button
           type="button"
           onClick={handleSubmit}
