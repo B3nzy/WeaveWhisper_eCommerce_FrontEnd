@@ -29,7 +29,8 @@ export default function SignIn() {
       }
       setLoading(false);
       setUserError(null);
-      dispatch(signInSuccess(res.data));
+      console.log(res.data);
+      dispatch(signInSuccess(res.data.userDetails));
       navigate("/");
     } catch (err) {
       setLoading(false);

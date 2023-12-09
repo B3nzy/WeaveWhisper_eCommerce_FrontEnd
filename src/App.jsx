@@ -14,6 +14,7 @@ import Cart from "./pages/Cart";
 import CustomerProfile from "./pages/CustomerProfile";
 import PrivateRouteManufacturer from "./components/PrivateRouteManufacturer";
 import About from "./pages/About";
+import Wishlist from "./pages/Wishlist";
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
 
         <Route element={<PrivateRouteCustomer />}>
           <Route path="/cart" element={<Cart />} />
+          <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/profile" element={<CustomerProfile />} />
         </Route>
 

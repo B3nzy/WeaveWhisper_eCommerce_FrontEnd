@@ -5,6 +5,7 @@ import { BsPerson } from "react-icons/bs";
 import { IoSearch } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
 import { GoSignOut } from "react-icons/go";
+import { IoShirtOutline } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -20,10 +21,26 @@ export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const handleCartClick = () => {
+    console.log(currentUser);
+    if (currentUser === null) {
+      navigate("/sign-in");
+    } else {
+      navigate("/cart");
+    }
+  };
+  const handleWishlistClick = () => {
+    console.log(currentUser);
+    if (currentUser === null) {
+      navigate("/sign-in");
+    } else {
+      navigate("/wishlist");
+    }
+  };
   const handleSignOut = () => {
     try {
       dispatch(signOutSuccess());
-      navigate("/sign-in");
     } catch (err) {
       console.log(err);
     }
@@ -37,7 +54,7 @@ export default function Header() {
       <div className="font-bold flex gap-8 text-xs text-slate-700">
         <p className="hidden md:inline hover:text-orange-600">MEN</p>
         <p className="hidden md:inline hover:text-orange-600">WOMEN</p>
-        <p className="hidden md:inline hover:text-orange-600">KIDS</p>
+        {/* <p className="hidden md:inline hover:text-orange-600">CATEGORY</p> */}
       </div>
       <form className="px-4 p-2 w-40 md:w-[400px] flex items-center justify-between bg-gray-100 rounded-md focus-within:bg-transparent focus-within:border">
         <input
@@ -104,14 +121,34 @@ export default function Header() {
           </MenuList>
         </Menu>
 
-        <ul className=" flex flex-col items-center hover:text-orange-600">
-          <CiHeart className="text-2xl" />
-          <li className="text-xs font-semibold">Wishlist</li>
-        </ul>
-        <ul className=" flex flex-col items-center hover:text-orange-600">
-          <LiaShoppingBagSolid className="text-2xl" />
-          <li className="text-xs font-semibold">Bag</li>
-        </ul>
+        {currentUser === null || currentUser.type === "customer" ? (
+          <ul
+            className=" flex flex-col items-center hover:text-orange-600  cursor-pointer"
+            onClick={handleWishlistClick}
+          >
+            <CiHeart className="text-2xl" />
+            <li className="text-xs font-semibold">Wishlist</li>
+          </ul>
+        ) : (
+          <Link to={"/create-product-listing"}>
+            {" "}
+            <ul className=" flex flex-col items-center hover:text-orange-600 ">
+              <IoShirtOutline className="text-2xl" />
+              <li className="text-xs font-semibold">Add Product</li>
+            </ul>
+          </Link>
+        )}
+        {currentUser === null || currentUser.type === "customer" ? (
+          <ul
+            className=" flex flex-col items-center hover:text-orange-600 cursor-pointer"
+            onClick={handleCartClick}
+          >
+            <LiaShoppingBagSolid className="text-2xl" />
+            <li className="text-xs font-semibold">Bag</li>
+          </ul>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
