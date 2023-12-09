@@ -13,6 +13,7 @@ import PrivateRouteCustomer from "./components/PrivateRouteCustomer";
 import Cart from "./pages/Cart";
 import CustomerProfile from "./pages/CustomerProfile";
 import PrivateRouteManufacturer from "./components/PrivateRouteManufacturer";
+import About from "./pages/About";
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/product" element={<Product />} />
         <Route path="/address" element={<AllowAddress />} />
+        <Route path="/about" element={<About />} />
 
         <Route element={<LoggedOutRoute />}>
           <Route path="/sign-in" element={<SignIn />} />
@@ -40,6 +42,7 @@ export default function App() {
           />
         </Route>
       </Routes>
+
       <Footer />
     </BrowserRouter>
   );
