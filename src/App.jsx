@@ -7,6 +7,7 @@ import SignUp from "./pages/SignUp";
 import Footer from "./components/Footer";
 import Product from "./pages/Product";
 import CreateProductListing from "./pages/CreateProductListing";
+import AllowAddress from "./components/AllowAddress";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/product" element={<Product />} />
+        <Route path="/address" element={<AllowAddress />} />
         <Route
           path="/create-product-listing"
           element={<CreateProductListing />}
