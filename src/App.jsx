@@ -8,6 +8,11 @@ import Footer from "./components/Footer";
 import Product from "./pages/Product";
 import CreateProductListing from "./pages/CreateProductListing";
 import AllowAddress from "./components/AllowAddress";
+import LoggedOutRoute from "./components/LoggedOutRoute";
+import PrivateRouteCustomer from "./components/PrivateRouteCustomer";
+import Cart from "./pages/Cart";
+import CustomerProfile from "./pages/CustomerProfile";
+import PrivateRouteManufacturer from "./components/PrivateRouteManufacturer";
 
 export default function App() {
   return (
@@ -15,14 +20,25 @@ export default function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
         <Route path="/product" element={<Product />} />
         <Route path="/address" element={<AllowAddress />} />
-        <Route
-          path="/create-product-listing"
-          element={<CreateProductListing />}
-        />
+
+        <Route element={<LoggedOutRoute />}>
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+        </Route>
+
+        <Route element={<PrivateRouteCustomer />}>
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/profile" element={<CustomerProfile />} />
+        </Route>
+
+        <Route element={<PrivateRouteManufacturer />}>
+          <Route
+            path="/create-product-listing"
+            element={<CreateProductListing />}
+          />
+        </Route>
       </Routes>
       <Footer />
     </BrowserRouter>
