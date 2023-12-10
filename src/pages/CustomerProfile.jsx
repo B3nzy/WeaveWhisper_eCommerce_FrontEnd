@@ -8,7 +8,7 @@ export default function CustomerProfile() {
   console.log(currentUser);
   const [showPassword, setShowPassword] = useState(true);
   const [disable, setDisable] = useState(true);
-
+  //FORMIK set up
   const { values, handleBlur, touched, handleChange, errors, handleSubmit } =
     useFormik({
       initialValues: {
