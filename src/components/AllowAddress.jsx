@@ -22,6 +22,7 @@ export default function AllowAddress() {
       .catch((error) => console.error(error));
   };
   const success = (pos) => {
+    console.log(pos);
     let crd = pos.coords;
     console.log("Your current position is:");
     console.log(`Latitude : ${crd.latitude}`);

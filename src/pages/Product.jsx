@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { CiHeart } from "react-icons/ci";
 import { BsHandbagFill } from "react-icons/bs";

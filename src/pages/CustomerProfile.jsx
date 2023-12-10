@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
 import { useFormik } from "formik";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { CustomerProfileSchema } from "../schemas/CustomerProfileSchema";
+const APIkey = import.meta.env.VITE_OPENCAGE_API_KEY;
 
 export default function CustomerProfile() {
   const { currentUser } = useSelector((state) => state.user);
@@ -9,24 +11,95 @@ export default function CustomerProfile() {
   const [showPassword, setShowPassword] = useState(true);
   const [disable, setDisable] = useState(true);
   //FORMIK set up
-  const { values, handleBlur, touched, handleChange, errors, handleSubmit } =
-    useFormik({
-      initialValues: {
-        name: currentUser.name,
-        email: currentUser.email,
-        password: currentUser.password,
-        confirmPassword: currentUser.password,
-        type: currentUser.type,
-        // userName: currentUser.user_name,
-        userName: "sumitmandal",
-        // phoneNumber: currentUser.phone_number,
-        phoneNumber: 1234567890,
-        // address: currentUser.address,
-        address:
-          "Ravet Village Rd, near Vicky's Corner, Shinde Vasti, Ravet, Pimpri-Chinchwad, Maharashtra 411044, India",
-      },
-      validationSchema: CustomerProfileSchema,
-    });
+  const {
+    values,
+    handleBlur,
+    touched,
+    handleChange,
+    errors,
+    handleSubmit,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      name: currentUser.name,
+      email: currentUser.email,
+      password: currentUser.password,
+      confirmPassword: currentUser.password,
+      type: currentUser.type,
+      // userName: currentUser.user_name,
+      userName: "sumitmandal",
+      // phoneNumber: currentUser.phone_number,
+      phoneNumber: 1234567890,
+      // address: currentUser.address,
+      address:
+        "Ravet Village Rd, near Vicky's Corner, Shinde Vasti, Ravet, Pimpri-Chinchwad, Maharashtra 411044, India",
+    },
+    validationSchema: CustomerProfileSchema,
+  });
+
+  const getLocationInfo = (latitude, longitude) => {
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude},${longitude}&key=${APIkey}`;
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status.code === 200) {
+          console.log("results:", data.results);
+          setFieldValue("address", data.results[0].formatted);
+        } else {
+          console.log("Reverse geolocation request failed.");
+        }
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const success = (pos) => {
+    console.log(pos);
+    let crd = pos.coords;
+    console.log("Your current position is:");
+    console.log(`Latitude : ${crd.latitude}`);
+    console.log(`Longitude: ${crd.longitude}`);
+    console.log(`More or less ${crd.accuracy} meters.`);
+
+    getLocationInfo(crd.latitude, crd.longitude);
+  };
+
+  const locationErrors = (err) => {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
+  };
+
+  const options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0,
+  };
+
+  const handleAddress = () => {
+    if (navigator.geolocation) {
+      navigator.permissions.query({ name: "geolocation" }).then((result) => {
+        console.log(result);
+        if (result.state === "granted") {
+          //If granted then you can directly call your function here
+          navigator.geolocation.getCurrentPosition(
+            success,
+            locationErrors,
+            options
+          );
+        } else if (result.state === "prompt") {
+          //If prompt then the user will be asked to give permission
+          navigator.geolocation.getCurrentPosition(
+            success,
+            locationErrors,
+            options
+          );
+        } else if (result.state === "denied") {
+          //If denied then you have to show instructions to enable location
+        }
+      });
+    } else {
+      console.log("Geolocation bot supported");
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-3 my-10 flex flex-col">
@@ -193,6 +266,7 @@ export default function CustomerProfile() {
             )}
           </label>
           <button
+            onClick={handleAddress}
             disabled={disable}
             className="bg-slate-600 text-white p-3 rounded-lg hover:shadow-md hover:opacity-90 disabled:opacity-70 disabled:shadow-none"
           >

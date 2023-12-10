@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { CiHeart } from "react-icons/ci";
@@ -75,11 +76,16 @@ export default function Header() {
           <MenuList className="p-6 flex flex-col gap-2 text-gray-600 outline-none shadow-md">
             {currentUser ? (
               <>
-                <MenuItem className="flex items-center gap-4 hover:text-orange-600">
-                  <BsPerson className="text-xl" />
-                  <Typography variant="small" className="font-medium">
-                    My Profile
-                  </Typography>
+                <MenuItem>
+                  <Link
+                    className="flex items-center gap-4 hover:text-orange-600"
+                    to="/profile"
+                  >
+                    <BsPerson className="text-xl" />
+                    <Typography variant="small" className="font-medium">
+                      My Profile
+                    </Typography>
+                  </Link>
                 </MenuItem>
                 <MenuItem className="flex items-center gap-4 hover:text-orange-600">
                   <IoSettingsOutline className="text-xl" />
