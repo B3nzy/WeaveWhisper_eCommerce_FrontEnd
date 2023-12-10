@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 
 const APIkey = import.meta.env.VITE_OPENCAGE_API_KEY;
