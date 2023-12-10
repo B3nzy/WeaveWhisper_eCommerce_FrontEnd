@@ -349,14 +349,17 @@ export default function CreateProductListing() {
               value={values.selling_price}
               onChange={handleChange}
               onBlur={handleBlur}
+              disabled={sellingPriceDisabled}
             />
-            <input
-              type="checkbox"
-              name="selling_price"
-              className="h-3 w-3 ml-5"
-              onClick={handleSellingPrice}
-            />
-            <p className="ml-[-5px]">same as price</p>
+            <label className="ml-4 flex flex-row whitespace-nowrap gap-1 items-center">
+              <input
+                type="checkbox"
+                name="selling_price"
+                className="h-4 w-4"
+                onClick={handleSellingPrice}
+              />
+              <span>same as price</span>
+            </label>
           </div>
           {errors.selling_price && touched.selling_price && (
             <p className="text-red-500 mt-[-12px] text-xs ml-2">
