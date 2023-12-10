@@ -16,7 +16,7 @@ export const productSchema = yup.object().shape({
     .number()
     .positive()
     .min(1, "*product price should be minimum 1")
-    .lessThan(
+    .max(
       yup.ref("actual_price"),
       "*selling price must be lesser than or equal to product actual price"
     )
