@@ -15,6 +15,7 @@ import CustomerProfile from "./pages/CustomerProfile";
 import PrivateRouteManufacturer from "./components/PrivateRouteManufacturer";
 import About from "./pages/About";
 import Wishlist from "./pages/Wishlist";
+import Search from "./pages/Search";
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
         <Route path="/product" element={<Product />} />
         <Route path="/address" element={<AllowAddress />} />
         <Route path="/about" element={<About />} />
+        <Route path="/search" element={<Search />} />
 
         <Route element={<LoggedOutRoute />}>
           <Route path="/sign-in" element={<SignIn />} />
