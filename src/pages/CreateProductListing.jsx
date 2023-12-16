@@ -11,6 +11,30 @@ export default function CreateProductListing() {
   };
   const [sellingPriceDisabled, setSellingPriceDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
+  const SIZEENUM = ["S", "M", "L", "XL"];
+  const COLORENUM = [
+    "Red",
+    "Blue",
+    "Orange",
+    "Black",
+    "White",
+    "Pink",
+    "Green",
+    "Yellow",
+    "Purple",
+  ];
+  const CATEGORYENUM = [
+    "pant",
+    "shirt",
+    "t-shirt",
+    "dress",
+    "saree",
+    "sweater",
+    "hoodie",
+    "jacket",
+    "top",
+    "jeans",
+  ];
   const {
     values,
     handleChange,
@@ -35,7 +59,6 @@ export default function CreateProductListing() {
     validationSchema: productSchema,
     onSubmit,
   });
-
   const handleSellingPrice = (e) => {
     if (e.target.checked) {
       setSellingPriceDisabled(true);
@@ -44,7 +67,7 @@ export default function CreateProductListing() {
       setSellingPriceDisabled(false);
     }
   };
-
+  console.log(values.name);
   useEffect(() => {
     if (sellingPriceDisabled) {
       setFieldValue("selling_price", values.actual_price);
@@ -146,50 +169,24 @@ export default function CreateProductListing() {
           )}
           <div className="flex flex-wrap items-center gap-6 text-slate-800">
             <p>Sizes : </p>
-            <div className="flex items-center gap-1">
-              <input
-                type="checkbox"
-                name="sizes"
-                className="h-4 w-4"
-                value={"s"}
-                checked={values.sizes.includes("s")}
-                onChange={handleChange}
-              />
-              <p>S</p>
-            </div>
-            <div className="flex items-center gap-1">
-              <input
-                type="checkbox"
-                name="sizes"
-                className="h-4 w-4"
-                value={"m"}
-                checked={values.sizes.includes("m")}
-                onChange={handleChange}
-              />
-              <p>M</p>
-            </div>
-            <div className="flex items-center gap-1">
-              <input
-                type="checkbox"
-                name="sizes"
-                className="h-4 w-4"
-                value={"l"}
-                checked={values.sizes.includes("l")}
-                onChange={handleChange}
-              />
-              <p>L</p>
-            </div>
-            <div className="flex items-center gap-1">
-              <input
-                type="checkbox"
-                name="sizes"
-                className="h-4 w-4"
-                value={"xl"}
-                checked={values.sizes.includes("xl")}
-                onChange={handleChange}
-              />
-              <p>XL</p>
-            </div>
+            {SIZEENUM &&
+              SIZEENUM.map((item) => (
+                <label
+                  className="flex items-center gap-1 whitespace-nowrap"
+                  key={item}
+                >
+                  <input
+                    className="w-4 h-4"
+                    type="checkbox"
+                    value={item}
+                    checked={values.sizes.includes(item)}
+                    name="sizes"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                  <span>{item}</span>
+                </label>
+              ))}
           </div>
           {errors.sizes && touched.sizes && (
             <p className="text-red-500 mt-[-12px] text-xs ml-2">
@@ -198,94 +195,22 @@ export default function CreateProductListing() {
           )}
           <div className="flex flex-wrap items-center gap-2 text-slate-800">
             <p className="mr-3">Color : </p>
-            <div className="flex items-center gap-1 mr-3">
-              <input
-                type="checkbox"
-                name="colors"
-                className="h-4 w-4"
-                value={"red"}
-                checked={values.colors.includes("red")}
-                onChange={handleChange}
-              />
-              <p>Red</p>
-            </div>
-            <div className="flex items-center gap-1 mr-3">
-              <input
-                type="checkbox"
-                name="colors"
-                className="h-4 w-4"
-                value={"green"}
-                checked={values.colors.includes("green")}
-                onChange={handleChange}
-              />
-              <p>Green</p>
-            </div>
-            <div className="flex items-center gap-1 mr-3">
-              <input
-                type="checkbox"
-                name="colors"
-                className="h-4 w-4"
-                value={"blue"}
-                checked={values.colors.includes("blue")}
-                onChange={handleChange}
-              />
-              <p>Blue</p>
-            </div>
-            <div className="flex items-center gap-1 mr-3">
-              <input
-                type="checkbox"
-                name="colors"
-                className="h-4 w-4"
-                value={"yellow"}
-                checked={values.colors.includes("yellow")}
-                onChange={handleChange}
-              />
-              <p>Yellow</p>
-            </div>
-            <div className="flex items-center gap-1 mr-3">
-              <input
-                type="checkbox"
-                name="colors"
-                className="h-4 w-4"
-                value={"black"}
-                checked={values.colors.includes("black")}
-                onChange={handleChange}
-              />
-              <p>Black</p>
-            </div>
-            <div className="flex items-center gap-1 mr-3">
-              <input
-                type="checkbox"
-                name="colors"
-                className="h-4 w-4"
-                value={"white"}
-                checked={values.colors.includes("white")}
-                onChange={handleChange}
-              />
-              <p>White</p>
-            </div>
-            <div className="flex items-center gap-1 mr-3">
-              <input
-                type="checkbox"
-                name="colors"
-                className="h-4 w-4"
-                value={"orange"}
-                checked={values.colors.includes("orange")}
-                onChange={handleChange}
-              />
-              <p>Orange</p>
-            </div>
-            <div className="flex items-center gap-1 mr-3">
-              <input
-                type="checkbox"
-                name="colors"
-                className="h-4 w-4"
-                value={"purple"}
-                checked={values.colors.includes("purple")}
-                onChange={handleChange}
-              />
-              <p>Purple</p>
-            </div>
+            {COLORENUM.map((item) => (
+              <label
+                className="flex items-center gap-1 mr-3 whitespace-nowrap"
+                key={item.toUpperCase()}
+              >
+                <input
+                  type="checkbox"
+                  name="colors"
+                  className="h-4 w-4"
+                  value={item.toUpperCase()}
+                  checked={values.colors.includes(item.toUpperCase())}
+                  onChange={handleChange}
+                />
+                <p>{item}</p>
+              </label>
+            ))}
           </div>
           {errors.colors && touched.colors && (
             <p className="text-red-500 mt-[-12px] text-xs ml-2">
@@ -297,22 +222,21 @@ export default function CreateProductListing() {
             <select
               name="category"
               id="category"
-              className="border rounded-lg p-3"
+              className="border rounded-lg p-3 capitalize"
               value={values.category}
               onChange={handleChange}
               onBlur={handleBlur}
             >
               <option className="text-slate-500">--select category--</option>
-              <option value="pant">Pant</option>
-              <option value="shirt">Shirt</option>
-              <option value="t-shirt">T-Shirt</option>
-              <option value="dress">Dress</option>
-              <option value="saree">Saree</option>
-              <option value="sweater">Sweater</option>
-              <option value="hoodie">Hoodie</option>
-              <option value="jacket">Jacket</option>
-              <option value="top">Top</option>
-              <option value="jeans">Jeans</option>
+              {CATEGORYENUM.map((item) => (
+                <option
+                  value={item.toUpperCase()}
+                  key={item.toUpperCase()}
+                  className="capitalize text-slate-600"
+                >
+                  {item}
+                </option>
+              ))}
             </select>
           </div>
           {errors.category && touched.category && (
@@ -384,7 +308,6 @@ export default function CreateProductListing() {
               id="imageUrls"
               value={values.imageUrls}
               onChange={handleChange}
-              onBlur={handleBlur}
             />
 
             <button className="flex items-center gap-2 p-3 border border-green-600 rounded-md text-green-600 uppercase hover:shadow-lg">

@@ -3,6 +3,7 @@ import * as yup from "yup";
 export const productSchema = yup.object().shape({
   name: yup
     .string()
+    .trim()
     .min(2, "*too short!")
     .max(50, "*too long!")
     .required("*required"),
@@ -30,16 +31,16 @@ export const productSchema = yup.object().shape({
   category: yup
     .string()
     .oneOf([
-      "pant",
-      "shirt",
-      "t-shirt",
-      "dress",
-      "saree",
-      "sweater",
-      "hoodie",
-      "jacket",
-      "top",
-      "jeans",
+      "PANT",
+      "SHIRT",
+      "T-SHIRT",
+      "DRESS",
+      "SAREE",
+      "SWEATER",
+      "HOODIE",
+      "JACKET",
+      "TOP",
+      "JEANS",
     ])
     .required("*select one"),
   colors: yup.array().min(1, "choose at least one").required("*required"),
