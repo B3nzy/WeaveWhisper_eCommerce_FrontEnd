@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { CiHeart } from "react-icons/ci";
 import { BsPerson } from "react-icons/bs";
@@ -19,6 +19,7 @@ import {
 import { signOutSuccess } from "../redux/user/userSlice";
 
 export default function Header() {
+  const [active, setActive] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -46,8 +47,25 @@ export default function Header() {
       console.log(err);
     }
   };
+
+  const isActive = () => {
+    window.scrollY > 0 ? setActive(true) : setActive(false);
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", isActive);
+
+    //cleanup function
+    return () => {
+      window.removeEventListener("scroll", isActive);
+    };
+  }, []);
   return (
-    <div className="bg-white shadow-md p-4 flex flex-row items-center justify-between">
+    <div
+      className={[
+        active ? "bg-black text-gray-50 " : "bg-white ",
+        " shadow-md p-4 flex flex-row items-center justify-between sticky top-0 transition-all ease",
+      ].join("")}
+    >
       <Link to={"/"} className="font-bold sm:ml-10 sm:text-xl">
         <span className="text-orange-800">Weave</span>
         <span className="text-slate-700">Whisper</span>
