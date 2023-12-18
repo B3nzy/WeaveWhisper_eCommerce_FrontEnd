@@ -63,7 +63,7 @@ export default function Header() {
     <div
       className={[
         active ? "bg-black text-gray-50 " : "bg-white ",
-        " shadow-md p-4 flex flex-row items-center justify-between sticky top-0 transition-all ease",
+        " shadow-md p-4 flex flex-row items-center justify-between sticky top-0 left-0 z-50 transition-all ease",
       ].join("")}
     >
       <Link to={"/"} className="font-bold sm:ml-10 sm:text-xl">
