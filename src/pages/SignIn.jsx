@@ -20,7 +20,7 @@ export default function SignIn() {
     try {
       setLoading(true);
       dispatch(signInStart());
-      const res = await axios.post("/api/signin", values);
+      const res = await axios.post("/api/users/sign-in", values);
       if (res.status !== 200) {
         setLoading(false);
         setUserError(res.response.data.message);

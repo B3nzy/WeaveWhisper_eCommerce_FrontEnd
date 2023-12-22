@@ -94,19 +94,19 @@ export default function Search() {
               type="range"
               min="100"
               max="9000"
-              classname="cursor-pointer w-full outline-none focus:outline-none appearance-none "
+              className="cursor-pointer w-full outline-none focus:outline-none appearance-none "
               onChange={(e) => setPrice(e.target.value)}
             />
-            <span class="text-xs text-gray-500 absolute start-0 -bottom-6">
+            <span className="text-xs text-gray-500 absolute start-0 -bottom-6">
               Rs. 100
             </span>
-            <span class="text-xs text-gray-500 absolute start-1/3 -translate-x-1/2 rtl:translate-x-1/2 -bottom-6">
+            <span className="text-xs text-gray-500 absolute start-1/3 -translate-x-1/2 rtl:translate-x-1/2 -bottom-6">
               3000
             </span>
-            <span class="text-xs text-gray-500 absolute start-2/3 -translate-x-1/2 rtl:translate-x-1/2 -bottom-6">
+            <span className="text-xs text-gray-500 absolute start-2/3 -translate-x-1/2 rtl:translate-x-1/2 -bottom-6">
               6000
             </span>
-            <span class="text-xs text-gray-500 absolute end-0 -bottom-6">
+            <span className="text-xs text-gray-500 absolute end-0 -bottom-6">
               9000
             </span>
           </div>
