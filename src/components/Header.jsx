@@ -145,7 +145,7 @@ export default function Header() {
           </MenuList>
         </Menu>
 
-        {currentUser === null || currentUser.type === "customer" ? (
+        {currentUser === null || currentUser.type === "CUSTOMER" ? (
           <ul
             className=" flex flex-col items-center hover:text-orange-600  cursor-pointer"
             onClick={handleWishlistClick}
@@ -162,7 +162,7 @@ export default function Header() {
             </ul>
           </Link>
         )}
-        {currentUser === null || currentUser.type === "customer" ? (
+        {currentUser === null || currentUser.type === "CUSTOMER" ? (
           <ul
             className=" flex flex-col items-center hover:text-orange-600 cursor-pointer"
             onClick={handleCartClick}

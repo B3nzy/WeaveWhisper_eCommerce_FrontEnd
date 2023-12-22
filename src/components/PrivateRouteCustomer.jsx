@@ -6,7 +6,9 @@ import { Navigate, Outlet } from "react-router-dom";
 export default function PrivateRouteCustomer() {
   const { currentUser } = useSelector((state) => state.user);
 
-  return currentUser !== null && currentUser.type === "customer" ? (
+  console.log(currentUser);
+
+  return currentUser !== null && currentUser.type === "CUSTOMER" ? (
     <Outlet />
   ) : (
     <Navigate to="/" />
