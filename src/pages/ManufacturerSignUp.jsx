@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { signUpSchema } from "../schemas/signupValidation";
+import { manufacturerSignUpSchema } from "../schemas/manufacturerSignupValidation";
 import axios from "axios";
 
 export default function SignUp() {
@@ -31,13 +31,14 @@ export default function SignUp() {
   const { values, handleChange, handleBlur, handleSubmit, errors, touched } =
     useFormik({
       initialValues: {
-        fullName: "",
+        brandName: "",
         email: "",
         password: "",
         confirm_password: "",
-        type: "CUSTOMER",
+        panNumber: "",
+        type: "MANUFACTURER",
       },
-      validationSchema: signUpSchema,
+      validationSchema: manufacturerSignUpSchema,
       onSubmit,
     });
 
@@ -48,21 +49,21 @@ export default function SignUp() {
         <input
           className={[
             "border p-3 rounded-lg focus:outline-orange-200",
-            errors.fullName &&
-              touched.fullName &&
+            errors.brandName &&
+              touched.brandName &&
               " border-red-600 border-[1.5px]",
           ].join("")}
           type="text"
-          placeholder="full name"
-          id="fullName"
-          name="fullName"
-          value={values.fullName}
+          placeholder="brand name"
+          id="brandName"
+          name="brandName"
+          value={values.brandName}
           onChange={handleChange}
           onBlur={handleBlur}
         />
-        {errors.fullName && (
+        {errors.brandName && (
           <p className="text-red-500 mt-[-12px] text-xs ml-2">
-            {errors.fullName}
+            {errors.brandName}
           </p>
         )}
         <input
@@ -121,6 +122,28 @@ export default function SignUp() {
             {errors.confirm_password}
           </p>
         )}
+
+        <input
+          className={[
+            "border p-3 rounded-lg focus:outline-orange-200",
+            errors.panNumber &&
+              touched.panNumber &&
+              " border-red-600 border-[1.5px]",
+          ].join("")}
+          type="text"
+          placeholder="pan number"
+          id="panNumber"
+          name="panNumber"
+          value={values.panNumber}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+        {errors.panNumber && (
+          <p className="text-red-500 mt-[-12px] text-xs ml-2">
+            {errors.panNumber}
+          </p>
+        )}
+
         <button
           type="button"
           onClick={handleSubmit}
@@ -137,12 +160,9 @@ export default function SignUp() {
       </div>
 
       <div className="text-center my-8">
-        <span> Want to sell your products? </span>
-        <Link
-          to={"/manufacturers/sign-up"}
-          className="text-orange-700 hover:underline"
-        >
-          Sign Up as a Seller
+        <span> Want to buy products? </span>
+        <Link to={"/sign-up"} className="text-orange-700 hover:underline">
+          Sign Up as a Customer
         </Link>
       </div>
     </div>

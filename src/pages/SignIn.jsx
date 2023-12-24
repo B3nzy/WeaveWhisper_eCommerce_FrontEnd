@@ -31,7 +31,7 @@ export default function SignIn() {
       setLoading(false);
       setUserError(null);
       console.log(res.data);
-      dispatch(signInSuccess(res.data.userDetails));
+      dispatch(signInSuccess(res.data));
       navigate("/");
     } catch (err) {
       setLoading(false);
