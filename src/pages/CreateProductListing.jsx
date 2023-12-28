@@ -26,7 +26,7 @@ export default function CreateProductListing() {
   const CATEGORYENUM = [
     "pant",
     "shirt",
-    "t-shirt",
+    "tshirt",
     "dress",
     "saree",
     "sweater",
@@ -47,9 +47,9 @@ export default function CreateProductListing() {
     initialValues: {
       name: "",
       description: "",
-      actual_price: 0,
-      selling_price: 0,
-      inventory_count: 0,
+      actualPrice: 0,
+      sellingPrice: 0,
+      inventoryCount: 0,
       colors: [],
       sizes: [],
       gender: "",
@@ -62,17 +62,17 @@ export default function CreateProductListing() {
   const handleSellingPrice = (e) => {
     if (e.target.checked) {
       setSellingPriceDisabled(true);
-      setFieldValue("selling_price", values.actual_price);
+      setFieldValue("sellingPrice", values.actualPrice);
     } else {
       setSellingPriceDisabled(false);
     }
   };
-  console.log(values.name);
+  console.log(values);
   useEffect(() => {
     if (sellingPriceDisabled) {
-      setFieldValue("selling_price", values.actual_price);
+      setFieldValue("sellingPrice", values.actualPrice);
     }
-  }, [values.actual_price]);
+  }, [values.actualPrice]);
   return (
     <main className="p-3 max-w-4xl mx-auto ">
       <h1 className="text-center font-semibold text-3xl my-7 text-pink-500">
@@ -126,7 +126,7 @@ export default function CreateProductListing() {
                 type="radio"
                 name="gender"
                 id="gender"
-                value={"m"}
+                value={"MEN"}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -137,7 +137,7 @@ export default function CreateProductListing() {
                 type="radio"
                 name="gender"
                 id="gender"
-                value={"f"}
+                value={"WOMEN"}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -155,16 +155,16 @@ export default function CreateProductListing() {
               type="number"
               placeholder="0"
               className="p-3 border rounded-lg w-36"
-              id="inventory_count"
-              name="inventory_count"
-              value={values.inventory_count}
+              id="inventoryCount"
+              name="inventoryCount"
+              value={values.inventoryCount}
               onChange={handleChange}
               onBlur={handleBlur}
             />
           </div>
-          {errors.inventory_count && touched.inventory_count && (
+          {errors.inventoryCount && touched.inventoryCount && (
             <p className="text-red-500 mt-[-12px] text-xs ml-2">
-              {errors.inventory_count}
+              {errors.inventoryCount}
             </p>
           )}
           <div className="flex flex-wrap items-center gap-6 text-slate-800">
@@ -250,16 +250,16 @@ export default function CreateProductListing() {
               type="number"
               placeholder="0"
               className="p-3 border rounded-lg w-36"
-              name="actual_price"
-              id="actual_price"
-              value={values.actual_price}
+              name="actualPrice"
+              id="actualPrice"
+              value={values.actualPrice}
               onChange={handleChange}
               onBlur={handleBlur}
             />
           </div>
-          {errors.actual_price && touched.actual_price && (
+          {errors.actualPrice && touched.actualPrice && (
             <p className="text-red-500 mt-[-12px] text-xs ml-2">
-              {errors.actual_price}
+              {errors.actualPrice}
             </p>
           )}
           <div className="flex gap-4 items-center">
@@ -268,9 +268,9 @@ export default function CreateProductListing() {
               type="number"
               placeholder="0"
               className="p-3 border rounded-lg w-36"
-              name="selling_price"
-              id="selling_price"
-              value={values.selling_price}
+              name="sellingPrice"
+              id="sellingPrice"
+              value={values.sellingPrice}
               onChange={handleChange}
               onBlur={handleBlur}
               disabled={sellingPriceDisabled}
@@ -278,16 +278,16 @@ export default function CreateProductListing() {
             <label className="ml-4 flex flex-row whitespace-nowrap gap-1 items-center">
               <input
                 type="checkbox"
-                name="selling_price"
+                name="sellingPrice"
                 className="h-4 w-4"
                 onClick={handleSellingPrice}
               />
               <span>same as price</span>
             </label>
           </div>
-          {errors.selling_price && touched.selling_price && (
+          {errors.sellingPrice && touched.sellingPrice && (
             <p className="text-red-500 mt-[-12px] text-xs ml-2">
-              {errors.selling_price}
+              {errors.sellingPrice}
             </p>
           )}
         </div>
