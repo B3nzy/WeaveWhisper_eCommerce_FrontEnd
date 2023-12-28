@@ -30,7 +30,6 @@ export default function App() {
         <Route path="/address" element={<AllowAddress />} />
         <Route path="/about" element={<About />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/brand" element={<ManufacturerProfile />} />
 
         <Route element={<LoggedOutRoute />}>
           <Route path="/sign-in" element={<SignIn />} />
@@ -52,6 +51,7 @@ export default function App() {
             path="/create-product-listing"
             element={<CreateProductListing />}
           />
+          <Route path="/brand" element={<ManufacturerProfile />} />
         </Route>
       </Routes>
 

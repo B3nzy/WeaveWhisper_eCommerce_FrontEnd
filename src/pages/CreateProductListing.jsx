@@ -5,10 +5,13 @@ import { MdFileUpload } from "react-icons/md";
 import { productSchema } from "../schemas/productValidation";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function CreateProductListing() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const { currentUser } = useSelector((state) => state.user);
 
   const onSubmit = async () => {
     console.log("submitted");
@@ -73,6 +76,7 @@ export default function CreateProductListing() {
       gender: "",
       imageUrls: [],
       category: "",
+      userId: currentUser.id,
     },
     validationSchema: productSchema,
     onSubmit,

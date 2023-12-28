@@ -1,16 +1,67 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { PiShirtFoldedLight } from "react-icons/pi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteBrandSuccess, signOutSuccess } from "../redux/user/userSlice";
+import axios from "axios";
 
 export default function () {
   const [loading, setLoading] = useState(false);
+  const [showListingsError, setShowListingError] = useState(false);
+  const [show, setShow] = useState(false);
+  const [listings, setListings] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const handleChange = () => {};
-  const handleDeleteBrand = () => {};
-  const handleListingDelete = () => {};
-  const handleShowListings = () => {};
-  const handleSignOut = () => {};
+  const handleDeleteBrand = async () => {
+    try {
+      const res = await axios.delete(`/api/users/delete/${currentUser.id}`);
+      if (res.status !== 200) {
+        console.log(res.response.data.message);
+        return;
+      }
+      dispatch(deleteBrandSuccess());
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
+  const handleListingDelete = async (productId) => {
+    try {
+      const res = await axios.delete(`/api/products/delete/${productId}`);
+      if (res.status !== 200) {
+        console.log(res.response.data.message);
+      }
+      handleShowListings();
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
+  const handleShowListings = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `api/users/products/manufacturer/${currentUser.id}`
+      );
+      if (res.status !== 200) {
+        setShowListingError(true);
+        setLoading(false);
+        console.log(res.response.data.message);
+      }
+      setLoading(false);
+      setListings(res.data);
+      setShow(true);
+    } catch (err) {
+      setLoading(false);
+      console.log(err.response.data.message);
+    }
+  };
+  const handleSignOut = () => {
+    try {
+      dispatch(signOutSuccess());
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const handleSubmit = () => {};
   console.log(currentUser);
   return (
@@ -18,7 +69,7 @@ export default function () {
       <div className="p-3 flex flex-col flex-1">
         <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <PiShirtFoldedLight className="mx-auto text-6xl bg-gray-100 rounded-full p-3" />
+          <PiShirtFoldedLight className="mx-auto text-7xl text-gray-700 bg-gray-100 rounded-full p-3" />
           <input
             type="text"
             placeholder="brandName"
@@ -44,7 +95,7 @@ export default function () {
           /> */}
           <button
             disabled={loading}
-            className=" bg-slate-900 text-white rounded-lg p-3 uppercase hover:opacity-95  disabled:opacity-80"
+            className=" bg-black text-white rounded-lg p-3 uppercase hover:opacity-95  disabled:opacity-80"
           >
             {loading ? "Loading..." : "Update"}
           </button>
@@ -79,55 +130,56 @@ export default function () {
           onClick={handleShowListings}
           className="bg-green-700 w-full rounded-lg p-3 uppercase text-white hover:shadow-md hover:opacity-90 disabled:opacity-75 mb-3"
         >
-          Show Listings
+          {loading ? "Loading.." : "Show Listings"}
         </button>
-        {/* <p className="text-red-700 mt-5">
+        <p className="text-red-700 mt-5">
           {showListingsError ? "Error showing listings" : ""}
-        </p> */}
-        {/* {show && userListings && userListings.length < 1 && ( */}
-        <p className="text-red-600 text-xs">*No listing to show</p>
-        {/* )} */}
-        {/* {userListings && userListings.length > 0 && ( */}
-        <div className="flex flex-col gap-4">
-          <h1 className="text-xl font-semibold text-center my-4">
-            Your Listings
-          </h1>
-          {/* {userListings.map((listingItem) => ( */}
-          <div
-            // key={listingItem._id}
-            className="border p-3 shadow-sm flex  items-center justify-between gap-4"
-          >
-            {/* <Link to={`/listing/${listingItem._id}`}>
+        </p>
+        {show && listings && listings.length < 1 && (
+          <p className="text-red-600 text-xs">*No listing to show</p>
+        )}
+        {show && listings && listings.length > 0 && (
+          <div className="flex flex-col gap-4">
+            <h1 className="text-xl font-semibold text-center my-4">
+              Your Listings
+            </h1>
+            {listings.map((listingItem) => (
+              <div
+                key={listingItem.id}
+                className="border p-3 shadow-sm flex  items-center justify-between gap-4"
+              >
+                <Link to={`/product/${listingItem.id}`}>
                   <img
-                    src={listingItem.imageUrls[0]}
+                    // src={listingItem.imageUrls[0]}
+                    src="https://images.pexels.com/photos/2767159/pexels-photo-2767159.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                     alt="listing cover"
                     className="h-16 object-contain rounded-sm hover:shadow-md"
                   />
                 </Link>
                 <Link
-                  to={`/listing/${listingItem._id}`}
+                  to={`/product/${listingItem.id}`}
                   className="text-slate-700 font-semibold hover:underline truncate w-full flex-1"
                 >
                   <p>{listingItem.name}</p>
-                </Link> */}
+                </Link>
 
-            <div className="flex flex-col items-center gap-1">
-              <button
-                // onClick={() => handleListingDelete(listingItem._id)}
-                className="w-20 bg-red-600 text-white p-1 rounded-md hover:opacity-90"
-              >
-                Delete
-              </button>
-              {/* <Link to={`/update-listing/${listingItem._id}`}> */}
-              <button className="w-20 border border-yellow-600 p-1 rounded-md text-yellow-600 hover:text-white hover:bg-yellow-600">
-                Edit
-              </button>
-              {/* </Link> */}
-            </div>
+                <div className="flex flex-col items-center gap-1">
+                  <button
+                    onClick={() => handleListingDelete(listingItem.id)}
+                    className="w-20 bg-red-600 text-white p-1 rounded-md hover:opacity-90"
+                  >
+                    Delete
+                  </button>
+                  {/* <Link to={`/update-listing/${listingItem._id}`}> */}
+                  <button className="w-20 border border-yellow-600 p-1 rounded-md text-yellow-600 hover:text-white hover:bg-yellow-600">
+                    Edit
+                  </button>
+                  {/* </Link> */}
+                </div>
+              </div>
+            ))}
           </div>
-          {/* ))} */}
-        </div>
-        {/* )} */}
+        )}
       </div>
     </div>
   );
