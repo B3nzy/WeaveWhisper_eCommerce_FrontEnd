@@ -27,13 +27,13 @@ export const productSchema = yup.object().shape({
     .positive()
     .min(1, "*add product")
     .required("*required"),
-  gender: yup.string().oneOf(["m", "f"]).required("*required"),
+  gender: yup.string().oneOf(["MEN", "WOMEN"]).required("*required"),
   category: yup
     .string()
     .oneOf([
       "PANT",
       "SHIRT",
-      "T-SHIRT",
+      "TSHIRT",
       "DRESS",
       "SAREE",
       "SWEATER",

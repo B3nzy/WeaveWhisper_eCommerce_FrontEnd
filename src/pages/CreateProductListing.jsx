@@ -3,14 +3,32 @@ import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { MdFileUpload } from "react-icons/md";
 import { productSchema } from "../schemas/productValidation";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateProductListing() {
-  const onSubmit = () => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const onSubmit = async () => {
     console.log("submitted");
     console.log(values);
+    setLoading(true);
+    try {
+      const res = await axios.post("/api/products/add", values);
+      if (res.status !== 201) {
+        setLoading(false);
+        return;
+      }
+      setLoading(false);
+      console.log(res.data);
+      navigate("/product");
+    } catch (err) {
+      setLoading(false);
+      console.log(err.response.data.message);
+    }
   };
   const [sellingPriceDisabled, setSellingPriceDisabled] = useState(false);
-  const [loading, setLoading] = useState(false);
   const SIZEENUM = ["S", "M", "L", "XL"];
   const COLORENUM = [
     "Red",
@@ -122,26 +140,30 @@ export default function CreateProductListing() {
           <div className="flex gap-6 text-slate-800">
             <p className="">Gender : </p>
             <div className="flex gap-2">
-              <input
-                type="radio"
-                name="gender"
-                id="gender"
-                value={"MEN"}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <label>Male</label>
+              <label>
+                <input
+                  type="radio"
+                  name="gender"
+                  id="gender"
+                  value={"MEN"}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+                Male
+              </label>
             </div>
             <div className="flex gap-2">
-              <input
-                type="radio"
-                name="gender"
-                id="gender"
-                value={"WOMEN"}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <label>Female</label>
+              <label>
+                <input
+                  type="radio"
+                  name="gender"
+                  id="gender"
+                  value={"WOMEN"}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+                Female
+              </label>
             </div>
           </div>
           {errors.gender && touched.gender && (
