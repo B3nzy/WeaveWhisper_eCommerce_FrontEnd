@@ -18,6 +18,7 @@ import PrivateRouteManufacturer from "./components/PrivateRouteManufacturer";
 import About from "./pages/About";
 import Wishlist from "./pages/Wishlist";
 import Search from "./pages/Search";
+import ManufacturerProfile from "./pages/ManufacturerProfile";
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/address" element={<AllowAddress />} />
         <Route path="/about" element={<About />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/brand" element={<ManufacturerProfile />} />
 
         <Route element={<LoggedOutRoute />}>
           <Route path="/sign-in" element={<SignIn />} />
