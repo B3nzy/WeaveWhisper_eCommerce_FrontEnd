@@ -66,10 +66,12 @@ export default function Product() {
             </div>
           </div>
           <div className="flex flex-col p-4 gap-1 flex-1">
-            <h1 className="text-xl font-semibold">Brand Name</h1>
-            <p className="text-lg text-gray-400">{productDetails.name}</p>
+            <h1 className="text-xl font-semibold capitalize">
+              {productDetails.name}
+            </h1>
+            <p className="text-md text-gray-400 ">{productDetails.brandName}</p>
             <hr />
-            {productDetails.sellingPrice ? (
+            {productDetails.sellingPrice !== productDetails.actualPrice ? (
               <p className="txet-lg text-gray-500">
                 MRP
                 <span className="line-through mx-2">
@@ -99,7 +101,7 @@ export default function Product() {
                 </li>
               ))}
             </ul>
-            <ul className="flex items-center gap-4 mt-2">
+            <ul className="flex items-center gap-4 mt-2 flex-wrap">
               {productDetails.colors.map((color) => (
                 <li
                   key={color}
@@ -133,7 +135,8 @@ export default function Product() {
               {productDetails.description}
             </p>
             <p className="text-slate-500 text-sm mt-3">
-              <span className="uppercase font-bold">Vendor : </span>
+              <span className="uppercase font-bold mr-3">Vendor :</span>
+              {productDetails.brandName}
             </p>
           </div>
         </>
