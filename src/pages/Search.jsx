@@ -3,6 +3,9 @@ import React, { useState } from "react";
 
 export default function Search() {
   const [price, setPrice] = useState(1000);
+  const [categoryClick, setCategoryClick] = useState(false);
+  const [brandClick, setBrandClick] = useState(false);
+  const [colorClick, setColorClick] = useState(false);
   console.log(price);
   const SIZEENUM = ["S", "M", "L", "XL"];
   const COLORENUM = [
@@ -28,12 +31,21 @@ export default function Search() {
     "top",
     "jeans",
   ];
+  const handleCategoryClick = () => {
+    setCategoryClick(!categoryClick);
+  };
+  const handleColorClick = () => {
+    setColorClick(!colorClick);
+  };
+  const handleBrandClick = () => {
+    setBrandClick(!brandClick);
+  };
   return (
     <div className="flex flex-col md:flex-row">
       {/* <div className=" border-b-2 md:min-h-screen md:sticky md:top-20 md:h-screen"> */}
       <div className=" border-b-2 ">
         <form className="flex flex-col gap-8">
-          <div className=" flex items-center gap-2 mx-5 mt-5">
+          {/* <div className=" flex items-center gap-2 mx-5 mt-5">
             <label className="whitespace-nowrap font-semibold">
               Search Term :{" "}
             </label>
@@ -43,8 +55,8 @@ export default function Search() {
               placeholder="Search..."
               className="border rounded-lg p-2 w-full"
             />
-          </div>
-          <div className="flex justify-between ml-5 mr-3 mb-[-15px]">
+          </div> */}
+          <div className="flex justify-between ml-5 mr-3 mb-[-15px] mt-5">
             <h1 className="font-bold">FILTERS</h1>
             <button className="text-xs font-semibold text-red-400">
               CLEAR ALL
@@ -57,7 +69,7 @@ export default function Search() {
                 type="radio"
                 name="gender"
                 id="gender"
-                className="w-[16px] accent-red-500"
+                className="w-[16px] accent-black"
               />
               <p>Men</p>
             </label>
@@ -66,7 +78,7 @@ export default function Search() {
                 type="radio"
                 name="gender"
                 id="gender"
-                className="w-[16px] accent-red-500"
+                className="w-[16px] accent-black"
               />
               <p>Women</p>
             </label>
@@ -74,27 +86,40 @@ export default function Search() {
 
           <hr />
           <div className=" flex flex-col gap-2 my-[-15px] mx-5">
-            <p className="font-bold text-[13px] text-gray-800 mb-2">BRAND</p>
-            <label className="flex gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                name="gender"
-                id="gender"
-                className="w-4 accent-red-500"
-              />
-              <p className="text-xs">Xyz</p>
-            </label>
+            <div
+              className="font-bold text-[13px] text-gray-800 mb-2 flex justify-between cursor-pointer"
+              onClick={handleBrandClick}
+            >
+              BRAND <span className="text-lg">+</span>
+            </div>
+            {brandClick && (
+              <>
+                {" "}
+                <label className="flex gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="gender"
+                    id="gender"
+                    className="w-4 accent-black"
+                  />
+                  <p className="text-xs">Xyz</p>
+                </label>
+              </>
+            )}
           </div>
           <hr />
           <div className="relative flex flex-col gap-2 mt-[-15px] mx-5 mb-3">
-            <p className="font-bold text-[13px] text-gray-800 mb-2">PRICE</p>
+            <p className="font-bold text-[13px] text-gray-800 mb-2">
+              PRICE <span className="ml-3 text-gray-500">100 - {price}</span>
+            </p>
             <input
               name="price"
               value={price}
               type="range"
               min="100"
               max="9000"
-              className="cursor-pointer w-full outline-none focus:outline-none appearance-none "
+              className="cursor-pointer w-full outline-none focus:outline-none "
+              // style={{ WebkitAppearance: "none" }}
               onChange={(e) => setPrice(e.target.value)}
             />
             <span className="text-xs text-gray-500 absolute start-0 -bottom-6">
@@ -112,20 +137,26 @@ export default function Search() {
           </div>
           <hr />
           <div className=" flex flex-col gap-2 my-[-15px] mx-5">
-            <p className="font-bold text-[13px] text-gray-800 mb-2">CATEGORY</p>
-            {CATEGORYENUM.map((item) => (
-              <>
-                <label className="flex gap-3 cursor-pointer" key={item}>
-                  <input
-                    type="checkbox"
-                    name="category"
-                    id="category"
-                    className="w-4 accent-red-500"
-                  />
-                  <p className="text-[13px] capitalize">{item}</p>
-                </label>
-              </>
-            ))}
+            <div
+              className="font-bold text-[13px] text-gray-800 mb-2 flex justify-between items-center cursor-pointer"
+              onClick={handleCategoryClick}
+            >
+              CATEGORY <span className="text-lg">+</span>
+            </div>
+            {categoryClick &&
+              CATEGORYENUM.map((item) => (
+                <>
+                  <label className="flex gap-3 cursor-pointer" key={item}>
+                    <input
+                      type="checkbox"
+                      name="category"
+                      id="category"
+                      className="w-4 accent-black"
+                    />
+                    <p className="text-[13px] capitalize">{item}</p>
+                  </label>
+                </>
+              ))}
           </div>
           <hr />
           <div className=" flex flex-wrap gap-6 my-[-15px] mx-5 items-center">
@@ -140,7 +171,7 @@ export default function Search() {
                     type="checkbox"
                     name="category"
                     id="category"
-                    className="w-4 h-4 accent-red-500"
+                    className="w-4 h-4 accent-black"
                   />
                   <p className="text-[13px] capitalize">{item}</p>
                 </label>
@@ -150,24 +181,30 @@ export default function Search() {
 
           <hr />
           <div className=" flex flex-col gap-2 my-[-15px] mx-5">
-            <p className="font-bold text-[13px] text-gray-800 mb-2">COLOR</p>
-            {COLORENUM.map((item) => (
-              <>
-                <label className="flex gap-3 cursor-pointer" key={item}>
-                  <input
-                    type="checkbox"
-                    name="category"
-                    id="category"
-                    className="w-4 accent-red-500"
-                  />
-                  <p className="text-[13px] capitalize">{item}</p>
-                </label>
-              </>
-            ))}
+            <div
+              className="font-bold text-[13px] text-gray-800 mb-2 flex justify-between cursor-pointer"
+              onClick={handleColorClick}
+            >
+              COLOR <span className="text-lg">+</span>
+            </div>
+            {colorClick &&
+              COLORENUM.map((item) => (
+                <>
+                  <label className="flex gap-3 cursor-pointer" key={item}>
+                    <input
+                      type="checkbox"
+                      name="category"
+                      id="category"
+                      className="w-4 accent-black"
+                    />
+                    <p className="text-[13px] capitalize">{item}</p>
+                  </label>
+                </>
+              ))}
           </div>
           <hr />
 
-          <button className="bg-slate-700 text-white uppercase hover:opacity-90 rounded-lg p-3 disabled:opacity-75">
+          <button className="bg-black text-white uppercase hover:opacity-90 m-2 p-3 disabled:opacity-75">
             Search
           </button>
         </form>
