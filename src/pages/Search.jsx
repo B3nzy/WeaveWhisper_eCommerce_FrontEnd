@@ -169,8 +169,8 @@ export default function Search() {
                 >
                   <input
                     type="checkbox"
-                    name="category"
-                    id="category"
+                    name="size"
+                    id="size"
                     className="w-4 h-4 accent-black"
                   />
                   <p className="text-[13px] capitalize">{item}</p>

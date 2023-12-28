@@ -20,10 +20,22 @@ import { signOutSuccess } from "../redux/user/userSlice";
 
 export default function Header() {
   const [active, setActive] = useState(false);
+  const [categoryClick, setCategoryClick] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const CATEGORYENUM = [
+    "pant",
+    "shirt",
+    "t-shirt",
+    "dress",
+    "saree",
+    "sweater",
+    "hoodie",
+    "jacket",
+    "top",
+    "jeans",
+  ];
   const handleCartClick = () => {
     console.log(currentUser);
     if (currentUser === null) {
@@ -59,6 +71,9 @@ export default function Header() {
       window.removeEventListener("scroll", isActive);
     };
   }, []);
+  const handleCategoryClick = () => {
+    setCategoryClick(!categoryClick);
+  };
   return (
     <div
       className={[
@@ -73,7 +88,21 @@ export default function Header() {
       <div className="font-bold flex gap-8 text-xs text-slate-700">
         <p className="hidden md:inline hover:text-orange-600">MEN</p>
         <p className="hidden md:inline hover:text-orange-600">WOMEN</p>
-        {/* <p className="hidden md:inline hover:text-orange-600">CATEGORY</p> */}
+        <div
+          className="hidden md:inline relative"
+          onClick={handleCategoryClick}
+        >
+          <p className=" hover:text-orange-600 cursor-pointer">CATEGORY</p>
+          {categoryClick && (
+            <div className="absolute p-6 flex flex-col gap-2 border rounded-md outline-none shadow-md top-6 z-50 bg-white">
+              {CATEGORYENUM.map((item) => (
+                <p className="capitalize cursor-pointer text-gray-400 hover:text-black">
+                  {item}
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
       <form className="px-4 p-2 w-40 md:w-[400px] flex items-center justify-between bg-gray-100 rounded-md focus-within:bg-transparent focus-within:border">
         <input
@@ -91,7 +120,7 @@ export default function Header() {
               <li className="text-xs font-semibold">Profile</li>
             </ul>
           </MenuHandler>
-          <MenuList className="p-6 flex flex-col gap-2 text-gray-600 outline-none shadow-md">
+          <MenuList className="p-6 flex flex-col gap-2 text-gray-600 outline-none shadow-md z-50">
             {currentUser ? (
               <>
                 <MenuItem>
