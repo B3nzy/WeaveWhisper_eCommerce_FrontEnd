@@ -22,7 +22,7 @@ export default function CreateProductListing() {
       }
       setLoading(false);
       console.log(res.data);
-      navigate("/product");
+      navigate(`/product/${res.data.productId}`);
     } catch (err) {
       setLoading(false);
       console.log(err.response.data.message);
