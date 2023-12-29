@@ -17,8 +17,10 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { signOutSuccess } from "../redux/user/userSlice";
+import Product from "../pages/Product";
 
 export default function Header() {
+  const [cartItems, setCartItems] = useState([1, 2, 3]);
   const [active, setActive] = useState(false);
   const [categoryClick, setCategoryClick] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
@@ -36,6 +38,8 @@ export default function Header() {
     "top",
     "jeans",
   ];
+
+  // const cartCount = cartItems.length;
   const handleCartClick = () => {
     console.log(currentUser);
     if (currentUser === null) {
@@ -196,8 +200,15 @@ export default function Header() {
             className=" flex flex-col items-center hover:text-orange-600 cursor-pointer"
             onClick={handleCartClick}
           >
-            <LiaShoppingBagSolid className="text-2xl" />
-            <li className="text-xs font-semibold">Bag</li>
+            <div className="relative">
+              <LiaShoppingBagSolid className="text-2xl" />
+              <li className="text-xs font-semibold">Bag</li>
+            </div>
+            {cartItems.length > 0 && (
+              <span className="bg-green-500 text-white rounded-full w-5 h-5 ml-5 mt-[-5px] absolute text-xs flex items-center justify-center font-semibold">
+                {cartItems.length}
+              </span>
+            )}
           </ul>
         ) : (
           ""

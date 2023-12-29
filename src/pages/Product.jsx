@@ -37,7 +37,12 @@ export default function Product() {
     };
     fetchProduct();
   }, [params.productId]);
-
+  const handleAddToCart = () => {
+    const product = {
+      id: productDetails.id,
+      name: productDetails.name,
+    };
+  };
   return (
     <div className="my-14 mx-10 flex flex-col md:flex-row gap-4 justify-between">
       {loading && <p className="text-center my-20 text-2xl">Loading...</p>}
@@ -112,7 +117,10 @@ export default function Product() {
               ))}
             </ul>
             <div className="flex gap-4 my-5">
-              <button className="flex items-center uppercase font-bold text-sm p-3 bg-pink-500 text-white w-full max-w-md hover:opacity-90 rounded-md gap-2 justify-center">
+              <button
+                onClick={handleAddToCart}
+                className="flex items-center uppercase font-bold text-sm p-3 bg-pink-500 text-white w-full max-w-md hover:opacity-90 rounded-md gap-2 justify-center"
+              >
                 <BsHandbagFill className="text-lg" />
                 Add to bag
               </button>
