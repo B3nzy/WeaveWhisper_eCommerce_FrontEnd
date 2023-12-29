@@ -19,6 +19,7 @@ import About from "./pages/About";
 import Wishlist from "./pages/Wishlist";
 import Search from "./pages/Search";
 import ManufacturerProfile from "./pages/ManufacturerProfile";
+import UpdateProduct from "./pages/UpdateProduct";
 
 export default function App() {
   return (
@@ -52,6 +53,7 @@ export default function App() {
             element={<CreateProductListing />}
           />
           <Route path="/brand" element={<ManufacturerProfile />} />
+          <Route path="/update-product/:pId" element={<UpdateProduct />} />
         </Route>
       </Routes>
 

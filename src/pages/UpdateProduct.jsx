@@ -4,17 +4,49 @@ import React, { useEffect, useState } from "react";
 import { MdFileUpload } from "react-icons/md";
 import { productSchema } from "../schemas/productValidation";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PopUpMessage from "../components/PopUpMessage";
 
-export default function CreateProductListing() {
+export default function UpdateProduct() {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
+  const [showImageMsg, setShowImageMsg] = useState(false);
   const navigate = useNavigate();
-
+  const params = useParams();
   const { currentUser } = useSelector((state) => state.user);
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(`/api/products/get/${params.pId}`);
+        if (res.status !== 200) {
+          setLoading(false);
+          setError(true);
+          return;
+        }
+        console.log(res.data);
 
+        setError(false);
+        setLoading(false);
+        setFieldValue("name", res.data.name);
+        setFieldValue("description", res.data.description);
+        setFieldValue("actualPrice", res.data.actualPrice);
+        setFieldValue("sellingPrice", res.data.sellingPrice);
+        setFieldValue("inventoryCount", res.data.inventoryCount);
+        setFieldValue("colors", res.data.colors);
+        setFieldValue("sizes", res.data.sizes);
+        setFieldValue("gender", res.data.gender);
+        setFieldValue("imageUrls", res.data.imageUrls);
+        setFieldValue("category", res.data.category);
+      } catch (err) {
+        setLoading(false);
+        setError(true);
+      }
+    };
+    fetchProduct();
+  }, [params.productId]);
   const onSubmit = async () => {
     console.log("submitted");
     console.log(values);
@@ -25,13 +57,10 @@ export default function CreateProductListing() {
         setLoading(false);
         return;
       }
-      // setShowPopUp(true);
+
       setLoading(false);
       console.log(res.data);
-      // setTimeout(() => {
-      //   setShowPopUp(false);
-      //   history.push(`/product/${res.data.productId}`);
-      // }, 10000);
+
       navigate(`/product/${res.data.productId}`);
     } catch (err) {
       setLoading(false);
@@ -88,6 +117,9 @@ export default function CreateProductListing() {
     validationSchema: productSchema,
     onSubmit,
   });
+  const handleImageUpload = () => {
+    setShowImageMsg(true);
+  };
   const handleSellingPrice = (e) => {
     if (e.target.checked) {
       setSellingPriceDisabled(true);
@@ -110,8 +142,8 @@ export default function CreateProductListing() {
           onClose={() => setShowPopUp(false)}
         />
       )}
-      <h1 className="text-center font-semibold text-3xl my-7 text-pink-500">
-        Create a Listing
+      <h1 className="text-center font-semibold text-3xl my-7 text-blue-500">
+        Update Product
       </h1>
       <form
         className="flex flex-col sm:flex-row gap-4 mx-3"
@@ -129,6 +161,7 @@ export default function CreateProductListing() {
               value={values.name}
               onChange={handleChange}
               onBlur={handleBlur}
+              disabled
             />
           </div>
           {errors.name && touched.name && (
@@ -165,6 +198,7 @@ export default function CreateProductListing() {
                   value={"MEN"}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  disabled
                 />
                 Male
               </label>
@@ -178,6 +212,7 @@ export default function CreateProductListing() {
                   value={"WOMEN"}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  disabled
                 />
                 Female
               </label>
@@ -222,6 +257,7 @@ export default function CreateProductListing() {
                     name="sizes"
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    disabled
                   />
                   <span>{item}</span>
                 </label>
@@ -246,6 +282,7 @@ export default function CreateProductListing() {
                   value={item.toUpperCase()}
                   checked={values.colors.includes(item.toUpperCase())}
                   onChange={handleChange}
+                  disabled
                 />
                 <p>{item}</p>
               </label>
@@ -265,6 +302,7 @@ export default function CreateProductListing() {
               value={values.category}
               onChange={handleChange}
               onBlur={handleBlur}
+              disabled
             >
               <option className="text-slate-500">--select category--</option>
               {CATEGORYENUM.map((item) => (
@@ -347,25 +385,30 @@ export default function CreateProductListing() {
               id="imageUrls"
               value={values.imageUrls}
               onChange={handleChange}
+              disabled
             />
 
-            <button className="flex items-center gap-2 p-3 border border-green-600 rounded-md text-green-600 uppercase hover:shadow-lg">
+            <button
+              disabled={true}
+              onClick={handleImageUpload}
+              className="flex items-center gap-2 p-3 border border-green-600 rounded-md text-green-600 uppercase disabled:opacity-40"
+            >
               <MdFileUpload className="text-xl" />
               Upload
             </button>
           </div>
-          {errors.imageUrls && touched.imageUrls && (
-            <p className="text-red-500 mt-[-12px] text-xs ml-2">
-              {errors.imageUrls}
+          {showImageMsg && (
+            <p className="text-red-500 mt-[-8px] text-xs ml-2">
+              "Sorry! you are not able update product image."
             </p>
           )}
           <button
             onSubmit={handleSubmit}
             disabled={loading}
             type="submit"
-            className="p-3 my-5 bg-pink-400 text-white uppercase font-semibold hover:opacity-90 disabled:opacity-80 rounded-lg"
+            className="p-3 my-5 bg-blue-500 text-white uppercase font-semibold hover:opacity-90 disabled:opacity-80 rounded-lg"
           >
-            Create listing
+            Update Product
           </button>
         </div>
       </form>
