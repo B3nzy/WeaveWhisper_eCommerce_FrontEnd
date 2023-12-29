@@ -32,7 +32,7 @@ export default function CreateProductListing() {
       //   setShowPopUp(false);
       //   history.push(`/product/${res.data.productId}`);
       // }, 10000);
-      navigate(`/product/${res.data.productId}`);
+      navigate(`/product/${res.data.productId}`, { state: res.data });
     } catch (err) {
       setLoading(false);
       console.log(err.response.data.message);
@@ -104,12 +104,12 @@ export default function CreateProductListing() {
   }, [values.actualPrice]);
   return (
     <main className="p-3 max-w-4xl mx-auto ">
-      {showPopUp && (
+      {/* {showPopUp && (
         <PopUpMessage
           message="Product listing created successfully!"
           onClose={() => setShowPopUp(false)}
         />
-      )}
+      )} */}
       <h1 className="text-center font-semibold text-3xl my-7 text-pink-500">
         Create a Listing
       </h1>
