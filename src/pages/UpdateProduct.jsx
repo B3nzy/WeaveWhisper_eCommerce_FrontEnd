@@ -16,43 +16,13 @@ export default function UpdateProduct() {
   const navigate = useNavigate();
   const params = useParams();
   const { currentUser } = useSelector((state) => state.user);
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        setLoading(true);
-        const res = await axios.get(`/api/products/get/${params.pId}`);
-        if (res.status !== 200) {
-          setLoading(false);
-          setError(true);
-          return;
-        }
-        console.log(res.data);
 
-        setError(false);
-        setLoading(false);
-        setFieldValue("name", res.data.name);
-        setFieldValue("description", res.data.description);
-        setFieldValue("actualPrice", res.data.actualPrice);
-        setFieldValue("sellingPrice", res.data.sellingPrice);
-        setFieldValue("inventoryCount", res.data.inventoryCount);
-        setFieldValue("colors", res.data.colors);
-        setFieldValue("sizes", res.data.sizes);
-        setFieldValue("gender", res.data.gender);
-        setFieldValue("imageUrls", res.data.imageUrls);
-        setFieldValue("category", res.data.category);
-      } catch (err) {
-        setLoading(false);
-        setError(true);
-      }
-    };
-    fetchProduct();
-  }, [params.productId]);
   const onSubmit = async () => {
     console.log("submitted");
     console.log(values);
     setLoading(true);
     try {
-      const res = await axios.post("/api/products/add", values);
+      const res = await axios.put("/api/products/update", values);
       if (res.status !== 201) {
         setLoading(false);
         return;
@@ -61,7 +31,7 @@ export default function UpdateProduct() {
       setLoading(false);
       console.log(res.data);
 
-      navigate(`/product/${res.data.productId}`);
+      navigate(`/product/${params.pId}`);
     } catch (err) {
       setLoading(false);
       console.log(err.response.data.message);
@@ -102,6 +72,7 @@ export default function UpdateProduct() {
     setFieldValue,
   } = useFormik({
     initialValues: {
+      productId: null,
       name: "",
       description: "",
       actualPrice: 0,
@@ -134,6 +105,39 @@ export default function UpdateProduct() {
       setFieldValue("sellingPrice", values.actualPrice);
     }
   }, [values.actualPrice]);
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(`/api/products/get/${params.pId}`);
+        if (res.status !== 200) {
+          setLoading(false);
+          setError(true);
+          return;
+        }
+        console.log(res.data);
+
+        setError(false);
+        setLoading(false);
+        setFieldValue("name", res.data.name);
+        setFieldValue("description", res.data.description);
+        setFieldValue("actualPrice", res.data.actualPrice);
+        setFieldValue("sellingPrice", res.data.sellingPrice);
+        setFieldValue("inventoryCount", res.data.inventoryCount);
+        setFieldValue("colors", res.data.colors);
+        setFieldValue("sizes", res.data.sizes);
+        setFieldValue("gender", res.data.gender);
+        setFieldValue("imageUrls", res.data.imageUrls);
+        setFieldValue("category", res.data.category);
+        setFieldValue("productId", params.pId);
+      } catch (err) {
+        setLoading(false);
+        setError(true);
+      }
+    };
+    fetchProduct();
+  }, [params.productId]);
+
   return (
     <main className="p-3 max-w-4xl mx-auto ">
       {showPopUp && (
@@ -199,8 +203,9 @@ export default function UpdateProduct() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   disabled
+                  className="mr-1"
                 />
-                Male
+                Men
               </label>
             </div>
             <div className="flex gap-2">
@@ -213,8 +218,9 @@ export default function UpdateProduct() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   disabled
+                  className="mr-1"
                 />
-                Female
+                Women
               </label>
             </div>
           </div>
