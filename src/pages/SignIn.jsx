@@ -69,7 +69,9 @@ export default function SignIn() {
       location.state.success === true &&
       location.state.message !== null
     ) {
-      toast.success(location.state.message);
+      toast.success(location.state.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
       return () => {
         toastEffectRan.current = true;
       };
@@ -78,7 +80,7 @@ export default function SignIn() {
 
   return (
     <>
-      <ToastContainer />
+      <ToastContainer className="top-16 max-w-fit w-full" />
       <div className="max-w-lg mx-auto items-center p-3">
         <h1 className="my-7 font-semibold text-2xl text-center">Sign In</h1>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>

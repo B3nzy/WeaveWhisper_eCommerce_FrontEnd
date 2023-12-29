@@ -21,7 +21,7 @@ export default function SignUp() {
       }
       setLoading(false);
       console.log(res.data);
-      navigate("/sign-in");
+      navigate("/sign-in", { state: res.data });
     } catch (err) {
       setLoading(false);
       console.log(err.response.data.message);
