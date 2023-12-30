@@ -54,14 +54,6 @@ export default function SignIn() {
       onSubmit,
     });
 
-  const handleToast = () => {
-    toast.success("Success Notification !", {
-      position: toast.POSITION.BOTTOM_RIGHT,
-    });
-
-    console.log("test");
-  };
-
   useEffect(() => {
     if (
       toastEffectRan.current === false &&

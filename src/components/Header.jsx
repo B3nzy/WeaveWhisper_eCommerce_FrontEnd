@@ -24,6 +24,7 @@ export default function Header() {
   const [active, setActive] = useState(false);
   const [categoryClick, setCategoryClick] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
+  console.log(currentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const CATEGORYENUM = [
@@ -86,10 +87,14 @@ export default function Header() {
       ].join("")}
     >
       <Link to={"/"} className="font-bold sm:ml-10 sm:text-xl">
-        <span className="text-orange-800">Weave</span>
-        <span className="text-slate-700">Whisper</span>
+        <span className={active ? "text-orange-700" : "text-orange-800"}>
+          Weave
+        </span>
+        <span className={active ? "text-slate-300" : "text-slate-700"}>
+          Whisper
+        </span>
       </Link>
-      <div className="font-bold flex gap-8 text-xs text-slate-700">
+      <div className="font-bold flex gap-8 text-xs">
         <p className="hidden md:inline hover:text-orange-600">MEN</p>
         <p className="hidden md:inline hover:text-orange-600">WOMEN</p>
         <div
@@ -99,8 +104,11 @@ export default function Header() {
           <p className=" hover:text-orange-600 cursor-pointer">CATEGORY</p>
           {categoryClick && (
             <div className="absolute p-6 flex flex-col gap-2 border rounded-md outline-none shadow-md top-6 z-50 bg-white">
-              {CATEGORYENUM.map((item) => (
-                <p className="capitalize cursor-pointer text-gray-400 hover:text-black">
+              {CATEGORYENUM.map((item, index) => (
+                <p
+                  key={index}
+                  className="capitalize cursor-pointer text-gray-400 hover:text-black"
+                >
                   {item}
                 </p>
               ))}
@@ -130,7 +138,11 @@ export default function Header() {
                 <MenuItem>
                   <Link
                     className="flex items-center gap-4 hover:text-orange-600"
-                    to="/profile"
+                    to={
+                      currentUser.type === "MANUFACTURER"
+                        ? "/brand"
+                        : "/profile"
+                    }
                   >
                     <BsPerson className="text-xl" />
                     <Typography variant="small" className="font-medium">

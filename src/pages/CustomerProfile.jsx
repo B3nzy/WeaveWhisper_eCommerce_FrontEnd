@@ -30,9 +30,9 @@ export default function CustomerProfile() {
       userName: "sumitmandal",
       // phoneNumber: currentUser.phone_number,
       phoneNumber: 1234567890,
-      // address: currentUser.address,
-      address:
-        "Ravet Village Rd, near Vicky's Corner, Shinde Vasti, Ravet, Pimpri-Chinchwad, Maharashtra 411044, India",
+      address: currentUser.address,
+      // address:
+      //   "Ravet Village Rd, near Vicky's Corner, Shinde Vasti, Ravet, Pimpri-Chinchwad, Maharashtra 411044, India",
     },
     validationSchema: CustomerProfileSchema,
   });
