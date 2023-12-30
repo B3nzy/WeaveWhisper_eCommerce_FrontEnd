@@ -1,7 +1,13 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ProductCard from "../components/ProductCard";
 
 export default function Search() {
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState(false);
+  const [products, setProducts] = useState([]);
   const [price, setPrice] = useState(1000);
   const [categoryClick, setCategoryClick] = useState(false);
   const [brandClick, setBrandClick] = useState(false);
@@ -40,6 +46,25 @@ export default function Search() {
   const handleBrandClick = () => {
     setBrandClick(!brandClick);
   };
+  useEffect(() => {
+    const fetchAllProducts = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get("/api/products");
+        if (res.status !== 200) {
+          setLoading(false);
+          setErrors(true);
+          console.log(res);
+        }
+        setLoading(false);
+        console.log(res.data);
+        setProducts(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchAllProducts();
+  }, []);
   return (
     <div className="flex flex-col md:flex-row">
       {/* <div className=" border-b-2 md:min-h-screen md:sticky md:top-20 md:h-screen"> */}
@@ -226,6 +251,24 @@ export default function Search() {
               <option>Oldest</option>
             </select>
           </div>
+        </div>
+        <div className="p-3 flex gap-7 mx-5 flex-wrap">
+          {!loading && products.length === 0 && (
+            <p className="text-2xl text-slate-400 text-center mt-36 w-full">
+              Sorry :( Nothing found!
+            </p>
+          )}
+          {loading && (
+            <p className="text-xl text-slate-600 text-center w-full">
+              Loading...
+            </p>
+          )}
+
+          {!loading &&
+            products &&
+            products.map((product) => {
+              return <ProductCard key={product.id} listing={product} />;
+            })}
         </div>
       </div>
     </div>
