@@ -5,9 +5,9 @@ export const productSchema = yup.object().shape({
     .string()
     .trim()
     .min(2, "*too short!")
-    .max(50, "*too long!")
+    .max(80, "*too long!")
     .required("*required"),
-  description: yup.string().max(100, "*too long!").required("*required"),
+  description: yup.string().required("*required"),
   actualPrice: yup
     .number()
     .positive()

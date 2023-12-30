@@ -19,9 +19,9 @@ export default function Product() {
   ];
   const [displayImg, setDisplayImg] = useState(images[0]);
   const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
   const [errors, setErrors] = useState(false);
   const [productDetails, setProductDetails] = useState(null);
-  const [show, setShow] = useState(true);
   const params = useParams();
   console.log(productDetails);
   useEffect(() => {
@@ -52,22 +52,16 @@ export default function Product() {
   };
   return (
     <>
-      {show &&
-        toastEffectRan.current === false &&
-        location.state != null &&
-        location.state.success === true &&
-        location.state.message !== null && (
-          <PopUpMessage
-            message={location.state.message}
-            onClose={() => setShow(false)}
-            //not working will do later
-            className=" top-5 left-0 z-50 absolute"
-          />
-        )}
       <div className="my-14 mx-10 flex flex-col md:flex-row gap-4 justify-between relative">
-        {loading && <p className="text-center my-20 text-2xl">Loading...</p>}
+        {loading && (
+          <p className="text-center my-20 text-2xl mx-auto font-semibold text-black">
+            Loading...
+          </p>
+        )}
         {errors && (
-          <p className="text-center my-20 text-2xl">Something went wrong!</p>
+          <p className="text-center my-20 text-2xl mx-auto font-semibold text-gray-500">
+            Something went wrong!
+          </p>
         )}
         {productDetails && !errors && !loading && (
           <>
@@ -173,98 +167,94 @@ export default function Product() {
                 <span className="uppercase font-bold mr-3">Vendor :</span>
                 {productDetails.brandName}
               </p>
-              <div className="border rounded-lg p-3 mt-5">
-                {/* <p className="text-lg text-gray-800 font-semibold mb-5">
-                  Add Review
-                </p> */}
-
-                <div>
-                  <input
-                    className=" border-b-2 w-full hover:outline-none outline-none mt-3"
-                    type="textarea"
-                    placeholder="write a review....."
-                  />
-                  <div className="flex items-center justify-between">
-                    <label className="flex gap-4 items-center mt-3">
-                      <p className="text-gray-500 font-medium">Rating : </p>
-                      <select
-                        name="rating"
-                        id="rating"
-                        className="border rounded-lg p-1 outline-gray-200 cursor-pointer"
-                      >
-                        <option className="text-slate-500">
-                          choose rating
-                        </option>
-                        <option value="ONE">1 </option>
-                        <option value="TWO">2</option>
-                        <option value="THREE">3</option>
-                        <option value="FOUR">4</option>
-                        <option value="FIVE">5</option>
-                      </select>
-                    </label>
-                    <button className="uppercase text-blue-500 border p-1 font-semibold border-blue-500 hover:shadow-md rounded-md w-20">
-                      Post
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="border rounded-lg p-3 mt-5">
-                <p className="text-lg text-gray-800 font-semibold mb-5">
-                  Reviews
-                </p>
-                <div>
-                  <div className="flex gap-2 items-center mb-2">
-                    <BsPerson className="text-xl rounded-full bg-blue-200 h-8 w-8 p-1 text-gray-500" />
-                    <p className="capitalize text-sm font-medium text-gray-600">
-                      name name
-                    </p>
-                  </div>
-                  <ul className="flex gap-1">
-                    <li>
-                      <RiStarSFill className="text-xl text-yellow-500" />
-                    </li>
-                    <li>
-                      <RiStarSFill className="text-xl text-yellow-500" />
-                    </li>
-                    <li>
-                      <RiStarSFill className="text-xl text-yellow-500" />
-                    </li>
-                    <li>
-                      <RiStarSFill className="text-xl text-yellow-500" />
-                    </li>
-                  </ul>
-                  <p className="text-gray-500 text-sm ">Review message</p>
-                  <hr className="my-5" />
-                </div>
-                <div>
-                  <div className="flex gap-2 items-center mb-2">
-                    <BsPerson className="text-xl rounded-full bg-blue-200 h-8 w-8 p-1 text-gray-500" />
-                    <p className="capitalize text-sm font-medium text-gray-600">
-                      name name
-                    </p>
-                  </div>
-                  <ul className="flex gap-1">
-                    <li>
-                      <RiStarSFill className="text-xl text-yellow-500" />
-                    </li>
-                    <li>
-                      <RiStarSFill className="text-xl text-yellow-500" />
-                    </li>
-                    <li>
-                      <RiStarSFill className="text-xl text-yellow-500" />
-                    </li>
-                    <li>
-                      <RiStarSFill className="text-xl text-yellow-500" />
-                    </li>
-                  </ul>
-                  <p className="text-gray-500 text-sm ">Review message</p>
-                  <hr className="my-5" />
-                </div>
-              </div>
             </div>
           </>
         )}
       </div>
+      {productDetails && !errors && !loading && (
+        <div className="flex justify-centers mx-auto   mb-10 w-full flex-col max-w-lg md:max-w-4xl">
+          <div className="border rounded-lg p-3 mt-5">
+            <p className="text-lg text-gray-800 font-semibold mb-5">Reviews</p>
+            <div>
+              <div className="flex gap-2 items-center mb-2">
+                <BsPerson className="text-xl rounded-full bg-blue-200 h-8 w-8 p-1 text-gray-500" />
+                <p className="capitalize text-sm font-medium text-gray-600">
+                  name name
+                </p>
+              </div>
+              <ul className="flex gap-1">
+                <li>
+                  <RiStarSFill className="text-xl text-yellow-500" />
+                </li>
+                <li>
+                  <RiStarSFill className="text-xl text-yellow-500" />
+                </li>
+                <li>
+                  <RiStarSFill className="text-xl text-yellow-500" />
+                </li>
+                <li>
+                  <RiStarSFill className="text-xl text-yellow-500" />
+                </li>
+              </ul>
+              <p className="text-gray-500 text-sm ">Review message</p>
+              <hr className="my-5" />
+            </div>
+            <div>
+              <div className="flex gap-2 items-center mb-2">
+                <BsPerson className="text-xl rounded-full bg-blue-200 h-8 w-8 p-1 text-gray-500" />
+                <p className="capitalize text-sm font-medium text-gray-600">
+                  name name
+                </p>
+              </div>
+              <ul className="flex gap-1">
+                <li>
+                  <RiStarSFill className="text-xl text-yellow-500" />
+                </li>
+                <li>
+                  <RiStarSFill className="text-xl text-yellow-500" />
+                </li>
+                <li>
+                  <RiStarSFill className="text-xl text-yellow-500" />
+                </li>
+                <li>
+                  <RiStarSFill className="text-xl text-yellow-500" />
+                </li>
+              </ul>
+              <p className="text-gray-500 text-sm ">Review message</p>
+              <hr className="my-5" />
+            </div>
+          </div>
+          <div className="border rounded-lg p-3 mt-5">
+            <form>
+              <input
+                className=" border-b-2 w-full hover:outline-none outline-none mt-3 focus:border-blue-200"
+                type="textarea"
+                placeholder="write a review....."
+              />
+              <div className="flex items-center justify-between">
+                <label className="flex gap-4 items-center mt-3">
+                  <p className="text-gray-500 font-medium">Rating : </p>
+                  <select
+                    name="rating"
+                    id="rating"
+                    className="border rounded-lg p-1 outline-gray-200 cursor-pointer"
+                  >
+                    <option className="text-slate-500">choose rating</option>
+                    <option value="ONE">1 </option>
+                    <option value="TWO">2</option>
+                    <option value="THREE">3</option>
+                    <option value="FOUR">4</option>
+                    <option value="FIVE">5</option>
+                  </select>
+                </label>
+                <button className="uppercase text-blue-500 border p-1 font-semibold border-blue-500 hover:shadow-md rounded-md w-20">
+                  Post
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 }
