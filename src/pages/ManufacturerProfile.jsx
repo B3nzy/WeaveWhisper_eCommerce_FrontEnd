@@ -33,7 +33,9 @@ export default function ManufacturerProfile() {
   const handleListingDelete = async (productId) => {
     try {
       setDeleteLoadingItem(productId);
-      const res = await axios.delete(`/api/products/delete/${productId}`);
+      const res = await axios.delete(
+        `/api/products/delete/${productId}/manufacturer/${currentUser.id}`
+      );
       if (res.status !== 200) {
         console.log(res.response.data.message);
         setDeleteLoadingItem(-1);
