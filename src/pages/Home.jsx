@@ -3,9 +3,5 @@ import PopUpMessage from "../components/PopUpMessage";
 import ProductCard from "../components/ProductCard";
 
 export default function Home() {
-  return (
-    <div>
-      <ProductCard />
-    </div>
-  );
+  return <div>Home</div>;
 }
