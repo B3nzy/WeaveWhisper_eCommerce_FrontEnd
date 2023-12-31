@@ -51,6 +51,7 @@ export default function ManufacturerProfile() {
     }
   };
   const handleShowListings = async () => {
+    console.log("hello");
     setListingLoading(true);
     try {
       const res = await axios.get(
@@ -76,7 +77,8 @@ export default function ManufacturerProfile() {
       console.log(err);
     }
   };
-  const handleSubmit = () => {};
+  console.log(listings);
+  // const handleSubmit = () => {};
   console.log(currentUser);
   return (
     <>
@@ -84,7 +86,7 @@ export default function ManufacturerProfile() {
       <div className="p-6 max-w-5xl mx-auto flex flex-col sm:flex-row gap-2">
         <div className="p-3 flex flex-col flex-1 md:sticky">
           <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <form className="flex flex-col gap-4">
             <PiShirtFoldedLight className="mx-auto text-7xl text-gray-700 bg-gray-100 rounded-full p-3" />
             <input
               type="text"
