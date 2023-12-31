@@ -165,8 +165,9 @@ export default function CreateProductListing() {
                   value={"MEN"}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className="mr-1"
                 />
-                Male
+                Men
               </label>
             </div>
             <div className="flex gap-2">
@@ -178,8 +179,9 @@ export default function CreateProductListing() {
                   value={"WOMEN"}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className="mr-1"
                 />
-                Female
+                Women
               </label>
             </div>
           </div>
@@ -301,8 +303,8 @@ export default function CreateProductListing() {
               {errors.actualPrice}
             </p>
           )}
-          <div className="flex gap-4 items-center">
-            <label className=" text-slate-800">Selling price : </label>
+          <div className="flex gap-4 items-center text-slate-800">
+            <label>Selling price : </label>
             <input
               type="number"
               placeholder="0"
@@ -363,7 +365,7 @@ export default function CreateProductListing() {
             onSubmit={handleSubmit}
             disabled={loading}
             type="submit"
-            className="p-3 my-5 bg-pink-400 text-white uppercase font-semibold hover:opacity-90 disabled:opacity-80 rounded-lg"
+            className="p-3 my-5 bg-pink-500 text-white uppercase font-semibold hover:opacity-90 disabled:opacity-80 rounded-lg"
           >
             Create listing
           </button>
