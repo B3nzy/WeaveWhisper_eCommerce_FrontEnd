@@ -84,7 +84,7 @@ export default function ManufacturerProfile() {
     <>
       <ToastContainer className="top-16 max-w-fit w-full" />
       <div className="p-6 max-w-5xl mx-auto flex flex-col sm:flex-row gap-2">
-        <div className="p-3 flex flex-col flex-1 md:sticky">
+        <div className="p-3 flex flex-col flex-1">
           <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
           <form className="flex flex-col gap-4">
             <PiShirtFoldedLight className="mx-auto text-7xl text-gray-700 bg-gray-100 rounded-full p-3" />
