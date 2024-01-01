@@ -6,14 +6,14 @@ import { productSchema } from "../schemas/productValidation";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import PopUpMessage from "../components/PopUpMessage";
 
 export default function CreateProductListing() {
   const [files, setFiles] = useState([]);
   const [imageNames, setImageNames] = useState([]);
   console.log(imageNames);
   const [loading, setLoading] = useState(false);
-  const [showPopUp, setShowPopUp] = useState(false);
+  const [imgUploading, setImgUploading] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState(false);
   const navigate = useNavigate();
 
   const { currentUser } = useSelector((state) => state.user);
@@ -23,7 +23,10 @@ export default function CreateProductListing() {
     console.log(values);
     setLoading(true);
     try {
-      const res = await axios.post("/api/products/add", values);
+      const res = await axios.post("/api/products/add", {
+        ...values,
+        imageNames,
+      });
       if (res.status !== 201) {
         setLoading(false);
         return;
@@ -101,6 +104,7 @@ export default function CreateProductListing() {
   }, [values.actualPrice]);
 
   const singleFileUpload = async (file) => {
+    setImgUploading(true);
     const formData = new FormData();
     formData.append("file", file);
     axios
@@ -115,15 +119,23 @@ export default function CreateProductListing() {
         setImageNames((prev) => {
           return [...prev, name];
         });
+        setImgUploading(false);
       })
       .catch((err) => {
         console.log(err);
+        setImgUploading(false);
       });
   };
 
   const handleImageUpload = () => {
-    for (let i = 0; i < files.length; i++) {
-      singleFileUpload(files[i]);
+    if (files.length > 0 && files.length + imageNames.length < 5) {
+      setImageUploadError(false);
+      for (let i = 0; i < files.length; i++) {
+        singleFileUpload(files[i]);
+      }
+    } else {
+      setImgUploading(false);
+      setImageUploadError(true);
     }
   };
 
@@ -135,6 +147,9 @@ export default function CreateProductListing() {
     }
     console.log(res.data);
     setImageNames(imageNames.filter((item, i) => i !== index));
+    if (imageNames.length < 5) {
+      setImageUploadError(false);
+    }
   };
 
   return (
@@ -382,19 +397,22 @@ export default function CreateProductListing() {
             <button
               type="button"
               onClick={handleImageUpload}
-              className="flex items-center gap-2 p-3 border border-green-600 rounded-md text-green-600 uppercase hover:shadow-lg"
+              disabled={imgUploading || loading}
+              className="flex items-center gap-2 p-3 border border-green-600 rounded-md text-green-600 uppercase hover:shadow-lg disabled:opacity-70 disabled:shadow-none"
             >
               <MdFileUpload className="text-xl" />
-              Upload
+              {imgUploading ? "Uploading..." : "Upload"}
             </button>
           </div>
-
+          <p className="text-red-700 text-sm mb-4">
+            {imageUploadError && "You can add only 4 images as per listing!"}
+          </p>
           <div className="flex flex-col gap-4">
             {imageNames.length > 0 &&
               imageNames.map((name, index) => (
                 <div
                   key={name}
-                  className="flex justify-between p-3 border items-center"
+                  className="flex justify-between p-2 border items-center"
                 >
                   <img
                     src={"/api/storage/view/" + name}
@@ -404,7 +422,7 @@ export default function CreateProductListing() {
                   <button
                     type="button"
                     onClick={() => handleRemoveImage(index)}
-                    className="p-3 text-red-700 rounded-lg uppercase hover:opacity-75"
+                    className="p-2 text-red-700 rounded-lg uppercase hover:opacity-75 hover:border hover:border-red-600"
                   >
                     Delete
                   </button>
@@ -414,7 +432,7 @@ export default function CreateProductListing() {
 
           <button
             onSubmit={handleSubmit}
-            disabled={loading}
+            disabled={loading || imgUploading}
             type="submit"
             className="p-3 my-5 bg-pink-500 text-white uppercase font-semibold hover:opacity-90 disabled:opacity-80 rounded-lg"
           >

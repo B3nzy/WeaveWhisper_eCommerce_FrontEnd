@@ -116,7 +116,7 @@ export default function Search() {
               className="font-bold text-[13px] text-gray-800 mb-2 flex justify-between cursor-pointer"
               onClick={handleBrandClick}
             >
-              BRAND <span className="text-lg">+</span>
+              BRAND <span className="text-lg">{brandClick ? "-" : "+"}</span>
             </div>
             {brandClick && (
               <>
@@ -167,7 +167,8 @@ export default function Search() {
               className="font-bold text-[13px] text-gray-800 mb-2 flex justify-between items-center cursor-pointer"
               onClick={handleCategoryClick}
             >
-              CATEGORY <span className="text-lg">+</span>
+              CATEGORY{" "}
+              <span className="text-lg">{categoryClick ? "-" : "+"}</span>
             </div>
             {categoryClick &&
               CATEGORYENUM.map((item) => (
@@ -211,7 +212,7 @@ export default function Search() {
               className="font-bold text-[13px] text-gray-800 mb-2 flex justify-between cursor-pointer"
               onClick={handleColorClick}
             >
-              COLOR <span className="text-lg">+</span>
+              COLOR <span className="text-lg">{colorClick ? "-" : "+"}</span>
             </div>
             {colorClick &&
               COLORENUM.map((item) => (

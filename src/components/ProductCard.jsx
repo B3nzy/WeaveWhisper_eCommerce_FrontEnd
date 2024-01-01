@@ -5,7 +5,7 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 export default function ProductCard({ listing }) {
   console.log(listing);
   return (
-    <div className="bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden w-full sm:w-[270px] my-5">
+    <div className="bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden w-full sm:w-[270px] my-5 rounded-md">
       <Link to={`/product/${listing.id}`}>
         <img
           //   src={listing.imageUrls[0]}

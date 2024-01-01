@@ -15,13 +15,7 @@ export default function Product() {
   const toastEffectRan = useRef(false);
   const { currentUser } = useSelector((state) => state.user);
   console.log(currentUser);
-  const images = [
-    "https://images.pexels.com/photos/5255159/pexels-photo-5255159.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    "https://images.pexels.com/photos/6626903/pexels-photo-6626903.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    "https://images.pexels.com/photos/769749/pexels-photo-769749.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    "https://images.pexels.com/photos/2923922/pexels-photo-2923922.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-  ];
-  const [displayImg, setDisplayImg] = useState(images[0]);
+  const [displayImg, setDisplayImg] = useState("");
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
   const [errors, setErrors] = useState(false);
@@ -38,7 +32,9 @@ export default function Product() {
           setErrors(true);
           return;
         }
+        console.log(res.data);
         setProductDetails(res.data);
+        setDisplayImg(res.data.imageNames[0]);
         setErrors(false);
         setLoading(false);
       } catch (err) {
@@ -71,10 +67,10 @@ export default function Product() {
           <>
             <div className="p-3 flex flex-row flex-1 gap-4">
               <div className="flex flex-col gap-3">
-                {images.map((image, id) => (
+                {productDetails.imageNames.map((image, id) => (
                   <img
                     key={id}
-                    src={image}
+                    src={"/api/storage/view/" + image}
                     alt="product image"
                     className="h-32 object-fit w-24 cursor-pointer hover:scale-105 transition-scale duration-300 rounded-sm"
                     onClick={() => setDisplayImg(image)}
@@ -83,7 +79,7 @@ export default function Product() {
               </div>
               <div>
                 <img
-                  src={displayImg}
+                  src={"/api/storage/view/" + displayImg}
                   alt="product image"
                   className="h-[600px] w-[500px]"
                 />
