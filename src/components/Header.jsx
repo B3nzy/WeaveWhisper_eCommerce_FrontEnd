@@ -117,12 +117,13 @@ export default function Header() {
           {categoryClick && (
             <div className="absolute p-6 flex flex-col gap-2 border rounded-md outline-none shadow-md top-6 z-50 bg-white">
               {CATEGORYENUM.map((item, index) => (
-                <p
+                <Link
+                  to={"/search"}
                   key={index}
-                  className="capitalize cursor-pointer text-gray-400 hover:text-black"
+                  className="capitalize cursor-pointer text-gray-400 hover:text-orange-600"
                 >
                   {item}
-                </p>
+                </Link>
               ))}
             </div>
           )}
@@ -162,19 +163,30 @@ export default function Header() {
                     </Typography>
                   </Link>
                 </MenuItem>
-                <MenuItem className="flex items-center gap-4 hover:text-orange-600">
-                  <IoSettingsOutline className="text-xl" />
-                  <Typography variant="small" className="font-medium">
-                    Edit Profile
-                  </Typography>
+                <MenuItem>
+                  <Link
+                    to={
+                      currentUser.type === "MANUFACTURER"
+                        ? "/brand"
+                        : "/profile"
+                    }
+                    className="flex items-center gap-4 hover:text-orange-600"
+                  >
+                    <IoSettingsOutline className="text-xl" />
+                    <Typography variant="small" className="font-medium">
+                      Edit Profile
+                    </Typography>
+                  </Link>
                 </MenuItem>
+                {currentUser.type === "CUSTOMER" && (
+                  <MenuItem className="flex items-center gap-4 hover:text-orange-600">
+                    <LiaShoppingBagSolid className="text-2xl" />
+                    <Typography variant="small" className="font-medium">
+                      My Orders
+                    </Typography>
+                  </MenuItem>
+                )}
 
-                <MenuItem className="flex items-center gap-4 hover:text-orange-600">
-                  <LiaShoppingBagSolid className="text-2xl" />
-                  <Typography variant="small" className="font-medium">
-                    My Orders
-                  </Typography>
-                </MenuItem>
                 <hr className="my-2 border-blue-gray-50" />
                 <MenuItem
                   className="flex items-center gap-4 text-orange-400 hover:text-orange-600"
