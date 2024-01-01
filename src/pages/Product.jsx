@@ -18,6 +18,8 @@ export default function Product() {
   const images = [
     "https://images.pexels.com/photos/5255159/pexels-photo-5255159.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     "https://images.pexels.com/photos/6626903/pexels-photo-6626903.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/769749/pexels-photo-769749.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/2923922/pexels-photo-2923922.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
   ];
   const [displayImg, setDisplayImg] = useState(images[0]);
   const [loading, setLoading] = useState(false);
@@ -46,12 +48,12 @@ export default function Product() {
     };
     fetchProduct();
   }, [params.productId]);
-  const handleAddToCart = () => {
-    const product = {
-      id: productDetails.id,
-      name: productDetails.name,
-    };
-  };
+  // const handleAddToCart = () => {
+  //   const product = {
+  //     id: productDetails.id,
+  //     name: productDetails.name,
+  //   };
+  // };
   return (
     <>
       <div className="my-14 mx-10 flex flex-col md:flex-row gap-4 justify-between relative">
@@ -68,19 +70,20 @@ export default function Product() {
         {productDetails && !errors && !loading && (
           <>
             <div className="p-3 flex flex-row flex-1 gap-4">
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 {images.map((image, id) => (
                   <img
                     key={id}
                     src={image}
                     alt="product image"
-                    className="h-32 object-fit w-24 cursor-pointer"
+                    className="h-32 object-fit w-24 cursor-pointer hover:scale-105 transition-scale duration-300 rounded-sm"
+                    onClick={() => setDisplayImg(image)}
                   />
                 ))}
               </div>
               <div>
                 <img
-                  src={images[0]}
+                  src={displayImg}
                   alt="product image"
                   className="h-[600px] w-[500px]"
                 />
@@ -147,7 +150,7 @@ export default function Product() {
               {currentUser.type !== "MANUFACTURER" && (
                 <div className="flex gap-4 my-5">
                   <button
-                    onClick={handleAddToCart}
+                    // onClick={handleAddToCart}
                     className="flex items-center uppercase font-bold text-sm p-3 bg-pink-500 text-white w-full max-w-md hover:opacity-90 rounded-md gap-2 justify-center"
                   >
                     <BsHandbagFill className="text-lg" />
