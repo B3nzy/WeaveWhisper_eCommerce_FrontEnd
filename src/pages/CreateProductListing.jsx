@@ -9,6 +9,9 @@ import { useSelector } from "react-redux";
 import PopUpMessage from "../components/PopUpMessage";
 
 export default function CreateProductListing() {
+  const [files, setFiles] = useState([]);
+  const [imageNames, setImageNames] = useState([]);
+  console.log(imageNames);
   const [loading, setLoading] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
   const navigate = useNavigate();
@@ -25,13 +28,8 @@ export default function CreateProductListing() {
         setLoading(false);
         return;
       }
-      // setShowPopUp(true);
       setLoading(false);
       console.log(res.data);
-      // setTimeout(() => {
-      //   setShowPopUp(false);
-      //   history.push(`/product/${res.data.productId}`);
-      // }, 10000);
       navigate(`/product/${res.data.productId}`, { state: res.data });
     } catch (err) {
       setLoading(false);
@@ -81,7 +79,6 @@ export default function CreateProductListing() {
       colors: [],
       sizes: [],
       gender: "",
-      imageUrls: [],
       category: "",
       userId: currentUser.id,
     },
@@ -102,14 +99,46 @@ export default function CreateProductListing() {
       setFieldValue("sellingPrice", values.actualPrice);
     }
   }, [values.actualPrice]);
+
+  const singleFileUpload = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    axios
+      .post("api/storage/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        const name = res.data.message;
+        setImageNames((prev) => {
+          return [...prev, name];
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleImageUpload = () => {
+    for (let i = 0; i < files.length; i++) {
+      singleFileUpload(files[i]);
+    }
+  };
+
+  const handleRemoveImage = async (index) => {
+    const res = await axios.delete(`/api/storage/delete/${imageNames[index]}`);
+
+    if (res.status !== 200) {
+      console.log(res);
+    }
+    console.log(res.data);
+    setImageNames(imageNames.filter((item, i) => i !== index));
+  };
+
   return (
     <main className="p-3 max-w-4xl mx-auto ">
-      {/* {showPopUp && (
-        <PopUpMessage
-          message="Product listing created successfully!"
-          onClose={() => setShowPopUp(false)}
-        />
-      )} */}
       <h1 className="text-center font-semibold text-3xl my-7 text-pink-500">
         Create a Listing
       </h1>
@@ -343,22 +372,44 @@ export default function CreateProductListing() {
               className="p-3 border rounded-md w-full"
               accept="image/*"
               multiple
-              name="imageUrls"
-              id="imageUrls"
-              value={values.imageUrls}
-              onChange={handleChange}
+              name="files"
+              id="files"
+              onChange={(e) => setFiles(e.target.files)}
             />
 
-            <button className="flex items-center gap-2 p-3 border border-green-600 rounded-md text-green-600 uppercase hover:shadow-lg">
+            <button
+              type="button"
+              onClick={handleImageUpload}
+              className="flex items-center gap-2 p-3 border border-green-600 rounded-md text-green-600 uppercase hover:shadow-lg"
+            >
               <MdFileUpload className="text-xl" />
               Upload
             </button>
           </div>
-          {errors.imageUrls && touched.imageUrls && (
-            <p className="text-red-500 mt-[-12px] text-xs ml-2">
-              {errors.imageUrls}
-            </p>
-          )}
+
+          <div className="flex flex-col gap-4">
+            {imageNames.length > 0 &&
+              imageNames.map((name, index) => (
+                <div
+                  key={name}
+                  className="flex justify-between p-3 border items-center"
+                >
+                  <img
+                    src={"/api/storage/view/" + name}
+                    alt="listing image"
+                    className="w-20 h-20 object-contain rounded-lg"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage(index)}
+                    className="p-3 text-red-700 rounded-lg uppercase hover:opacity-75"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))}
+          </div>
+
           <button
             onSubmit={handleSubmit}
             disabled={loading}

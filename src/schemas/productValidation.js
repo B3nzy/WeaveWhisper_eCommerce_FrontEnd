@@ -45,9 +45,4 @@ export const productSchema = yup.object().shape({
     .required("*select one"),
   colors: yup.array().min(1, "choose at least one").required("*required"),
   sizes: yup.array().min(1, "choose at least one").required("*required"),
-  // imageUrls: yup
-  //   .array()
-  //   .min(1, "choose at least one")
-  //   .max(4, "can upload max 4 images")
-  //   .required("*required"),
 });
