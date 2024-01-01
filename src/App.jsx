@@ -31,6 +31,7 @@ export default function App() {
         <Route path="/address" element={<AllowAddress />} />
         <Route path="/about" element={<About />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/search" element={<Search />} />
 
         <Route element={<LoggedOutRoute />}>
           <Route path="/sign-in" element={<SignIn />} />

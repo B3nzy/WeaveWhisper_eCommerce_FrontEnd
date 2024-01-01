@@ -51,6 +51,7 @@ export default function ManufacturerProfile() {
     }
   };
   const handleShowListings = async () => {
+    console.log("hello");
     setListingLoading(true);
     try {
       const res = await axios.get(
@@ -76,7 +77,8 @@ export default function ManufacturerProfile() {
       console.log(err);
     }
   };
-  const handleSubmit = () => {};
+  console.log(listings);
+  // const handleSubmit = () => {};
   console.log(currentUser);
   return (
     <>
@@ -84,56 +86,50 @@ export default function ManufacturerProfile() {
       <div className="p-6 max-w-5xl mx-auto flex flex-col sm:flex-row gap-2">
         <div className="p-3 flex flex-col flex-1">
           <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <form className="flex flex-col gap-4">
             <PiShirtFoldedLight className="mx-auto text-7xl text-gray-700 bg-gray-100 rounded-full p-3" />
             <input
               type="text"
-              placeholder="brandName"
               defaultValue={currentUser.brandName}
-              id="brandName"
               className=" border p-3 rounded-lg"
-              onChange={handleChange}
+              disabled
             />
             <input
               type="email"
-              placeholder="email"
               defaultValue={currentUser.email}
-              id="email"
               className=" border p-3 rounded-lg"
-              onChange={handleChange}
+              disabled
             />
-            {/* <input
-            type="password"
-            placeholder="password"
-            id="password"
-            className=" border p-3 rounded-lg"
-            onChange={handleChange}
-          /> */}
-            <button
+            <input
+              type="text"
+              defaultValue={currentUser.email}
+              className=" border p-3 rounded-lg"
+              disabled
+            />
+            {/* <button
               disabled={loading}
               className=" bg-black text-white rounded-lg p-3 uppercase hover:opacity-85 hover:shadow-lg  disabled:opacity-80"
             >
-              {loading ? "Loading..." : "Update"}
-            </button>
+              {loading ? "Loading..." : "Update Password"}
+            </button> */}
           </form>
-          <div className="flex justify-between mt-4">
+          <hr className="my-4" />
+          <div className="flex justify-between">
             <span
               onClick={handleDeleteBrand}
-              className="text-red-700 cursor-pointer hover:underline"
+              className="text-red-600 cursor-pointer border p-2 rounded-lg border-red-700 hover:shadow-md "
             >
               Delete account
             </span>
             <span
               onClick={handleSignOut}
-              className="text-red-700 cursor-pointer hover:underline"
+              className="text-red-600 cursor-pointer border p-2 rounded-lg border-red-700 hover:shadow-md "
             >
               Sign out
             </span>
           </div>
           <p className="text-red-700 mt-5"></p>
-          <p className="text-green-700 mt-5">
-            {/* {updateSuccess ? "Profile is updated successfully!" : ""} */}
-          </p>
+          <p className="text-green-700 mt-5"></p>
         </div>
         <div className="p-3 flex flex-col flex-1">
           <Link
@@ -173,7 +169,7 @@ export default function ManufacturerProfile() {
           )}
           {!listingLoading && show && listings && listings.length > 0 && (
             <div className="flex flex-col gap-4">
-              <h1 className="text-xl font-semibold text-center my-4">
+              <h1 className="text-xl font-semibold text-center ">
                 Your Listings
               </h1>
               {listings.map((listingItem) => (
@@ -200,16 +196,16 @@ export default function ManufacturerProfile() {
                     <button
                       disabled={deleteLoadingItem === listingItem.id}
                       onClick={() => handleListingDelete(listingItem.id)}
-                      className="w-20 bg-red-600 text-white p-1 rounded-md hover:opacity-90 disabled:opacity-70"
+                      className="w-20 bg-red-600 text-white p-1 rounded-md hover:opacity-80 disabled:opacity-70"
                     >
                       Delete
                     </button>
 
-                    {/* <Link to={`/update-listing/${listingItem._id}`}> */}
-                    <button className="w-20 border border-yellow-600 p-1 rounded-md text-yellow-600 hover:text-white hover:bg-yellow-600">
-                      Edit
-                    </button>
-                    {/* </Link> */}
+                    <Link to={`/update-product/${listingItem.id}`}>
+                      <button className="w-20 border border-yellow-600 p-1 rounded-md text-yellow-600 hover:text-white hover:bg-yellow-600">
+                        Edit
+                      </button>
+                    </Link>
                   </div>
                 </div>
               ))}

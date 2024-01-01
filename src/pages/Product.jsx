@@ -8,14 +8,18 @@ import { RiStarSFill } from "react-icons/ri";
 import axios from "axios";
 import { useLocation, useParams } from "react-router-dom";
 import PopUpMessage from "../components/PopUpMessage";
+import { useSelector } from "react-redux";
 
 export default function Product() {
   const location = useLocation();
   const toastEffectRan = useRef(false);
-
+  const { currentUser } = useSelector((state) => state.user);
+  console.log(currentUser);
   const images = [
     "https://images.pexels.com/photos/5255159/pexels-photo-5255159.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     "https://images.pexels.com/photos/6626903/pexels-photo-6626903.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/769749/pexels-photo-769749.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/2923922/pexels-photo-2923922.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
   ];
   const [displayImg, setDisplayImg] = useState(images[0]);
   const [loading, setLoading] = useState(false);
@@ -44,12 +48,12 @@ export default function Product() {
     };
     fetchProduct();
   }, [params.productId]);
-  const handleAddToCart = () => {
-    const product = {
-      id: productDetails.id,
-      name: productDetails.name,
-    };
-  };
+  // const handleAddToCart = () => {
+  //   const product = {
+  //     id: productDetails.id,
+  //     name: productDetails.name,
+  //   };
+  // };
   return (
     <>
       <div className="my-14 mx-10 flex flex-col md:flex-row gap-4 justify-between relative">
@@ -66,19 +70,20 @@ export default function Product() {
         {productDetails && !errors && !loading && (
           <>
             <div className="p-3 flex flex-row flex-1 gap-4">
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 {images.map((image, id) => (
                   <img
                     key={id}
                     src={image}
                     alt="product image"
-                    className="h-32 object-fit w-24 cursor-pointer"
+                    className="h-32 object-fit w-24 cursor-pointer hover:scale-105 transition-scale duration-300 rounded-sm"
+                    onClick={() => setDisplayImg(image)}
                   />
                 ))}
               </div>
               <div>
                 <img
-                  src={images[0]}
+                  src={displayImg}
                   alt="product image"
                   className="h-[600px] w-[500px]"
                 />
@@ -98,13 +103,13 @@ export default function Product() {
                   <span className="line-through mx-2">
                     Rs. {productDetails.actualPrice}
                   </span>
-                  <span className="text-black">
+                  <span className="text-slate-600 font-semibold">
                     {productDetails.sellingPrice}
                   </span>
                 </p>
               ) : (
                 <p className="txet-lg text-gray-500">
-                  MRP Rs.{productDetails.actualPrice}
+                  MRP Rs. {productDetails.actualPrice}
                 </p>
               )}
 
@@ -126,31 +131,42 @@ export default function Product() {
                 {productDetails.colors.map((color) => (
                   <li
                     key={color}
-                    className="capitalize border rounded-lg p-1 flex items-center justify-center font-semibold text-slate-600 cursor-pointer hover:border-pink-500 hover:text-pink-500 bg-green-50"
+                    className="capitalize border border-orange-50 rounded-lg p-1 flex items-center justify-center font-semibold text-slate-600 cursor-pointer hover:border-pink-500 hover:text-pink-500 bg-orange-50"
                   >
                     {color}
                   </li>
                 ))}
               </ul>
-              {productDetails.inventoryCount < 6 && (
-                <div className="text-red-600">
-                  Hurry! Only {productDetails.inventoryCount} products left
+              {currentUser && currentUser.type === "MANUFACTURER" ? (
+                <div className="text-blue-600">
+                  Stock : {productDetails.inventoryCount} pcs
+                </div>
+              ) : (
+                productDetails.inventoryCount < 6 && (
+                  <div className="text-red-600">
+                    Hurry! Only {productDetails.inventoryCount} products left
+                  </div>
+                )
+              )}
+              {currentUser && currentUser.type === "MANUFACTURER" ? (
+                ""
+              ) : (
+                <div className="flex gap-4 my-5">
+                  <button
+                    // onClick={handleAddToCart}
+                    className="flex items-center uppercase font-bold text-sm p-3 bg-pink-500 text-white w-full max-w-md hover:opacity-90 rounded-md gap-2 justify-center"
+                  >
+                    <BsHandbagFill className="text-lg" />
+                    Add to bag
+                  </button>
+
+                  <button className="uppercase font-bold text-sm p-3 flex items-center gap-2 border rounded-md w-40 text-slate-600 hover:border-pink-600 justify-center">
+                    <CiHeart className="text-2xl" />
+                    Wishlist
+                  </button>
                 </div>
               )}
-              <div className="flex gap-4 my-5">
-                <button
-                  onClick={handleAddToCart}
-                  className="flex items-center uppercase font-bold text-sm p-3 bg-pink-500 text-white w-full max-w-md hover:opacity-90 rounded-md gap-2 justify-center"
-                >
-                  <BsHandbagFill className="text-lg" />
-                  Add to bag
-                </button>
 
-                <button className="uppercase font-bold text-sm p-3 flex items-center gap-2 border rounded-md w-40 text-slate-600 hover:border-pink-600 justify-center">
-                  <CiHeart className="text-2xl" />
-                  Wishlist
-                </button>
-              </div>
               <hr />
               <div className="text-slate-500 flex gap-4 items-center my-5">
                 <FaTruckArrowRight className="text-4xl " />
@@ -223,35 +239,37 @@ export default function Product() {
               <p className="text-gray-500 text-sm ">Review message</p>
               <hr className="my-5" />
             </div>
-          </div>
-          <div className="border rounded-lg p-3 mt-5">
-            <form>
-              <input
-                className=" border-b-2 w-full hover:outline-none outline-none mt-3 focus:border-blue-200"
-                type="textarea"
-                placeholder="write a review....."
-              />
-              <div className="flex items-center justify-between">
-                <label className="flex gap-4 items-center mt-3">
-                  <p className="text-gray-500 font-medium">Rating : </p>
-                  <select
-                    name="rating"
-                    id="rating"
-                    className="border rounded-lg p-1 outline-gray-200 cursor-pointer"
-                  >
-                    <option className="text-slate-500">choose rating</option>
-                    <option value="ONE">1 </option>
-                    <option value="TWO">2</option>
-                    <option value="THREE">3</option>
-                    <option value="FOUR">4</option>
-                    <option value="FIVE">5</option>
-                  </select>
-                </label>
-                <button className="uppercase text-blue-500 border p-1 font-semibold border-blue-500 hover:shadow-md rounded-md w-20">
-                  Post
-                </button>
-              </div>
-            </form>
+            {currentUser && currentUser.type === "MANUFACTURER" ? (
+              ""
+            ) : (
+              <form>
+                <input
+                  className=" border-b-2 w-full hover:outline-none outline-none mt-3 focus:border-blue-200"
+                  type="textarea"
+                  placeholder="write a review....."
+                />
+                <div className="flex items-center justify-between">
+                  <label className="flex gap-4 items-center mt-3">
+                    <p className="text-gray-500 font-medium">Rating : </p>
+                    <select
+                      name="rating"
+                      id="rating"
+                      className="border rounded-lg p-1 outline-gray-200 cursor-pointer"
+                    >
+                      <option className="text-slate-500">choose rating</option>
+                      <option value="ONE">1 </option>
+                      <option value="TWO">2</option>
+                      <option value="THREE">3</option>
+                      <option value="FOUR">4</option>
+                      <option value="FIVE">5</option>
+                    </select>
+                  </label>
+                  <button className="uppercase text-blue-500 border p-1 font-semibold border-blue-500 hover:shadow-md rounded-md w-20">
+                    Post
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}

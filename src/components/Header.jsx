@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { CiHeart } from "react-icons/ci";
 import { BsPerson } from "react-icons/bs";
@@ -17,7 +17,6 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { signOutSuccess } from "../redux/user/userSlice";
-import Product from "../pages/Product";
 
 export default function Header() {
   const [cartItems, setCartItems] = useState([1, 2, 3]);
@@ -27,6 +26,8 @@ export default function Header() {
   console.log(currentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const category = useRef();
+  const [clickedOutside, setClickedOutside] = useState(false);
   const CATEGORYENUM = [
     "pant",
     "shirt",
@@ -76,9 +77,19 @@ export default function Header() {
       window.removeEventListener("scroll", isActive);
     };
   }, []);
+  const handleClickOutside = (e) => {
+    if (!category.current.contains(e.target)) {
+      // setClickedOutside(true);
+      setCategoryClick(false);
+    }
+  };
   const handleCategoryClick = () => {
     setCategoryClick(!categoryClick);
   };
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  });
   return (
     <div
       className={[
@@ -100,17 +111,19 @@ export default function Header() {
         <div
           className="hidden md:inline relative"
           onClick={handleCategoryClick}
+          ref={category}
         >
           <p className=" hover:text-orange-600 cursor-pointer">CATEGORY</p>
           {categoryClick && (
             <div className="absolute p-6 flex flex-col gap-2 border rounded-md outline-none shadow-md top-6 z-50 bg-white">
               {CATEGORYENUM.map((item, index) => (
-                <p
+                <Link
+                  to={"/search"}
                   key={index}
-                  className="capitalize cursor-pointer text-gray-400 hover:text-black"
+                  className="capitalize cursor-pointer text-gray-400 hover:text-orange-600"
                 >
                   {item}
-                </p>
+                </Link>
               ))}
             </div>
           )}
@@ -150,19 +163,30 @@ export default function Header() {
                     </Typography>
                   </Link>
                 </MenuItem>
-                <MenuItem className="flex items-center gap-4 hover:text-orange-600">
-                  <IoSettingsOutline className="text-xl" />
-                  <Typography variant="small" className="font-medium">
-                    Edit Profile
-                  </Typography>
+                <MenuItem>
+                  <Link
+                    to={
+                      currentUser.type === "MANUFACTURER"
+                        ? "/brand"
+                        : "/profile"
+                    }
+                    className="flex items-center gap-4 hover:text-orange-600"
+                  >
+                    <IoSettingsOutline className="text-xl" />
+                    <Typography variant="small" className="font-medium">
+                      Edit Profile
+                    </Typography>
+                  </Link>
                 </MenuItem>
+                {currentUser.type === "CUSTOMER" && (
+                  <MenuItem className="flex items-center gap-4 hover:text-orange-600">
+                    <LiaShoppingBagSolid className="text-2xl" />
+                    <Typography variant="small" className="font-medium">
+                      My Orders
+                    </Typography>
+                  </MenuItem>
+                )}
 
-                <MenuItem className="flex items-center gap-4 hover:text-orange-600">
-                  <LiaShoppingBagSolid className="text-2xl" />
-                  <Typography variant="small" className="font-medium">
-                    My Orders
-                  </Typography>
-                </MenuItem>
                 <hr className="my-2 border-blue-gray-50" />
                 <MenuItem
                   className="flex items-center gap-4 text-orange-400 hover:text-orange-600"
