@@ -137,17 +137,20 @@ export default function Product() {
                   </li>
                 ))}
               </ul>
-              {currentUser.type === "CUSTOMER" &&
-              productDetails.inventoryCount < 6 ? (
-                <div className="text-red-600">
-                  Hurry! Only {productDetails.inventoryCount} products left
-                </div>
-              ) : (
+              {currentUser && currentUser.type === "MANUFACTURER" ? (
                 <div className="text-blue-600">
                   Stock : {productDetails.inventoryCount} pcs
                 </div>
+              ) : (
+                productDetails.inventoryCount < 6 && (
+                  <div className="text-red-600">
+                    Hurry! Only {productDetails.inventoryCount} products left
+                  </div>
+                )
               )}
-              {currentUser.type !== "MANUFACTURER" && (
+              {currentUser && currentUser.type === "MANUFACTURER" ? (
+                ""
+              ) : (
                 <div className="flex gap-4 my-5">
                   <button
                     // onClick={handleAddToCart}
@@ -236,7 +239,9 @@ export default function Product() {
               <p className="text-gray-500 text-sm ">Review message</p>
               <hr className="my-5" />
             </div>
-            {currentUser.type !== "MANUFACTURER" && (
+            {currentUser && currentUser.type === "MANUFACTURER" ? (
+              ""
+            ) : (
               <form>
                 <input
                   className=" border-b-2 w-full hover:outline-none outline-none mt-3 focus:border-blue-200"
