@@ -81,7 +81,7 @@ export default function UpdateProduct() {
       colors: [],
       sizes: [],
       gender: "",
-      imageUrls: [],
+      imageNames: [],
       category: "",
       userId: currentUser.id,
     },
@@ -127,9 +127,10 @@ export default function UpdateProduct() {
         setFieldValue("colors", res.data.colors);
         setFieldValue("sizes", res.data.sizes);
         setFieldValue("gender", res.data.gender);
-        setFieldValue("imageUrls", res.data.imageUrls);
+        setFieldValue("imageNames", res.data.imageNames);
         setFieldValue("category", res.data.category);
         setFieldValue("productId", params.pId);
+        console.log(values);
       } catch (err) {
         setLoading(false);
         setError(true);
@@ -389,13 +390,13 @@ export default function UpdateProduct() {
               multiple
               name="imageUrls"
               id="imageUrls"
-              value={values.imageUrls}
-              onChange={handleChange}
+              // value={values.imageUrls}
+              // onChange={handleChange}
               disabled
             />
 
             <button
-              disabled={true}
+              type="button"
               onClick={handleImageUpload}
               className="flex items-center gap-2 p-3 border border-green-600 rounded-md text-green-600 uppercase disabled:opacity-40"
             >
@@ -408,6 +409,23 @@ export default function UpdateProduct() {
               "Sorry! you are not able update product image."
             </p>
           )}
+          <div className="flex flex-col gap-4 ">
+            {values.imageNames &&
+              values.imageNames.length > 0 &&
+              values.imageNames.map((name, index) => (
+                <div
+                  key={name}
+                  className="flex justify-between p-2 border items-center border-slate-300"
+                  disabled={true}
+                >
+                  <img
+                    src={"/api/storage/view/" + name}
+                    alt="listing image"
+                    className=" h-20 object-contain rounded-lg"
+                  />
+                </div>
+              ))}
+          </div>
           <button
             onSubmit={handleSubmit}
             disabled={loading}

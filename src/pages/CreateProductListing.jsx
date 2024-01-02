@@ -6,6 +6,7 @@ import { productSchema } from "../schemas/productValidation";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function CreateProductListing() {
   const [files, setFiles] = useState([]);
@@ -13,7 +14,7 @@ export default function CreateProductListing() {
   console.log(imageNames);
   const [loading, setLoading] = useState(false);
   const [imgUploading, setImgUploading] = useState(false);
-  const [imageUploadError, setImageUploadError] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState("");
   const navigate = useNavigate();
 
   const { currentUser } = useSelector((state) => state.user);
@@ -22,21 +23,31 @@ export default function CreateProductListing() {
     console.log("submitted");
     console.log(values);
     setLoading(true);
-    try {
-      const res = await axios.post("/api/products/add", {
-        ...values,
-        imageNames,
-      });
-      if (res.status !== 201) {
+    if (imageNames.length < 1) {
+      setImageUploadError("Please upload at least one image!");
+      setLoading(false);
+      return;
+    } else {
+      try {
+        const res = await axios.post("/api/products/add", {
+          ...values,
+          imageNames,
+        });
+        if (res.status !== 201) {
+          setLoading(false);
+          // console.log(res.data.message);
+          return;
+        }
         setLoading(false);
-        return;
+        console.log(res.data);
+        navigate(`/product/${res.data.productId}`, { state: res.data });
+      } catch (err) {
+        setLoading(false);
+        console.log(err.response.data.message);
+        toast.error(err.response.data.message, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       }
-      setLoading(false);
-      console.log(res.data);
-      navigate(`/product/${res.data.productId}`, { state: res.data });
-    } catch (err) {
-      setLoading(false);
-      console.log(err.response.data.message);
     }
   };
   const [sellingPriceDisabled, setSellingPriceDisabled] = useState(false);
@@ -135,7 +146,7 @@ export default function CreateProductListing() {
       }
     } else {
       setImgUploading(false);
-      setImageUploadError(true);
+      setImageUploadError("You can add only 4 images as per listing!");
     }
   };
 
@@ -148,12 +159,13 @@ export default function CreateProductListing() {
     console.log(res.data);
     setImageNames(imageNames.filter((item, i) => i !== index));
     if (imageNames.length < 5) {
-      setImageUploadError(false);
+      setImageUploadError("");
     }
   };
 
   return (
     <main className="p-3 max-w-4xl mx-auto ">
+      <ToastContainer className="top-16 max-w-fit w-full" />
       <h1 className="text-center font-semibold text-3xl my-7 text-pink-500">
         Create a Listing
       </h1>
@@ -405,19 +417,19 @@ export default function CreateProductListing() {
             </button>
           </div>
           <p className="text-red-700 text-sm mb-4">
-            {imageUploadError && "You can add only 4 images as per listing!"}
+            {imageUploadError && imageUploadError}
           </p>
           <div className="flex flex-col gap-4">
             {imageNames.length > 0 &&
               imageNames.map((name, index) => (
                 <div
                   key={name}
-                  className="flex justify-between p-2 border items-center"
+                  className="flex justify-between p-2 border items-center border-slate-300"
                 >
                   <img
                     src={"/api/storage/view/" + name}
                     alt="listing image"
-                    className="w-20 h-20 object-contain rounded-lg"
+                    className=" h-20 object-contain rounded-lg"
                   />
                   <button
                     type="button"
