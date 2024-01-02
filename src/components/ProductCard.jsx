@@ -1,31 +1,50 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaIndianRupeeSign } from "react-icons/fa6";
+import { RiStarSFill } from "react-icons/ri";
+import { CiHeart } from "react-icons/ci";
+import { TbMinusVertical } from "react-icons/tb";
 
 export default function ProductCard({ listing }) {
   console.log(listing);
+  const discount = Math.floor(
+    ((listing.actualPrice - listing.sellingPrice) / listing.actualPrice) * 100
+  );
   return (
-    <div className="bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden w-full sm:w-[270px] my-5 rounded-md">
+    <div className="bg-white hover:shadow-lg transition-shadow overflow-hidden w-full sm:w-[250px] my-5 rounded-md">
       <Link to={`/product/${listing.id}`}>
-        <img
-          //   src={listing.imageUrls[0]}
-          src="https://images.pexels.com/photos/2767159/pexels-photo-2767159.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-          alt="product cover"
-          className="h-[400px] sm:h-[300px] w-full object-cover hover:scale-105 transition-scale duration-300"
-        />
-        <div className="p-3 flex flex-col gap-1 w-full my-2 mx-auto text-center">
-          <p className="truncate text-md font-medium text-yellow-500 capitalize">
-            {listing.brandName}
-          </p>
-          <p className="truncate text-md font-light text-slate-700">
-            {listing.name}
-          </p>
-          <p className="truncate text-sm text-slate-600 font-bold flex gap-2 items-center mx-auto">
-            <FaIndianRupeeSign className="text-sm" /> {listing.actualPrice}
-          </p>
-          <p className="flex gap-2 items-center truncate text-xs text-green-600 font-semibold mx-auto">
-            Offer price <FaIndianRupeeSign className="text-xs" />{" "}
-            {listing.sellingPrice}
+        <div className="relative">
+          <img
+            src={"/api/storage/view/" + listing.imageNames[0]}
+            alt="product cover"
+            className="h-[350px] sm:h-[280px] w-full object-cover hover:scale-105 transition-scale duration-300"
+          />
+          <div className="absolute bottom-1 left-2 gap-1 flex flex-row items-center text-black bg-white opacity-70 px-2 w-fit rounded-sm text-sm">
+            <RiStarSFill className="text-md text-green-700" />
+            <TbMinusVertical />5
+          </div>
+        </div>
+
+        <div className="p-3 flex flex-col w-full mx-auto">
+          <div className="flex flex-row items-center justify-between">
+            <p className="truncate text-md font-semibold text-slate-900">
+              {listing.brandName}
+            </p>
+            <CiHeart className="text-2xl hover:text-pink-500" />
+          </div>
+          <p className="truncate text-md text-slate-500">{listing.name}</p>
+          <p className="truncate text-sm text-slate-700 font-bold flex gap-2 place-items-baseline ">
+            Rs. {listing.sellingPrice}{" "}
+            {listing.sellingPrice !== listing.actualPrice && (
+              <>
+                <span className="line-through text-xs font-normal text-gray-500">
+                  Rs. {listing.actualPrice}
+                </span>
+                <span className="text-xs font-normal text-red-400">
+                  {" "}
+                  ({discount}% OFF)
+                </span>
+              </>
+            )}
           </p>
         </div>
       </Link>

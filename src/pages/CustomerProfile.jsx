@@ -319,21 +319,21 @@ export default function CustomerProfile() {
       {disable ? (
         <button
           onClick={() => setDisable(false)}
-          className="bg-blue-900 font-semibold text-white p-3 rounded-lg hover:opacity-90 uppercase w-full mx-auto mt-10"
+          className="bg-orange-700 font-semibold text-white p-3 rounded-lg hover:opacity-90 uppercase w-full mx-auto mt-10"
         >
           Edit
         </button>
       ) : (
-        <div className="flex sm:flex-row gap-4 max-w-2xl justify-between mx-auto items-center mt-10">
+        <div className="flex sm:flex-row gap-4 max-w-6xl justify-between mx-auto items-center mt-10 w-full">
           <button
             onClick={handleCustomerProfileUpdate}
-            className="bg-slate-900 font-semibold text-white p-3 rounded-lg hover:opacity-90 uppercase w-40 "
+            className="bg-slate-900 font-semibold text-white p-3 rounded-lg hover:opacity-90 uppercase w-full "
           >
             {upadte ? "Updating..." : "Save"}
           </button>
           <button
             onClick={handleCancelClick}
-            className="border border-red-700 font-semibold text-red-700 p-3 rounded-lg hover:shadow-lg hover:opacity-90  w-40 uppercase"
+            className="border border-red-700 font-semibold text-red-700 p-3 rounded-lg hover:shadow-lg hover:opacity-90  w-full uppercase"
           >
             Cancel
           </button>

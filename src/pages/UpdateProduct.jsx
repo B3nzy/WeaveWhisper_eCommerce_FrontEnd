@@ -147,7 +147,7 @@ export default function UpdateProduct() {
           onClose={() => setShowPopUp(false)}
         />
       )}
-      <h1 className="text-center font-semibold text-3xl my-7 text-blue-500">
+      <h1 className="text-center font-semibold text-3xl my-7 text-orange-600">
         Update Product
       </h1>
       <form
@@ -406,7 +406,7 @@ export default function UpdateProduct() {
           </div>
           {showImageMsg && (
             <p className="text-red-500 mt-[-8px] text-xs ml-2">
-              "Sorry! you are not able update product image."
+              Sorry! you are not able update product image.
             </p>
           )}
           <div className="flex flex-col gap-4 ">
@@ -430,7 +430,7 @@ export default function UpdateProduct() {
             onSubmit={handleSubmit}
             disabled={loading}
             type="submit"
-            className="p-3 my-5 bg-blue-500 text-white uppercase font-semibold hover:opacity-90 disabled:opacity-80 rounded-lg"
+            className="p-3 my-5 bg-orange-700 text-white uppercase font-semibold hover:opacity-90 disabled:opacity-80 rounded-lg"
           >
             Update Product
           </button>
