@@ -21,18 +21,13 @@ export default function CustomerProfile() {
     setFieldValue,
   } = useFormik({
     initialValues: {
-      name: currentUser.name,
+      userId: currentUser.id,
+      fullName: currentUser.fullName,
       email: currentUser.email,
-      password: currentUser.password,
-      confirmPassword: currentUser.password,
+      password: "",
       type: currentUser.type,
-      // userName: currentUser.user_name,
-      userName: "sumitmandal",
-      // phoneNumber: currentUser.phone_number,
-      phoneNumber: 1234567890,
+      phoneNumber: currentUser.phone_number,
       address: currentUser.address,
-      // address:
-      //   "Ravet Village Rd, near Vicky's Corner, Shinde Vasti, Ravet, Pimpri-Chinchwad, Maharashtra 411044, India",
     },
     validationSchema: CustomerProfileSchema,
   });
@@ -104,26 +99,27 @@ export default function CustomerProfile() {
   const handleCancelClick = () => {
     setDisable(true);
     // setFieldValue("address", currentUser.address);
-    // setFieldValue("userName", currentUser.username);
     // setFieldValue("phoneNumber", currentUser.ph);
 
-    setFieldValue("name", currentUser.name);
+    setFieldValue("fullName", currentUser.fullName);
     setFieldValue("email", currentUser.email);
-    setFieldValue("password", currentUser.password);
+    setFieldValue("password", "");
     setFieldValue("type", currentUser.type);
-    setFieldValue("confirmPassword", currentUser.password);
-    setFieldValue("userName", "sumitmandal");
-    setFieldValue("phoneNumber", 1234567890);
+    setFieldValue("confirmPassword", "");
+    setFieldValue(
+      "phoneNumber",
+      currentUser.phone_number === null ? "" : currentUser.phone_number
+    );
     setFieldValue(
       "address",
-      "Ravet Village Rd, near Vicky's Corner, Shinde Vasti, Ravet, Pimpri-Chinchwad, Maharashtra 411044, India"
+      currentUser.address === null ? "" : currentUser.address
     );
   };
   return (
     <div className="max-w-6xl mx-auto p-3 my-10 flex flex-col">
       <div className="font-semibold   uppercase">
         <p className="text-lg text-slate-900">Hello </p>
-        <p className="text-md text-slate-500">{currentUser.name}</p>
+        <p className="text-md text-slate-500">{currentUser.fullName}</p>
       </div>
       <hr className="h-px my-1 bg-gray-200 border-0 dark:bg-slate-400" />
 
@@ -138,20 +134,22 @@ export default function CustomerProfile() {
               <input
                 className={[
                   "w-full p-3 border rounded-lg ",
-                  errors.name && touched.name
+                  errors.fullName && touched.fullName
                     ? " border-red-600 border"
                     : " border-slate-300",
                 ].join("")}
                 type="text"
-                name="name"
-                value={values.name}
+                name="fullName"
+                value={values.fullName}
                 placeholder="your name..."
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={disable}
               />
-              {errors.name && touched.name && (
-                <div className="text-sm text-red-500">{"*" + errors.email}</div>
+              {errors.fullName && touched.fullName && (
+                <div className="text-sm text-red-500">
+                  {"*" + errors.fullName}
+                </div>
               )}
             </label>
             <label className="w-full flex flex-col whitespace-nowrap gap-1">
@@ -172,30 +170,9 @@ export default function CustomerProfile() {
                 disabled={disable}
               />
               {errors.phoneNumber && touched.phoneNumber && (
-                <div className="text-sm text-red-500">{"*" + errors.email}</div>
-              )}
-            </label>
-          </div>
-          <div className="justify-around gap-3 sm:max-w-sm mx-auto">
-            <label className="w-full flex flex-col whitespace-nowrap gap-1">
-              <p className="">Username</p>
-              <input
-                className={[
-                  "w-full p-3 border rounded-lg ",
-                  errors.userName && touched.userName
-                    ? " border-red-600 border"
-                    : " border-slate-300",
-                ].join("")}
-                type="text"
-                name="userName"
-                placeholder="your user name..."
-                value={values.userName}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                disabled={disable}
-              />
-              {errors.userName && touched.userName && (
-                <div className="text-sm text-red-500">{"*" + errors.email}</div>
+                <div className="text-sm text-red-500">
+                  {"*" + errors.phoneNumber}
+                </div>
               )}
             </label>
           </div>
@@ -289,7 +266,9 @@ export default function CustomerProfile() {
                 disabled={disable}
               />
               {errors.address && touched.address && (
-                <div className="text-sm text-red-500">{"*" + errors.email}</div>
+                <div className="text-sm text-red-500">
+                  {"*" + errors.address}
+                </div>
               )}
             </label>
           </div>
