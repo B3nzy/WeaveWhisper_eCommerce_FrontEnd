@@ -24,6 +24,9 @@ const userSlice = createSlice({
     deleteBrandSuccess: (state) => {
       state.currentUser = null;
     },
+    updateCustomerSuccess: (state, action) => {
+      state.currentUser = action.payload;
+    },
   },
 });
 
@@ -33,6 +36,7 @@ export const {
   signInFaliure,
   signOutSuccess,
   deleteBrandSuccess,
+  updateCustomerSuccess,
 } = userSlice.actions;
 
 export default userSlice.reducer;

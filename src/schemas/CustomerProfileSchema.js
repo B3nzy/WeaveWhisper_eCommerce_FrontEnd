@@ -9,13 +9,11 @@ export const CustomerProfileSchema = yup.object().shape({
     .min(5, "Name must be at least 5 characters")
     .required("Required"),
   email: yup.string().email("Please enter valid email").required("Required"),
-  phoneNumber: yup.number().typeError("Phone number must be digits only"),
-  password: yup
-    .string()
-    .min(8, "Password length must be 8")
-    .matches(passwordRules, {
-      message: "Please create a stronger password",
-    })
-    .required("Required"),
+  phoneNumber: yup
+    .number()
+    .typeError("Phone number must be digits only")
+    .min(10, "*phone number must be 10 digits only")
+    .max(10, "*phone number must be 10 digits only"),
+  password: yup.string().required("Required"),
   type: yup.string().required("Required"),
 });

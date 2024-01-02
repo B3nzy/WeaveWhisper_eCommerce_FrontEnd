@@ -1,8 +1,11 @@
 /* eslint-disable no-unused-vars */
 import { useFormik } from "formik";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CustomerProfileSchema } from "../schemas/CustomerProfileSchema";
+import { updateCustomerSuccess } from "../redux/user/userSlice";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 const APIkey = import.meta.env.VITE_OPENCAGE_API_KEY;
 
 export default function CustomerProfile() {
@@ -10,6 +13,9 @@ export default function CustomerProfile() {
   console.log(currentUser);
   const [showPassword, setShowPassword] = useState(true);
   const [disable, setDisable] = useState(true);
+  const [upadte, setUpdate] = useState(false);
+  const [locationLoading, setLocationLoading] = useState(false);
+  const dispatch = useDispatch();
   //FORMIK set up
   const {
     values,
@@ -26,7 +32,7 @@ export default function CustomerProfile() {
       email: currentUser.email,
       password: "",
       type: currentUser.type,
-      phoneNumber: currentUser.phone_number,
+      phoneNumber: currentUser.phoneNumber,
       address: currentUser.address,
     },
     validationSchema: CustomerProfileSchema,
@@ -41,8 +47,10 @@ export default function CustomerProfile() {
         if (data.status.code === 200) {
           console.log("results:", data.results);
           setFieldValue("address", data.results[0].formatted);
+          setLocationLoading(false);
         } else {
           console.log("Reverse geolocation request failed.");
+          setLocationLoading(false);
         }
       })
       .catch((error) => console.error(error));
@@ -71,6 +79,7 @@ export default function CustomerProfile() {
 
   const handleAddress = () => {
     if (navigator.geolocation) {
+      setLocationLoading(true);
       navigator.permissions.query({ name: "geolocation" }).then((result) => {
         console.log(result);
         if (result.state === "granted") {
@@ -89,6 +98,7 @@ export default function CustomerProfile() {
           );
         } else if (result.state === "denied") {
           //If denied then you have to show instructions to enable location
+          setLocationLoading(false);
         }
       });
     } else {
@@ -98,25 +108,47 @@ export default function CustomerProfile() {
 
   const handleCancelClick = () => {
     setDisable(true);
-    // setFieldValue("address", currentUser.address);
-    // setFieldValue("phoneNumber", currentUser.ph);
 
     setFieldValue("fullName", currentUser.fullName);
     setFieldValue("email", currentUser.email);
     setFieldValue("password", "");
-    setFieldValue("type", currentUser.type);
-    setFieldValue("confirmPassword", "");
     setFieldValue(
       "phoneNumber",
-      currentUser.phone_number === null ? "" : currentUser.phone_number
+      currentUser.phone_number === null ? "" : currentUser.phoneNumber
     );
     setFieldValue(
       "address",
       currentUser.address === null ? "" : currentUser.address
     );
   };
+
+  const handleCustomerProfileUpdate = async () => {
+    if (values.password === null || values.password === "") {
+      toast.info("Please enter your password to update profile");
+      return;
+    } else {
+      setUpdate(true);
+      try {
+        const res = await axios.put("/api/users/update", values);
+        if (res.status !== 200) {
+          setUpdate(false);
+          console.log(res.response.data.message);
+          return;
+        }
+        dispatch(updateCustomerSuccess(res.data));
+        toast.success("Profile updated successfully");
+        setDisable(true);
+        setUpdate(false);
+      } catch (err) {
+        console.log(err.response.data.message);
+        toast.error(err.response.data.message);
+        setUpdate(false);
+      }
+    }
+  };
   return (
     <div className="max-w-6xl mx-auto p-3 my-10 flex flex-col">
+      <ToastContainer />
       <div className="font-semibold   uppercase">
         <p className="text-lg text-slate-900">Hello </p>
         <p className="text-md text-slate-500">{currentUser.fullName}</p>
@@ -228,6 +260,7 @@ export default function CustomerProfile() {
                   onBlur={handleBlur}
                   disabled={disable}
                 />
+
                 <button
                   disabled={disable}
                   onClick={() => setShowPassword(!showPassword)}
@@ -276,8 +309,8 @@ export default function CustomerProfile() {
         {!disable && (
           <button
             onClick={handleAddress}
-            disabled={disable}
-            className="text-center uppercase text-green-600 font-semibold text-sm p-2 rounded-lg border border-green-600 hover:shadow-md disabled:opacity-70 mx-auto mt-[-25px] mb-5"
+            disabled={locationLoading}
+            className="text-center uppercase text-green-600 font-semibold text-sm p-2 rounded-lg border border-green-600 hover:shadow-md disabled:opacity-50 disabled:shadow-none mx-auto mt-[-25px] mb-5"
           >
             Allow current location
           </button>
@@ -286,21 +319,21 @@ export default function CustomerProfile() {
       {disable ? (
         <button
           onClick={() => setDisable(false)}
-          className="bg-[#E48F45] font-semibold text-white p-3 rounded-lg hover:opacity-90 uppercase w-full mx-auto mt-10"
+          className="bg-blue-900 font-semibold text-white p-3 rounded-lg hover:opacity-90 uppercase w-full mx-auto mt-10"
         >
           Edit
         </button>
       ) : (
-        <div className="flex sm:flex-row gap-4 max-w-2xl justify-around mx-auto items-center mt-10">
+        <div className="flex sm:flex-row gap-4 max-w-2xl justify-between mx-auto items-center mt-10">
           <button
-            //   onClick={}
-            className="bg-slate-900 font-semibold text-white p-3 rounded-lg hover:opacity-90 uppercase w-36"
+            onClick={handleCustomerProfileUpdate}
+            className="bg-slate-900 font-semibold text-white p-3 rounded-lg hover:opacity-90 uppercase w-40 "
           >
-            Save
+            {upadte ? "Updating..." : "Save"}
           </button>
           <button
             onClick={handleCancelClick}
-            className="border border-red-700 font-semibold text-red-700 p-3 rounded-lg hover:shadow-lg hover:opacity-90 w-36 uppercase"
+            className="border border-red-700 font-semibold text-red-700 p-3 rounded-lg hover:shadow-lg hover:opacity-90  w-40 uppercase"
           >
             Cancel
           </button>
