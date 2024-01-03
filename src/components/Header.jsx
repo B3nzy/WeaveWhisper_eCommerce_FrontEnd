@@ -20,6 +20,7 @@ import { signOutSuccess } from "../redux/user/userSlice";
 
 export default function Header() {
   const [cartItems, setCartItems] = useState([1, 2, 3]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [active, setActive] = useState(false);
   const [categoryClick, setCategoryClick] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
@@ -90,6 +91,9 @@ export default function Header() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
   return (
     <div
       className={[
@@ -118,7 +122,10 @@ export default function Header() {
             <div className="absolute p-6 flex flex-col gap-2 border rounded-md outline-none shadow-md top-6 z-50 bg-white">
               {CATEGORYENUM.map((item, index) => (
                 <Link
-                  to={"/search"}
+                  to={{
+                    pathname: "/search",
+                    state: { category: item.toUpperCase() },
+                  }}
                   key={index}
                   className="capitalize cursor-pointer text-gray-400 hover:text-orange-600"
                 >
@@ -129,11 +136,16 @@ export default function Header() {
           )}
         </div>
       </div>
-      <form className="px-4 p-2 w-40 md:w-[400px] flex items-center justify-between bg-gray-100 rounded-md focus-within:bg-transparent focus-within:border">
+      <form
+        onSubmit={handleSubmit}
+        className="px-4 p-2 w-40 md:w-[400px] flex items-center justify-between bg-gray-100 rounded-md focus-within:bg-transparent focus-within:border"
+      >
         <input
           type="text"
           placeholder="Search..."
           className="outline-none bg-transparent w-full"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
         <IoSearch className="text-slate-400 text-xl" />
       </form>

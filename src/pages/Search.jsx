@@ -1,42 +1,68 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
+import { useFormik } from "formik";
 
 export default function Search() {
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState(false);
+  // const [errors, setErrors] = useState(false);
   const [products, setProducts] = useState([]);
-  const [price, setPrice] = useState(1000);
+  const [totalElements, setTotalElements] = useState(0);
+  const [pageNumber, setPageNmber] = useState(1);
+  const [offset, setOffset] = useState(4);
   const [categoryClick, setCategoryClick] = useState(false);
   const [brandClick, setBrandClick] = useState(false);
   const [colorClick, setColorClick] = useState(false);
-  console.log(price);
   const SIZEENUM = ["S", "M", "L", "XL"];
+  const [allBrands, setAllBrands] = useState([]);
   const COLORENUM = [
-    "Red",
-    "Blue",
-    "Orange",
-    "Black",
-    "White",
-    "Pink",
-    "Green",
-    "Yellow",
-    "Purple",
+    "RED",
+    "BLUE",
+    "ORANGE",
+    "BLACK",
+    "WHITE",
+    "PINK",
+    "GREEN",
+    "YELLOW",
+    "PURPLE",
   ];
   const CATEGORYENUM = [
-    "pant",
-    "shirt",
-    "t-shirt",
-    "dress",
-    "saree",
-    "sweater",
-    "hoodie",
-    "jacket",
-    "top",
-    "jeans",
+    "PANT",
+    "SHIRT",
+    "TSHIRT",
+    "DRESS",
+    "SAREE",
+    "SWEATER",
+    "HOODIE",
+    "JACKET",
+    "TOP",
+    "JEANS",
   ];
+  const onSubmit = async () => {
+    console.log({
+      ...values,
+      pageNumber,
+      offset,
+    });
+    fetchAllProducts();
+  };
+
+  const { values, handleChange, handleSubmit, setFieldValue } = useFormik({
+    initialValues: {
+      searchTerm: "",
+      genders: [],
+      colors: [],
+      sizes: [],
+      categories: [],
+      priceMin: 0,
+      priceMax: 9999999,
+      brandNames: [],
+    },
+    onSubmit,
+  });
   const handleCategoryClick = () => {
     setCategoryClick(!categoryClick);
   };
@@ -46,45 +72,91 @@ export default function Search() {
   const handleBrandClick = () => {
     setBrandClick(!brandClick);
   };
+  const fetchAllProducts = async () => {
+    console.log(values);
+    try {
+      setLoading(true);
+      const res = await axios.post("/api/products", {
+        ...values,
+        pageNumber,
+        offset,
+      });
+      if (res.status !== 200) {
+        setLoading(false);
+        setErrors(true);
+        console.log(res);
+      }
+      setLoading(false);
+      console.log(res.data);
+      setProducts(res.data.productSearchResponseDto);
+      setTotalElements(res.data.totalElements);
+      setPageNmber(res.data.pageNumber);
+      setOffset(res.data.offset);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  console.log(values);
   useEffect(() => {
-    const fetchAllProducts = async () => {
+    // if (location.state !== null) {
+    //   console.log(location.state.category);
+    //   setFieldValue("categories", [location.state.category]);
+    // }
+    fetchAllProducts();
+  }, []);
+  useEffect(() => {
+    const fetchAllBrands = async () => {
       try {
-        setLoading(true);
-        const res = await axios.post("/api/products", {});
+        const res = await axios.get(
+          "/api/products/get/manufacturer/brandnames"
+        );
         if (res.status !== 200) {
-          setLoading(false);
-          setErrors(true);
           console.log(res);
         }
-        setLoading(false);
-        console.log(res.data);
-        setProducts(res.data);
+        setAllBrands(res.data);
+        // console.log(res.data);
       } catch (err) {
         console.log(err);
       }
     };
-    fetchAllProducts();
+    fetchAllBrands();
   }, []);
-  console.log(products);
+  // console.log(products);
+  const handleClearFilter = () => {
+    setFieldValue("searchTerm", "");
+    setFieldValue("genders", []);
+    setFieldValue("colors", []);
+    setFieldValue("sizes", []);
+    setFieldValue("categories", []);
+    setFieldValue("priceMin", 0);
+    setFieldValue("priceMax", 999999);
+    setFieldValue("brandNames", []);
+    fetchAllProducts();
+  };
   return (
     <div className="flex flex-col md:flex-row mb-5">
       <div className=" border-b-2 md:min-h-screen md:sticky md:top-20 md:h-fit">
         <div className=" border-b-2 ">
-          <form className="flex flex-col gap-8">
-            {/* <div className=" flex items-center gap-2 mx-5 mt-5">
-            <label className="whitespace-nowrap font-semibold">
-              Search Term :{" "}
-            </label>
-            <input
-              type="text"
-              id="searchTerm"
-              placeholder="Search..."
-              className="border rounded-lg p-2 w-full"
-            />
-          </div> */}
+          <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
+            <div className=" flex items-center gap-2 mx-5 mt-5">
+              <label className="whitespace-nowrap font-semibold">
+                Search Term :{" "}
+              </label>
+              <input
+                type="text"
+                id="searchTerm"
+                placeholder="Search..."
+                className="border rounded-lg p-2 w-full"
+                value={values.searchTerm}
+                onChange={handleChange}
+              />
+            </div>
             <div className="flex justify-between ml-5 mr-3 mb-[-15px] mt-5">
               <h1 className="font-bold">FILTERS</h1>
-              <button className="text-xs font-semibold text-red-400">
+              <button
+                className="text-xs font-semibold text-red-400 hover:text-red-600"
+                onClick={handleClearFilter}
+              >
                 CLEAR ALL
               </button>
             </div>
@@ -92,19 +164,25 @@ export default function Search() {
             <div className=" flex flex-col gap-2 my-[-15px] mx-5 text-sm font-semibold text-slate-800">
               <label className="flex gap-2 cursor-pointer">
                 <input
-                  type="radio"
-                  name="gender"
-                  id="gender"
+                  type="checkbox"
+                  name="genders"
+                  id="genders"
                   className="w-[16px] accent-black"
+                  value={"MEN"}
+                  onChange={handleChange}
+                  checked={values.genders.includes("MEN")}
                 />
                 <p>Men</p>
               </label>
               <label className="flex gap-2 cursor-pointer">
                 <input
-                  type="radio"
-                  name="gender"
-                  id="gender"
+                  type="checkbox"
+                  name="genders"
+                  id="genders"
                   className="w-[16px] accent-black"
+                  value={"WOMEN"}
+                  onChange={handleChange}
+                  checked={values.genders.includes("WOMEN")}
                 />
                 <p>Women</p>
               </label>
@@ -118,38 +196,44 @@ export default function Search() {
               >
                 BRAND <span className="text-lg">{brandClick ? "-" : "+"}</span>
               </div>
-              {brandClick && (
-                <>
-                  {" "}
-                  <label className="flex gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      name="gender"
-                      id="gender"
-                      className="w-4 accent-black"
-                    />
-                    <p className="text-xs">Xyz</p>
-                  </label>
-                </>
-              )}
+              {brandClick &&
+                allBrands.map((brand) => (
+                  <>
+                    <label className="flex gap-3 cursor-pointer" key={brand}>
+                      <input
+                        type="checkbox"
+                        name="brandNames"
+                        id="brandNames"
+                        className="w-4 accent-black"
+                        value={brand}
+                        onChange={handleChange}
+                        checked={values.brandNames.includes(brand)}
+                      />
+                      <p className="text-xs">{brand}</p>
+                    </label>
+                  </>
+                ))}
             </div>
             <hr />
             <div className="relative flex flex-col gap-2 mt-[-15px] mx-5 mb-3">
               <p className="font-bold text-[13px] text-gray-800 mb-2">
-                PRICE <span className="ml-3 text-gray-500">100 - {price}</span>
+                PRICE{" "}
+                <span className="ml-3 text-gray-500">
+                  0 - {values.priceMax}
+                </span>
               </p>
               <input
-                name="price"
-                value={price}
+                name="priceMax"
                 type="range"
-                min="100"
+                min="0"
                 max="9000"
+                id="priceMax"
                 className="cursor-pointer w-full outline-none focus:outline-none "
-                // style={{ WebkitAppearance: "none" }}
-                onChange={(e) => setPrice(e.target.value)}
+                value={values.priceMax}
+                onChange={handleChange}
               />
               <span className="text-xs text-gray-500 absolute start-0 -bottom-6">
-                Rs. 100
+                Rs. 0
               </span>
               <span className="text-xs text-gray-500 absolute start-1/3 -translate-x-1/2 rtl:translate-x-1/2 -bottom-6">
                 3000
@@ -176,9 +260,12 @@ export default function Search() {
                     <label className="flex gap-3 cursor-pointer" key={item}>
                       <input
                         type="checkbox"
-                        name="category"
-                        id="category"
+                        name="categories"
+                        id="categories"
                         className="w-4 accent-black"
+                        value={item}
+                        onChange={handleChange}
+                        checked={values.categories.includes(item)}
                       />
                       <p className="text-[13px] capitalize">{item}</p>
                     </label>
@@ -196,9 +283,12 @@ export default function Search() {
                   >
                     <input
                       type="checkbox"
-                      name="size"
-                      id="size"
+                      name="sizes"
+                      id="sizes"
                       className="w-4 h-4 accent-black"
+                      value={item}
+                      onChange={handleChange}
+                      checked={values.sizes.includes(item)}
                     />
                     <p className="text-[13px] capitalize">{item}</p>
                   </label>
@@ -220,9 +310,12 @@ export default function Search() {
                     <label className="flex gap-3 cursor-pointer" key={item}>
                       <input
                         type="checkbox"
-                        name="category"
-                        id="category"
+                        name="colors"
+                        id="colors"
                         className="w-4 accent-black"
+                        value={item}
+                        onChange={handleChange}
+                        checked={values.colors.includes(item)}
                       />
                       <p className="text-[13px] capitalize">{item}</p>
                     </label>
@@ -231,7 +324,12 @@ export default function Search() {
             </div>
             <hr />
 
-            <button className="bg-black text-white uppercase hover:opacity-90 m-2 p-3 disabled:opacity-75">
+            <button
+              type="submit"
+              onClick={handleSubmit}
+              disabled={loading}
+              className="bg-black text-white uppercase hover:opacity-90 m-2 p-3 disabled:opacity-75"
+            >
               Search
             </button>
           </form>
@@ -241,9 +339,7 @@ export default function Search() {
         <div className="border-b p-3 mt-3 flex flex-row items-center justify-between">
           <p className="text-2xl font-semibold  text-slate-700 ">
             Listing Results:{" "}
-            <span className="text-slate-500">
-              {products.length} items found
-            </span>
+            <span className="text-slate-500">{totalElements} items found</span>
           </p>
           <div className="flex items-center gap-2 ">
             <label className="font-semibold">Sort By :</label>

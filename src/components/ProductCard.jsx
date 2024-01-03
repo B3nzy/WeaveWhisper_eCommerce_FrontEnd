@@ -5,7 +5,7 @@ import { CiHeart } from "react-icons/ci";
 import { TbMinusVertical } from "react-icons/tb";
 
 export default function ProductCard({ listing }) {
-  console.log(listing);
+  // console.log(listing);
   const discount = Math.floor(
     ((listing.actualPrice - listing.sellingPrice) / listing.actualPrice) * 100
   );
@@ -14,7 +14,7 @@ export default function ProductCard({ listing }) {
       <Link to={`/product/${listing.id}`}>
         <div className="relative">
           <img
-            src={"/api/storage/view/" + listing.imageNames[0]}
+            src={"/api/storage/view/" + listing.imageName}
             alt="product cover"
             className="h-[350px] sm:h-[280px] w-full object-cover hover:scale-105 transition-scale duration-300"
           />
