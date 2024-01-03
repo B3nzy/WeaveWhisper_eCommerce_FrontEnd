@@ -31,7 +31,7 @@ export default function () {
       </div>
       <div className=" bg-gray-50">
         <div className="p-10 md:mx-32">
-          <div className="flex justify-between ">
+          <div className="flex justify-around gap-4 flex-wrap">
             <div className="">
               <h1 className="font-semibold text-slate-700 mb-2">Categories</h1>
               <ul className="text-sm text-slate-500 ">

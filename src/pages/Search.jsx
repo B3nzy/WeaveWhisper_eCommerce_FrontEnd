@@ -50,7 +50,7 @@ export default function Search() {
     const fetchAllProducts = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("/api/products");
+        const res = await axios.post("/api/products", {});
         if (res.status !== 200) {
           setLoading(false);
           setErrors(true);
@@ -67,7 +67,7 @@ export default function Search() {
   }, []);
   console.log(products);
   return (
-    <div className="flex flex-col md:flex-row">
+    <div className="flex flex-col md:flex-row mb-5">
       <div className=" border-b-2 md:min-h-screen md:sticky md:top-20 md:h-fit">
         <div className=" border-b-2 ">
           <form className="flex flex-col gap-8">
@@ -276,6 +276,7 @@ export default function Search() {
               return <ProductCard key={product.id} listing={product} />;
             })}
         </div>
+        <hr />
       </div>
     </div>
   );

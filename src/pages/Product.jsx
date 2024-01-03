@@ -22,6 +22,7 @@ export default function Product() {
   const [productDetails, setProductDetails] = useState(null);
   const params = useParams();
   console.log(productDetails);
+  // const discount =;
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -101,6 +102,16 @@ export default function Product() {
                   </span>
                   <span className="text-slate-600 font-semibold">
                     {productDetails.sellingPrice}
+                  </span>
+                  <span className="ml-2 font-normal text-red-400">
+                    (
+                    {Math.floor(
+                      ((productDetails.actualPrice -
+                        productDetails.sellingPrice) /
+                        productDetails.actualPrice) *
+                        100
+                    )}
+                    % OFF)
                   </span>
                 </p>
               ) : (
