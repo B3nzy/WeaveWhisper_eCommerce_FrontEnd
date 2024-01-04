@@ -7,13 +7,13 @@ import { Formik, useFormik } from "formik";
 
 export default function Search() {
   const location = useLocation();
-  const [locationVariable, setlocationVariable] = useState(null);
+  const [sortBy, setSortBy] = useState("LATEST");
   const [loading, setLoading] = useState(false);
   // const [errors, setErrors] = useState(false);
   const [products, setProducts] = useState([]);
   const [totalElements, setTotalElements] = useState(0);
   const [pageNumber, setPageNmber] = useState(1);
-  const [offset, setOffset] = useState(4);
+  const [offset, setOffset] = useState(8);
   const [categoryClick, setCategoryClick] = useState(false);
   const [brandClick, setBrandClick] = useState(false);
   const [colorClick, setColorClick] = useState(false);
@@ -79,16 +79,18 @@ export default function Search() {
     try {
       setLoading(true);
       const res =
-        state === null
+        state === undefined
           ? await axios.post("/api/products", {
               ...values,
               pageNumber,
               offset,
+              sortBy,
             })
           : await axios.post("/api/products", {
               ...state,
               pageNumber,
               offset,
+              sortBy,
             });
       if (res.status !== 200) {
         setLoading(false);
@@ -109,13 +111,16 @@ export default function Search() {
   useEffect(() => {
     console.log(location);
     if (location.state !== null) {
+      if (location.state.searchTerm) {
+        setFieldValue("searchTerm", location.state.searchTerm);
+      }
       console.log(location.state.categories);
       setFieldValue("categories", location.state.categories);
       fetchAllProducts(location.state);
     } else {
       fetchAllProducts();
     }
-  }, [location]);
+  }, [location, sortBy]);
   useEffect(() => {
     const fetchAllBrands = async () => {
       try {
@@ -145,6 +150,7 @@ export default function Search() {
     setFieldValue("brandNames", []);
     fetchAllProducts();
   };
+  console.log(sortBy);
   return (
     <div className="flex flex-col md:flex-row mb-5">
       <div className=" border-b-2 md:min-h-screen md:sticky md:top-20 md:h-fit">
@@ -356,13 +362,16 @@ export default function Search() {
           <div className="flex items-center gap-2 ">
             <label className="font-semibold">Sort By :</label>
             <select
-              id="sort_order"
+              id="sortBy"
+              name="sortBy"
+              defaultValue={"LATEST"}
               className="border rounded-lg p-2 text-gray-700 outline-none cursor-pointer"
+              onChange={(e) => setSortBy(e.target.value)}
             >
-              <option>Price high to low</option>
-              <option>Price low to high</option>
-              <option>Latest</option>
-              <option>Oldest</option>
+              <option value={"LATEST"}>Latest</option>
+              <option value={"OLDEST"}>Oldest</option>
+              <option value={"PRICE_DESC"}>Price high to low</option>
+              <option value={"PRICE_ASC"}>Price low to high</option>
             </select>
           </div>
         </div>

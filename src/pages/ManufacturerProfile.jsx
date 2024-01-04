@@ -179,8 +179,7 @@ export default function ManufacturerProfile() {
                 >
                   <Link to={`/product/${listingItem.id}`}>
                     <img
-                      // src={listingItem.imageUrls[0]}
-                      src="https://images.pexels.com/photos/2767159/pexels-photo-2767159.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                      src={"/api/storage/view/" + listingItem.imageName}
                       alt="listing cover"
                       className="h-16 object-contain rounded-sm hover:shadow-md"
                     />

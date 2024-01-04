@@ -32,7 +32,7 @@ export default function Header() {
   const CATEGORYENUM = [
     "pant",
     "shirt",
-    "t-shirt",
+    "tshirt",
     "dress",
     "saree",
     "sweater",
