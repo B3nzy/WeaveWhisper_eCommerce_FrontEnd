@@ -3,10 +3,11 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
-import { useFormik } from "formik";
+import { Formik, useFormik } from "formik";
 
 export default function Search() {
   const location = useLocation();
+  const [locationVariable, setlocationVariable] = useState(null);
   const [loading, setLoading] = useState(false);
   // const [errors, setErrors] = useState(false);
   const [products, setProducts] = useState([]);
@@ -72,15 +73,23 @@ export default function Search() {
   const handleBrandClick = () => {
     setBrandClick(!brandClick);
   };
-  const fetchAllProducts = async () => {
+  const fetchAllProducts = async (state) => {
     console.log(values);
+    console.log(state);
     try {
       setLoading(true);
-      const res = await axios.post("/api/products", {
-        ...values,
-        pageNumber,
-        offset,
-      });
+      const res =
+        state === null
+          ? await axios.post("/api/products", {
+              ...values,
+              pageNumber,
+              offset,
+            })
+          : await axios.post("/api/products", {
+              ...state,
+              pageNumber,
+              offset,
+            });
       if (res.status !== 200) {
         setLoading(false);
         setErrors(true);
@@ -98,12 +107,15 @@ export default function Search() {
   };
   console.log(values);
   useEffect(() => {
-    // if (location.state !== null) {
-    //   console.log(location.state.category);
-    //   setFieldValue("categories", [location.state.category]);
-    // }
-    fetchAllProducts();
-  }, []);
+    console.log(location);
+    if (location.state !== null) {
+      console.log(location.state.categories);
+      setFieldValue("categories", location.state.categories);
+      fetchAllProducts(location.state);
+    } else {
+      fetchAllProducts();
+    }
+  }, [location]);
   useEffect(() => {
     const fetchAllBrands = async () => {
       try {

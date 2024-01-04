@@ -93,7 +93,9 @@ export default function Header() {
   });
   const handleSubmit = (e) => {
     e.preventDefault();
+    navigate("/search", { state: { searchTerm } });
   };
+  console.log(searchTerm);
   return (
     <div
       className={[
@@ -122,10 +124,8 @@ export default function Header() {
             <div className="absolute p-6 flex flex-col gap-2 border rounded-md outline-none shadow-md top-6 z-50 bg-white">
               {CATEGORYENUM.map((item, index) => (
                 <Link
-                  to={{
-                    pathname: "/search",
-                    state: { category: item.toUpperCase() },
-                  }}
+                  to="/search"
+                  state={{ categories: [item.toUpperCase()] }}
                   key={index}
                   className="capitalize cursor-pointer text-gray-400 hover:text-orange-600"
                 >
@@ -147,7 +147,10 @@ export default function Header() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <IoSearch className="text-slate-400 text-xl" />
+        <IoSearch
+          onClick={handleSubmit}
+          className="text-slate-400 text-xl hover:text-2xl cursor-pointer"
+        />
       </form>
       <div className="flex gap-6 sm:mr-10 text-center">
         <Menu>
