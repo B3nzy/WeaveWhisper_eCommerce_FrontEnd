@@ -7,6 +7,7 @@ import axios from "axios";
 
 export default function SignUp() {
   const [loading, setLoading] = useState(false);
+  const [signupError, setSignupError] = useState("");
   const navigate = useNavigate();
 
   const onSubmit = async () => {
@@ -25,6 +26,7 @@ export default function SignUp() {
     } catch (err) {
       setLoading(false);
       console.log(err.response.data.message);
+      setSignupError(err.response.data.message);
     }
   };
 
@@ -41,7 +43,7 @@ export default function SignUp() {
       validationSchema: manufacturerSignUpSchema,
       onSubmit,
     });
-
+  console.log(values);
   return (
     <div className="max-w-lg mx-auto items-center p-3">
       <h1 className="my-7 font-semibold text-2xl text-center">Sign Up</h1>
@@ -134,11 +136,11 @@ export default function SignUp() {
           placeholder="pan number"
           id="panNumber"
           name="panNumber"
-          value={values.panNumber}
+          value={values.panNumber.toUpperCase()}
           onChange={handleChange}
           onBlur={handleBlur}
         />
-        {errors.panNumber && (
+        {errors.panNumber && touched.panNumber && (
           <p className="text-red-500 mt-[-12px] text-xs ml-2">
             {errors.panNumber}
           </p>
@@ -152,6 +154,9 @@ export default function SignUp() {
           Sign up
         </button>
       </form>
+      {signupError && (
+        <p className="text-red-600 text-sm ml-5 mt-1">*{signupError}</p>
+      )}
       <div className="flex gap-2 justify-center mt-5">
         <p>Have an account?</p>
         <Link to={"/sign-in"} className="text-green-700 hover:underline">

@@ -5,7 +5,11 @@ const passwordRules =
 //Password must contain one digit from 1 to 9, one lowercase letter, one uppercase letter, one special character, no space, and it must be 6-10 characters long.
 export const manufacturerSignUpSchema = yup.object().shape({
   brandName: yup.string().required("*required"),
-  panNumber: yup.string().required("*required"),
+  panNumber: yup
+    .string()
+    .min(10, "*Invalid pan number (must contain 10 characters)")
+    .max(10, "*Invalid pan number (must contain 10 characters)")
+    .required("*required"),
   email: yup
     .string()
     .email("*please enter a valid email")
