@@ -51,30 +51,37 @@ export default function CreateProductListing() {
     }
   };
   const [sellingPriceDisabled, setSellingPriceDisabled] = useState(false);
-  const SIZEENUM = ["S", "M", "L", "XL"];
-  const COLORENUM = [
-    "Red",
-    "Blue",
-    "Orange",
-    "Black",
-    "White",
-    "Pink",
-    "Green",
-    "Yellow",
-    "Purple",
-  ];
-  const CATEGORYENUM = [
-    "pant",
-    "shirt",
-    "tshirt",
-    "dress",
-    "saree",
-    "sweater",
-    "hoodie",
-    "jacket",
-    "top",
-    "jeans",
-  ];
+  const [SIZEENUM, setSIZEENUM] = useState([]);
+
+  // const SIZEENUM = ["S", "M", "L", "XL"];
+  const [COLORENUM, setCOLORENUM] = useState([]);
+
+  // const COLORENUM = [
+  //   "Red",
+  //   "Blue",
+  //   "Orange",
+  //   "Black",
+  //   "White",
+  //   "Pink",
+  //   "Green",
+  //   "Yellow",
+  //   "Purple",
+  // ];
+
+  const [CATEGORYENUM, setCATEGORYENUM] = useState([]);
+
+  // const CATEGORYENUM = [
+  //   "pant",
+  //   "shirt",
+  //   "tshirt",
+  //   "dress",
+  //   "saree",
+  //   "sweater",
+  //   "hoodie",
+  //   "jacket",
+  //   "top",
+  //   "jeans",
+  // ];
   const {
     values,
     handleChange,
@@ -108,6 +115,52 @@ export default function CreateProductListing() {
     }
   };
   console.log(values);
+
+  const fetchAllColors = async () => {
+    try {
+      const res = await axios.get("/api/products/getcolors");
+      if (res.status !== 200) {
+        console.log(res);
+      }
+      console.log(res.data);
+      setCOLORENUM(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchAllSizes = async () => {
+    try {
+      const res = await axios.get("/api/products/getsizes");
+      if (res.status !== 200) {
+        console.log(res);
+      }
+      console.log(res.data);
+      setSIZEENUM(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchAllCategories = async () => {
+    try {
+      const res = await axios.get("/api/products/getcategories");
+      if (res.status !== 200) {
+        console.log(res);
+      }
+      console.log(res.data);
+      setCATEGORYENUM(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllSizes();
+    fetchAllCategories();
+    fetchAllColors();
+  }, []);
+
   useEffect(() => {
     if (sellingPriceDisabled) {
       setFieldValue("sellingPrice", values.actualPrice);
@@ -305,7 +358,7 @@ export default function CreateProductListing() {
                   checked={values.colors.includes(item.toUpperCase())}
                   onChange={handleChange}
                 />
-                <p>{item}</p>
+                <p className="lowercase first-letter:capitalize">{item}</p>
               </label>
             ))}
           </div>
@@ -319,7 +372,7 @@ export default function CreateProductListing() {
             <select
               name="category"
               id="category"
-              className="border rounded-lg p-3 capitalize"
+              className="border rounded-lg p-3"
               value={values.category}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -329,9 +382,11 @@ export default function CreateProductListing() {
                 <option
                   value={item.toUpperCase()}
                   key={item.toUpperCase()}
-                  className="capitalize text-slate-600"
+                  className="text-slate-600 "
                 >
-                  {item}
+                  <span className="lowercase first-letter:uppercase">
+                    {item}
+                  </span>
                 </option>
               ))}
             </select>
