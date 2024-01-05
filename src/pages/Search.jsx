@@ -17,31 +17,35 @@ export default function Search() {
   const [categoryClick, setCategoryClick] = useState(false);
   const [brandClick, setBrandClick] = useState(false);
   const [colorClick, setColorClick] = useState(false);
-  const SIZEENUM = ["S", "M", "L", "XL"];
   const [allBrands, setAllBrands] = useState([]);
-  const COLORENUM = [
-    "RED",
-    "BLUE",
-    "ORANGE",
-    "BLACK",
-    "WHITE",
-    "PINK",
-    "GREEN",
-    "YELLOW",
-    "PURPLE",
-  ];
-  const CATEGORYENUM = [
-    "PANT",
-    "SHIRT",
-    "TSHIRT",
-    "DRESS",
-    "SAREE",
-    "SWEATER",
-    "HOODIE",
-    "JACKET",
-    "TOP",
-    "JEANS",
-  ];
+  const [COLORENUM, setCOLORENUM] = useState([]);
+  // const COLORENUM = [
+  //   "RED",
+  //   "BLUE",
+  //   "ORANGE",
+  //   "BLACK",
+  //   "WHITE",
+  //   "PINK",
+  //   "GREEN",
+  //   "YELLOW",
+  //   "PURPLE",
+  // ];
+  const [CATEGORYENUM, setCATEGORYENUM] = useState([]);
+  // const CATEGORYENUM = [
+  //   "PANT",
+  //   "SHIRT",
+  //   "TSHIRT",
+  //   "DRESS",
+  //   "SAREE",
+  //   "SWEATER",
+  //   "HOODIE",
+  //   "JACKET",
+  //   "TOP",
+  //   "JEANS",
+  // ];
+  const [SIZEENUM, setSIZEENUM] = useState([]);
+  // const SIZEENUM = ["S", "M", "L", "XL"];
+
   const onSubmit = async () => {
     console.log({
       ...values,
@@ -64,6 +68,9 @@ export default function Search() {
     },
     onSubmit,
   });
+
+  console.log(values);
+
   const handleCategoryClick = () => {
     setCategoryClick(!categoryClick);
   };
@@ -94,7 +101,6 @@ export default function Search() {
             });
       if (res.status !== 200) {
         setLoading(false);
-        setErrors(true);
         console.log(res);
       }
       setLoading(false);
@@ -113,30 +119,72 @@ export default function Search() {
     if (location.state !== null) {
       if (location.state.searchTerm) {
         setFieldValue("searchTerm", location.state.searchTerm);
+      } else if (location.state.categories) {
+        setFieldValue("categories", location.state.categories);
       }
-      console.log(location.state.categories);
-      setFieldValue("categories", location.state.categories);
       fetchAllProducts(location.state);
     } else {
       fetchAllProducts();
     }
   }, [location, sortBy]);
-  useEffect(() => {
-    const fetchAllBrands = async () => {
-      try {
-        const res = await axios.get(
-          "/api/products/get/manufacturer/brandnames"
-        );
-        if (res.status !== 200) {
-          console.log(res);
-        }
-        setAllBrands(res.data);
-        // console.log(res.data);
-      } catch (err) {
-        console.log(err);
+
+  const fetchAllBrands = async () => {
+    try {
+      const res = await axios.get("/api/products/get/manufacturer/brandnames");
+      if (res.status !== 200) {
+        console.log(res);
       }
-    };
+      // console.log(res.data);
+      setAllBrands(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchAllColors = async () => {
+    try {
+      const res = await axios.get("/api/products/getcolors");
+      if (res.status !== 200) {
+        console.log(res);
+      }
+      console.log(res.data);
+      setCOLORENUM(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchAllSizes = async () => {
+    try {
+      const res = await axios.get("/api/products/getsizes");
+      if (res.status !== 200) {
+        console.log(res);
+      }
+      console.log(res.data);
+      setSIZEENUM(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchAllCategories = async () => {
+    try {
+      const res = await axios.get("/api/products/getcategories");
+      if (res.status !== 200) {
+        console.log(res);
+      }
+      console.log(res.data);
+      setCATEGORYENUM(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
     fetchAllBrands();
+    fetchAllSizes();
+    fetchAllCategories();
+    fetchAllColors();
   }, []);
   // console.log(products);
   const handleClearFilter = () => {
@@ -153,7 +201,7 @@ export default function Search() {
   console.log(sortBy);
   return (
     <div className="flex flex-col md:flex-row mb-5">
-      <div className=" border-b-2 md:min-h-screen md:sticky md:top-20 md:h-fit">
+      <div className=" border-b-2 md:w-72 md:min-h-screen md:sticky md:top-20 md:h-fit">
         <div className=" border-b-2 ">
           <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
             <div className=" flex items-center gap-2 mx-5 mt-5">
@@ -375,7 +423,7 @@ export default function Search() {
             </select>
           </div>
         </div>
-        <div className="p-3 flex mx-5 flex-wrap justify-evenly">
+        <div className="p-3 flex flex-wrap justify-evenly">
           {!loading && products.length === 0 && (
             <p className="text-2xl text-slate-400 text-center mt-36 w-full">
               Sorry!! Nothing found!
