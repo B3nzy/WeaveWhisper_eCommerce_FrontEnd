@@ -18,10 +18,17 @@ export default function ProductCard({ listing }) {
             alt="product cover"
             className="h-[350px] sm:h-[280px] w-full object-cover hover:scale-105 transition-scale duration-300"
           />
-          <div className="absolute bottom-1 left-2 gap-1 flex flex-row items-center text-black bg-white opacity-70 px-2 w-fit rounded-sm text-sm">
-            <RiStarSFill className="text-md text-green-700" />
-            <TbMinusVertical />5
-          </div>
+          {listing.reviewCount > 0 && (
+            <div className="absolute bottom-1 left-2 gap-1 flex flex-row items-center text-slate-800 bg-white opacity-80 px-2 w-fit rounded-sm text-sm">
+              {listing.avgRating.toFixed(1)}
+              <RiStarSFill className="text-md text-green-500" />
+              <TbMinusVertical />
+              {listing.reviewCount}
+              <span className="">
+                {listing.reviewCount === 1 ? "review" : "reviews"}
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="p-3 flex flex-col w-full mx-auto">
