@@ -6,12 +6,11 @@ import { BsHandbagFill } from "react-icons/bs";
 import { FaTruckArrowRight } from "react-icons/fa6";
 import { RiStarSFill } from "react-icons/ri";
 import { TbMinusVertical } from "react-icons/tb";
+import { IoMdHeart } from "react-icons/io";
 
 import axios from "axios";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import PopUpMessage from "../components/PopUpMessage";
 import { useSelector } from "react-redux";
-import { object } from "yup";
 
 export default function Product() {
   const navigate = useNavigate();
@@ -19,6 +18,7 @@ export default function Product() {
   const toastEffectRan = useRef(false);
   const { currentUser } = useSelector((state) => state.user);
   const [productDetails, setProductDetails] = useState(null);
+  const [isWishlist, setIsWishlist] = useState(false);
   const [reviews, setReviews] = useState({
     rating: 0,
     review: "",
@@ -44,10 +44,10 @@ export default function Product() {
           setErrors(true);
           return;
         }
+
         console.log(res.data);
         setProductDetails(res.data);
         setDisplayImg(res.data.imageNames[0]);
-        // setProductReviews(res.data.productReviews);
         setErrors(false);
         setLoading(false);
       } catch (err) {
@@ -55,8 +55,71 @@ export default function Product() {
         setErrors(true);
       }
     };
+
     fetchProduct();
   }, [params.productId]);
+  useEffect(() => {
+    const checkWishlist = async () => {
+      try {
+        if (currentUser !== null && currentUser.type === "CUSTOMER") {
+          const resCheckWishlist = await axios.post("/api/wishlists/check", {
+            customerId: currentUser.id,
+            productId: productDetails.id,
+          });
+          if (
+            resCheckWishlist.status === 200 &&
+            resCheckWishlist.data.inWishList === true
+          ) {
+            setIsWishlist(true);
+          }
+          if (resCheckWishlist.status === 404) {
+            setIsWishlist(false);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    checkWishlist();
+  }, [productDetails]);
+  const handleWishlist = async () => {
+    if (currentUser === null) {
+      navigate("/sign-in");
+      return;
+    } else if (!isWishlist) {
+      try {
+        const res = await axios.post("/api/wishlists/add", {
+          customerId: currentUser.id,
+          productId: productDetails.id,
+        });
+        if (res.status !== 200) {
+          console.log(res.response.error.message);
+        }
+        setIsWishlist(true);
+      } catch (err) {
+        console.log(err);
+      }
+      return;
+    } else if (isWishlist) {
+      try {
+        console.log(currentUser);
+        console.log(productDetails);
+        const res = await axios.post("/api/wishlists/delete", {
+          customerId: currentUser.id,
+          productId: productDetails.id,
+        });
+        console.log(res);
+        if (res.status !== 200) {
+          console.log(res);
+        }
+        setIsWishlist(false);
+      } catch (err) {
+        console.log(err);
+      }
+      return;
+    }
+  };
   const handlePostReview = async (e) => {
     e.preventDefault();
     console.log(reviews);
@@ -235,9 +298,21 @@ export default function Product() {
                     Add to bag
                   </button>
 
-                  <button className="uppercase font-bold text-sm p-3 flex items-center gap-2 border rounded-md w-40 text-slate-600 hover:border-pink-600 justify-center">
-                    <CiHeart className="text-2xl" />
-                    Wishlist
+                  <button
+                    onClick={handleWishlist}
+                    className="uppercase font-bold text-sm p-3 flex items-center gap-2 border rounded-md w-40 text-slate-600 hover:border-pink-600 justify-center"
+                  >
+                    {isWishlist ? (
+                      <>
+                        <IoMdHeart className="text-2xl text-pink-600" />
+                        Wishlisted
+                      </>
+                    ) : (
+                      <>
+                        <CiHeart className="text-2xl" />
+                        Wishlist
+                      </>
+                    )}
                   </button>
                 </div>
               )}
@@ -270,8 +345,8 @@ export default function Product() {
           <div className="border rounded-lg p-3 mt-5">
             <p className="text-lg text-gray-800 font-semibold mb-5">Reviews</p>
             {productDetails.productReviews.length > 0 &&
-              productDetails.productReviews.map((item) => (
-                <div key={item}>
+              productDetails.productReviews.map((item, index) => (
+                <div key={index}>
                   <div className="flex gap-2 items-center mb-2">
                     <BsPerson className="text-xl rounded-full bg-blue-200 h-8 w-8 p-1 text-gray-500" />
                     <p className="capitalize text-sm font-medium text-gray-600">
