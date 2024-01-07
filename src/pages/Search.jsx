@@ -4,12 +4,16 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import { Formik, useFormik } from "formik";
+import { useSelector } from "react-redux";
 
 export default function Search() {
   const location = useLocation();
+  const { currentUser } = useSelector((state) => state.user);
+  console.log(currentUser);
   const [sortBy, setSortBy] = useState("LATEST");
   const [loading, setLoading] = useState(false);
   // const [errors, setErrors] = useState(false);
+  const [productIdsInWIshlist, setProductIdsInWIshlist] = useState([]);
   const [products, setProducts] = useState([]);
   const [totalElements, setTotalElements] = useState(0);
   const [pageNumber, setPageNmber] = useState(1);
@@ -19,6 +23,7 @@ export default function Search() {
   const [colorClick, setColorClick] = useState(false);
   const [allBrands, setAllBrands] = useState([]);
   const [COLORENUM, setCOLORENUM] = useState([]);
+  const navigate = useNavigate();
   // const COLORENUM = [
   //   "RED",
   //   "BLUE",
@@ -127,6 +132,68 @@ export default function Search() {
       fetchAllProducts();
     }
   }, [location, sortBy]);
+
+  const populateWishListedProductIdForCustomer = async () => {
+    if (currentUser !== null && currentUser.type === "CUSTOMER") {
+      try {
+        const res = await axios.get(
+          `/api/wishlists/getproductids/customer/${currentUser.id}`
+        );
+        if (res.status !== 200) {
+          console.log(res);
+        }
+        console.log(res.data);
+        setProductIdsInWIshlist(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  useEffect(() => {
+    populateWishListedProductIdForCustomer();
+  }, []);
+
+  const addWishList = async (productId) => {
+    if (currentUser === null) {
+      navigate("/sign-in");
+      return;
+    } else if (currentUser.type === "CUSTOMER") {
+      try {
+        const res = await axios.post("/api/wishlists/add", {
+          customerId: currentUser.id,
+          productId,
+        });
+        if (res.status !== 200) {
+          console.log(res.response.error.message);
+        }
+        populateWishListedProductIdForCustomer();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  const deleteWishList = async (productId) => {
+    if (currentUser === null) {
+      navigate("/sign-in");
+      return;
+    } else if (currentUser.type === "CUSTOMER") {
+      try {
+        const res = await axios.post("/api/wishlists/delete", {
+          customerId: currentUser.id,
+          productId,
+        });
+        console.log(res);
+        if (res.status !== 200) {
+          console.log(res);
+        }
+        populateWishListedProductIdForCustomer();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
 
   const fetchAllBrands = async () => {
     try {
@@ -342,23 +409,21 @@ export default function Search() {
             <div className=" flex flex-wrap gap-6 my-[-15px] mx-5 items-center">
               <p className="font-bold text-[13px] text-gray-800">SIZE</p>
               {SIZEENUM.map((item) => (
-                <>
-                  <label
-                    className="flex gap-1 cursor-pointer items-center whitespace-nowrap"
-                    key={item}
-                  >
-                    <input
-                      type="checkbox"
-                      name="sizes"
-                      id="sizes"
-                      className="w-4 h-4 accent-black"
-                      value={item}
-                      onChange={handleChange}
-                      checked={values.sizes.includes(item)}
-                    />
-                    <p className="text-[13px] capitalize">{item}</p>
-                  </label>
-                </>
+                <label
+                  className="flex gap-1 cursor-pointer items-center whitespace-nowrap"
+                  key={item}
+                >
+                  <input
+                    type="checkbox"
+                    name="sizes"
+                    id="sizes"
+                    className="w-4 h-4 accent-black"
+                    value={item}
+                    onChange={handleChange}
+                    checked={values.sizes.includes(item)}
+                  />
+                  <p className="text-[13px] capitalize">{item}</p>
+                </label>
               ))}
             </div>
 
@@ -438,7 +503,15 @@ export default function Search() {
           {!loading &&
             products &&
             products.map((product) => {
-              return <ProductCard key={product.id} listing={product} />;
+              return (
+                <ProductCard
+                  addWishListAction={addWishList}
+                  deleteWishListAction={deleteWishList}
+                  productIds={productIdsInWIshlist}
+                  key={product.id}
+                  listing={product}
+                />
+              );
             })}
         </div>
         <hr />

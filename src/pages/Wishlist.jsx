@@ -1,13 +1,80 @@
+/* eslint-disable no-unused-vars */
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ProductCard from "../components/ProductCard";
+import { useNavigate } from "react-router-dom";
 
 export default function Wishlist() {
   const { currentUser } = useSelector((state) => state.user);
   const [errors, setErrors] = useState(false);
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
+  const [productIdsInWIshlist, setProductIdsInWIshlist] = useState([]);
+
+  const navigate = useNavigate();
+
+  const populateWishListedProductIdForCustomer = async () => {
+    if (currentUser !== null && currentUser.type === "CUSTOMER") {
+      try {
+        const res = await axios.get(
+          `/api/wishlists/getproductids/customer/${currentUser.id}`
+        );
+        if (res.status !== 200) {
+          console.log(res);
+        }
+        console.log(res.data);
+        setProductIdsInWIshlist(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  useEffect(() => {
+    populateWishListedProductIdForCustomer();
+  }, []);
+
+  const addWishList = async (productId) => {
+    if (currentUser === null) {
+      navigate("/sign-in");
+      return;
+    } else if (currentUser.type === "CUSTOMER") {
+      try {
+        const res = await axios.post("/api/wishlists/add", {
+          customerId: currentUser.id,
+          productId,
+        });
+        if (res.status !== 200) {
+          console.log(res.response.error.message);
+        }
+        populateWishListedProductIdForCustomer();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  const deleteWishList = async (productId) => {
+    if (currentUser === null) {
+      navigate("/sign-in");
+      return;
+    } else if (currentUser.type === "CUSTOMER") {
+      try {
+        const res = await axios.post("/api/wishlists/delete", {
+          customerId: currentUser.id,
+          productId,
+        });
+        console.log(res);
+        if (res.status !== 200) {
+          console.log(res);
+        }
+        populateWishListedProductIdForCustomer();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchWishlistedItems = async () => {
@@ -31,8 +98,16 @@ export default function Wishlist() {
       <div className="flex flex-wrap justify-evenly">
         {products &&
           products.length > 0 &&
-          products.map((item) => {
-            return <ProductCard listing={item} key={item} />;
+          products.map((item, id) => {
+            return (
+              <ProductCard
+                addWishListAction={addWishList}
+                deleteWishListAction={deleteWishList}
+                productIds={productIdsInWIshlist}
+                listing={item}
+                key={id}
+              />
+            );
           })}
       </div>
     </div>
