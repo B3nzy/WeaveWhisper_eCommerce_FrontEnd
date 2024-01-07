@@ -7,10 +7,11 @@ import { FaTruckArrowRight } from "react-icons/fa6";
 import { RiStarSFill } from "react-icons/ri";
 import { TbMinusVertical } from "react-icons/tb";
 import { IoMdHeart } from "react-icons/io";
-
 import axios from "axios";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Product() {
   const navigate = useNavigate();
@@ -96,7 +97,11 @@ export default function Product() {
         if (res.status !== 200) {
           console.log(res.response.error.message);
         }
+        console.log(res.data);
         setIsWishlist(true);
+        toast.success(res.data.message, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       } catch (err) {
         console.log(err);
       }
@@ -114,6 +119,9 @@ export default function Product() {
           console.log(res);
         }
         setIsWishlist(false);
+        toast.info(res.data.message, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       } catch (err) {
         console.log(err);
       }
@@ -128,6 +136,13 @@ export default function Product() {
       return;
     }
     try {
+      console.log(reviews.review.length);
+      if (reviews.review.length === 0) {
+        toast.error("Review must contain something!", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        return;
+      }
       const res = await axios.post("/api/products/addreview", {
         ...reviews,
         customerFullName: currentUser.fullName,
@@ -135,24 +150,22 @@ export default function Product() {
       });
       if (res.status !== 200) {
         console.log(res);
-        setErrors(true);
         return;
       }
       setReviews({ rating: 0, review: "" });
-      setErrors(false);
+      toast.success(res.data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
       const resReview = await axios.get(
         `/api/products/getallreview/product/${productDetails.id}`
       );
       if (resReview.status !== 200) {
         console.log(resReview);
-        setErrors(true);
       }
       console.log(resReview.data);
-      setErrors(false);
       setProductDetails({ ...productDetails, productReviews: resReview.data });
     } catch (err) {
       console.log(err);
-      setErrors(true);
     }
   };
   console.log(reviews);
@@ -164,6 +177,7 @@ export default function Product() {
   // };
   return (
     <>
+      <ToastContainer newestOnTop={true} className="top-16 w-fit" />
       <div className="my-14 mx-10 flex flex-col md:flex-row gap-4 justify-between relative">
         {loading && (
           <p className="text-center my-20 text-2xl mx-auto font-semibold text-black">
@@ -401,6 +415,7 @@ export default function Product() {
                   name="review"
                   id="review"
                   value={reviews.review}
+                  maxLength={500}
                   onChange={(e) =>
                     setReviews({ ...reviews, [e.target.id]: e.target.value })
                   }

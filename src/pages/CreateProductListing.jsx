@@ -218,7 +218,7 @@ export default function CreateProductListing() {
 
   return (
     <main className="p-3 max-w-4xl mx-auto ">
-      <ToastContainer className="top-16 max-w-fit w-full" />
+      <ToastContainer newestOnTop={true} className="top-16 w-fit" />
       <h1 className="text-center font-semibold text-3xl my-7 text-pink-500">
         Create a Listing
       </h1>

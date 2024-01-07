@@ -82,7 +82,7 @@ export default function ManufacturerProfile() {
   console.log(currentUser);
   return (
     <>
-      <ToastContainer className="top-16 max-w-fit w-full" />
+      <ToastContainer newestOnTop={true} className="top-16 w-fit" />
       <div className="p-6 max-w-5xl mx-auto flex flex-col sm:flex-row gap-2">
         <div className="p-3 flex flex-col flex-1">
           <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>

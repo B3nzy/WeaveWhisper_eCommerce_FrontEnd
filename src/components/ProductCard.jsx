@@ -47,21 +47,23 @@ export default function ProductCard({
           <p className="truncate text-md font-semibold text-slate-900">
             {listing.brandName}
           </p>
-          {productIds.includes(listing.id) ? (
-            <IoMdHeart
-              onClick={() => {
-                deleteWishListAction(listing.id);
-              }}
-              className="text-2xl text-pink-600 hover:cursor-pointer"
-            />
-          ) : (
-            <CiHeart
-              onClick={() => {
-                addWishListAction(listing.id);
-              }}
-              className="text-2xl hover:text-pink-500 hover:cursor-pointer"
-            />
-          )}
+          <span className="transition-all ease-in-out duration-300 hover:scale-125">
+            {productIds.includes(listing.id) ? (
+              <IoMdHeart
+                onClick={() => {
+                  deleteWishListAction(listing.id);
+                }}
+                className="text-2xl text-pink-600 hover:cursor-pointer"
+              />
+            ) : (
+              <CiHeart
+                onClick={() => {
+                  addWishListAction(listing.id);
+                }}
+                className="text-2xl hover:text-pink-500 hover:cursor-pointer"
+              />
+            )}
+          </span>
         </div>
         <p className="truncate text-md text-slate-500">{listing.name}</p>
         <p className="truncate text-sm text-slate-700 font-bold flex gap-2 place-items-baseline ">

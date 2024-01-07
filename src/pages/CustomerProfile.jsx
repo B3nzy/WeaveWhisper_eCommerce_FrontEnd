@@ -148,7 +148,7 @@ export default function CustomerProfile() {
   };
   return (
     <div className="max-w-6xl mx-auto p-3 my-10 flex flex-col">
-      <ToastContainer />
+      <ToastContainer newestOnTop={true} className="top-16 w-fit" />
       <div className="font-semibold   uppercase">
         <p className="text-lg text-slate-900">Hello </p>
         <p className="text-md text-slate-500">{currentUser.fullName}</p>
