@@ -130,17 +130,25 @@ export default function CustomerProfile() {
       setUpdate(true);
       try {
         const res = await axios.put("/api/users/update", values);
+        console.log(res.data);
         if (res.status !== 200) {
           setUpdate(false);
-          console.log(res.response.data.message);
+          console.log(res.response);
+          if (
+            res.response.data.message !== undefined ||
+            res.response.data.message !== null
+          ) {
+            toast.error(res.response.data.message);
+          }
           return;
         }
+
         dispatch(updateCustomerSuccess(res.data));
         toast.success("Profile updated successfully");
         setDisable(true);
         setUpdate(false);
       } catch (err) {
-        console.log(err.response.data.message);
+        console.log(err.response);
         toast.error(err.response.data.message);
         setUpdate(false);
       }

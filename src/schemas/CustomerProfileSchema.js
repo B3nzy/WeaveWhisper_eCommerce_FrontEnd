@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
-const passwordRules =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
+// const passwordRules =
+//   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
 
 export const CustomerProfileSchema = yup.object().shape({
   fullName: yup
@@ -12,8 +12,8 @@ export const CustomerProfileSchema = yup.object().shape({
   phoneNumber: yup
     .number()
     .typeError("Phone number must be digits only")
-    .min(10, "*phone number must be 10 digits only")
-    .max(10, "*phone number must be 10 digits only"),
+    .min(1000000000, "*phone number must be 10 digits only")
+    .max(9999999999, "*phone number must be 10 digits only"),
   password: yup.string().required("Required"),
   type: yup.string().required("Required"),
 });
