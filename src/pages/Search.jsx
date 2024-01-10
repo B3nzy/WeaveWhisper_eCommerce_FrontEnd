@@ -265,6 +265,7 @@ export default function Search() {
     setFieldValue("priceMin", 0);
     setFieldValue("priceMax", 999999);
     setFieldValue("brandNames", []);
+    location.state = null;
     fetchAllProducts();
   };
   console.log(sortBy);
