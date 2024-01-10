@@ -17,6 +17,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { signOutSuccess } from "../redux/user/userSlice";
+import axios from "axios";
 
 export default function Header() {
   const [cartItems, setCartItems] = useState([1, 2, 3]);
@@ -29,18 +30,38 @@ export default function Header() {
   const navigate = useNavigate();
   const category = useRef();
   const [clickedOutside, setClickedOutside] = useState(false);
-  const CATEGORYENUM = [
-    "pant",
-    "shirt",
-    "tshirt",
-    "dress",
-    "saree",
-    "sweater",
-    "hoodie",
-    "jacket",
-    "top",
-    "jeans",
-  ];
+
+  const [CATEGORYENUM, setCATEGORYENUM] = useState([]);
+
+  // const CATEGORYENUM = [
+  //   "pant",
+  //   "shirt",
+  //   "tshirt",
+  //   "dress",
+  //   "saree",
+  //   "sweater",
+  //   "hoodie",
+  //   "jacket",
+  //   "top",
+  //   "jeans",
+  // ];
+
+  const fetchAllCategories = async () => {
+    try {
+      const res = await axios.get("/api/products/getcategories");
+      if (res.status !== 200) {
+        console.log(res);
+      }
+      console.log(res.data);
+      setCATEGORYENUM(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllCategories();
+  }, []);
 
   // const cartCount = cartItems.length;
   const handleCartClick = () => {
@@ -112,8 +133,22 @@ export default function Header() {
         </span>
       </Link>
       <div className="font-bold flex gap-8 text-xs">
-        <p className="hidden md:inline hover:text-orange-600">MEN</p>
-        <p className="hidden md:inline hover:text-orange-600">WOMEN</p>
+        {/* <p className="hidden md:inline hover:text-orange-600">MEN</p> */}
+        <Link
+          to="/search"
+          state={{ genders: ["MEN"] }}
+          className="capitalize cursor-pointer hover:text-orange-600"
+        >
+          MEN
+        </Link>
+        {/* <p className="hidden md:inline hover:text-orange-600">WOMEN</p> */}
+        <Link
+          to="/search"
+          state={{ genders: ["WOMEN"] }}
+          className="capitalize cursor-pointer hover:text-orange-600"
+        >
+          WOMEN
+        </Link>
         <div
           className="hidden md:inline relative"
           onClick={handleCategoryClick}

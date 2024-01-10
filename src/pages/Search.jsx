@@ -126,6 +126,8 @@ export default function Search() {
         setFieldValue("searchTerm", location.state.searchTerm);
       } else if (location.state.categories) {
         setFieldValue("categories", location.state.categories);
+      } else if (location.state.genders) {
+        setFieldValue("genders", location.state.genders);
       }
       fetchAllProducts(location.state);
     } else {
