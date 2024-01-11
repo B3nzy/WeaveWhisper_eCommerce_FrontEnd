@@ -121,7 +121,7 @@ export default function Header() {
     <div
       className={[
         active ? "bg-black text-gray-50 " : "bg-white ",
-        " shadow-md p-4 flex flex-row items-center justify-between sticky top-0 left-0 z-50 transition-all ease",
+        " shadow-md p-4 flex flex-row items-center justify-between sticky top-0 left-0 z-10 transition-all ease",
       ].join("")}
     >
       <Link to={"/"} className="font-bold sm:ml-10 sm:text-xl">
@@ -156,7 +156,7 @@ export default function Header() {
         >
           <p className=" hover:text-orange-600 cursor-pointer">CATEGORY</p>
           {categoryClick && (
-            <div className="absolute p-6 flex flex-col gap-2 border rounded-md outline-none shadow-md top-6 z-50 bg-white">
+            <div className="absolute p-6 flex flex-col gap-2 border rounded-md outline-none shadow-md top-6 z-20 bg-white">
               {CATEGORYENUM.map((item, index) => (
                 <Link
                   to="/search"

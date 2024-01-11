@@ -7,6 +7,7 @@ import { deleteBrandSuccess, signOutSuccess } from "../redux/user/userSlice";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import DeleteBrandModal from "../components/DeleteBrandModal";
 
 export default function ManufacturerProfile() {
   const [loading, setLoading] = useState(false);
@@ -18,18 +19,26 @@ export default function ManufacturerProfile() {
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const handleChange = () => {};
+  const [showModal, setShowModal] = useState(false);
+  console.log(showModal);
   const handleDeleteBrand = async () => {
     try {
-      const res = await axios.delete(`/api/users/delete/${currentUser.id}`);
-      if (res.status !== 200) {
-        console.log(res.response.data.message);
-        return;
-      }
-      dispatch(deleteBrandSuccess());
+      // const res = await axios.delete(`/api/users/delete/${currentUser.id}`);
+      // if (res.status !== 200) {
+      //   console.log(res.response.data.message);
+      //   return;
+      // }
+      // dispatch(deleteBrandSuccess());
+      setShowModal(true);
     } catch (err) {
       console.log(err.response.data.message);
     }
   };
+
+  const closeDeleteModal = () => {
+    setShowModal(false);
+  };
+
   const handleListingDelete = async (productId) => {
     try {
       setDeleteLoadingItem(productId);
@@ -82,6 +91,7 @@ export default function ManufacturerProfile() {
   console.log(currentUser);
   return (
     <>
+      {showModal && <DeleteBrandModal closeModalAction={closeDeleteModal} />}
       <ToastContainer newestOnTop={true} className="top-16 w-fit" />
       <div className="p-6 max-w-5xl mx-auto flex flex-col sm:flex-row gap-2">
         <div className="p-3 flex flex-col flex-1">
