@@ -92,6 +92,7 @@ export default function ManufacturerProfile() {
   return (
     <>
       {showModal && <DeleteBrandModal closeModalAction={closeDeleteModal} />}
+
       <ToastContainer newestOnTop={true} className="top-16 w-fit" />
       <div className="p-6 max-w-5xl mx-auto flex flex-col sm:flex-row gap-2">
         <div className="p-3 flex flex-col flex-1">

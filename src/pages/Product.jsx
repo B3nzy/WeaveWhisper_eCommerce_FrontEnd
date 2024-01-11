@@ -198,7 +198,10 @@ export default function Product() {
                     key={id}
                     src={"/api/storage/view/" + image}
                     alt="product image"
-                    className="h-32 object-fit w-24 cursor-pointer hover:scale-105 transition-scale duration-300 rounded-sm"
+                    className={[
+                      "h-32 object-fit w-24 cursor-pointer hover:scale-105 transition-scale duration-300 rounded-sm ",
+                      displayImg === image ? "scale-105" : "scale-100",
+                    ].join("")}
                     onClick={() => setDisplayImg(image)}
                   />
                 ))}
