@@ -5,6 +5,7 @@ import { CiHeart } from "react-icons/ci";
 import { BsPerson } from "react-icons/bs";
 import { IoSearch } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
+import { IoWalletOutline } from "react-icons/io5";
 import { GoSignOut } from "react-icons/go";
 import { IoShirtOutline } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
@@ -23,28 +24,16 @@ export default function Header() {
   const [cartItems, setCartItems] = useState([1, 2, 3]);
   const [searchTerm, setSearchTerm] = useState("");
   const [active, setActive] = useState(false);
+  // const [checkWalletBalance, setCheckWalletBalance] = useState(false);
   const [categoryClick, setCategoryClick] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   console.log(currentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const category = useRef();
-  const [clickedOutside, setClickedOutside] = useState(false);
+  // const [clickedOutside, setClickedOutside] = useState(false);
 
   const [CATEGORYENUM, setCATEGORYENUM] = useState([]);
-
-  // const CATEGORYENUM = [
-  //   "pant",
-  //   "shirt",
-  //   "tshirt",
-  //   "dress",
-  //   "saree",
-  //   "sweater",
-  //   "hoodie",
-  //   "jacket",
-  //   "top",
-  //   "jeans",
-  // ];
 
   const fetchAllCategories = async () => {
     try {
@@ -87,6 +76,8 @@ export default function Header() {
       console.log(err);
     }
   };
+
+  // const handleWalletClick = () => {};
 
   const isActive = () => {
     window.scrollY > 0 ? setActive(true) : setActive(false);
@@ -235,6 +226,16 @@ export default function Header() {
                       My Orders
                     </Typography>
                   </MenuItem>
+                )}
+                {currentUser.type === "CUSTOMER" && (
+                  <Link to={"/wallet"}>
+                    <MenuItem className="flex items-center gap-4 hover:text-orange-600">
+                      <IoWalletOutline className="text-2xl" />
+                      <Typography variant="small" className="font-medium">
+                        My Wallet
+                      </Typography>
+                    </MenuItem>
+                  </Link>
                 )}
 
                 <hr className="my-2 border-blue-gray-50" />

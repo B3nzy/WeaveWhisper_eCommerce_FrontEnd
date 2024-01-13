@@ -20,6 +20,7 @@ import Wishlist from "./pages/Wishlist";
 import Search from "./pages/Search";
 import ManufacturerProfile from "./pages/ManufacturerProfile";
 import UpdateProduct from "./pages/UpdateProduct";
+import Wallet from "./pages/Wallet";
 
 export default function App() {
   return (
@@ -45,6 +46,7 @@ export default function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/profile" element={<CustomerProfile />} />
+          <Route path="/wallet" element={<Wallet />} />
         </Route>
 
         <Route element={<PrivateRouteManufacturer />}>
