@@ -84,6 +84,7 @@ export default function Product() {
 
     checkWishlist();
   }, [productDetails]);
+
   const handleWishlist = async () => {
     if (currentUser === null) {
       navigate("/sign-in");

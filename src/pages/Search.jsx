@@ -135,6 +135,12 @@ export default function Search() {
     }
   }, [location, sortBy]);
 
+  const onProductClick = () => {
+    // TODO need to work on it, ISSUE when user clicks back button from product page to search page.
+    console.log("onProductClickAction hit");
+    location.state = null;
+  };
+
   const populateWishListedProductIdForCustomer = async () => {
     if (currentUser !== null && currentUser.type === "CUSTOMER") {
       try {
@@ -508,6 +514,7 @@ export default function Search() {
             products.map((product) => {
               return (
                 <ProductCard
+                  onClick={onProductClick}
                   addWishListAction={addWishList}
                   deleteWishListAction={deleteWishList}
                   productIds={productIdsInWIshlist}

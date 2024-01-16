@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -23,21 +24,21 @@ export default function Home() {
         <div className="text-gray-400 text-xs sm:text-sm">
           WaeveWhisper is not just an online clothing store..
           <br />
-          it's an immersive journey into the world of fashion where every
+          it&aposs an immersive journey into the world of fashion where every
           garment tells a story.
         </div>
         <Link
           to={"/search"}
           className="text-xs sm:text-sm text-blue-800 font-bold hover:underline"
         >
-          Let's explore...
+          Let&aposs explore...
         </Link>
       </div>
 
       {/* swiper */}
       <Swiper navigation>
         {images.map((item) => (
-          <SwiperSlide>
+          <SwiperSlide key={item}>
             <div
               style={{
                 background: `url(${item}) center no-repeat`,
