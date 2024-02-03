@@ -12,6 +12,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { cardFooter } from "@material-tailwind/react";
 
 export default function Product() {
   const navigate = useNavigate();
@@ -23,17 +24,39 @@ export default function Product() {
   const [reviews, setReviews] = useState({
     rating: 0,
     review: "",
-    // customerFullName: null,
-    // productId: null,
   });
-  // const [productReviews, setProductReviews] = useState([]);
   console.log(currentUser);
   const [displayImg, setDisplayImg] = useState("");
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
   const [errors, setErrors] = useState(false);
   const params = useParams();
+  const [sizeError, setSizeError] = useState(false);
+  const [colorError, setColorError] = useState(false);
   console.log(productDetails);
+
+  const [cartDetail, setCartDetail] = useState({
+    size: "",
+    color: "",
+    productId: params.productId,
+    customerId: currentUser.id,
+  });
+  console.log(cartDetail);
+
+  const handleColorChange = (val) => {
+    console.log(val);
+    setCartDetail((prev) => ({
+      ...prev,
+      productColor: val,
+    }));
+  };
+  const handleSizeChange = (val) => {
+    console.log(val);
+    setCartDetail((prev) => ({
+      ...prev,
+      productSize: val,
+    }));
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -170,12 +193,7 @@ export default function Product() {
     }
   };
   console.log(reviews);
-  // const handleAddToCart = () => {
-  //   const product = {
-  //     id: productDetails.id,
-  //     name: productDetails.name,
-  //   };
-  // };
+  const handleAddToCart = () => {};
   return (
     <>
       <ToastContainer newestOnTop={true} className="top-16 w-fit" />
@@ -272,27 +290,44 @@ export default function Product() {
               <p className="text-green-500 font-semibold">
                 inclusive of all taxes
               </p>
-              <p className="my-4 font-semibold">SELECT SIZE</p>
+              <p className="my-4 font-semibold">SELECT SIZE & COLOR</p>
               <ul className="flex items-center gap-4 uppercase">
                 {productDetails.sizes.map((size) => (
                   <li
                     key={size}
-                    className=" border rounded-full h-12 w-12 flex items-center justify-center font-semibold text-slate-600 cursor-pointer hover:border-pink-500 hover:text-pink-500"
+                    className={[
+                      cartDetail.productSize === size
+                        ? "text-pink-500  border-pink-500"
+                        : "text-slate-600",
+                      " border rounded-full h-12 w-12 flex items-center justify-center font-semibold  cursor-pointer hover:border-pink-500 hover:text-pink-500",
+                    ].join("")}
+                    value={size}
+                    onClick={() => handleSizeChange(size)}
                   >
                     {size}
                   </li>
                 ))}
               </ul>
+              {sizeError && <p>*choose a size</p>}
               <ul className="flex items-center gap-4 mt-2 flex-wrap">
                 {productDetails.colors.map((color) => (
                   <li
                     key={color}
-                    className="capitalize border border-orange-50 rounded-lg p-1 flex items-center justify-center font-semibold text-slate-600 cursor-pointer hover:border-pink-500 hover:text-pink-500 bg-orange-50"
+                    className={[
+                      cartDetail.productColor === color
+                        ? "text-pink-500 border border-pink-500"
+                        : "text-slate-600",
+                      " capitalize border border-orange-50 rounded-lg p-1 flex items-center justify-center font-semibold  cursor-pointer hover:border-pink-500 hover:text-pink-500 bg-orange-50",
+                    ].join("")}
+                    value={color}
+                    onClick={() => handleColorChange(color)}
                   >
                     {color}
                   </li>
                 ))}
               </ul>
+              {colorError && <p>*choose a color</p>}
+
               {currentUser && currentUser.type === "MANUFACTURER" ? (
                 <div className="text-blue-600">
                   Stock : {productDetails.inventoryCount} pcs
@@ -309,7 +344,7 @@ export default function Product() {
               ) : (
                 <div className="flex gap-4 my-5">
                   <button
-                    // onClick={handleAddToCart}
+                    onClick={handleAddToCart}
                     className="flex items-center uppercase font-bold text-sm p-3 bg-pink-500 text-white w-full max-w-md hover:opacity-90 rounded-md gap-2 justify-center"
                   >
                     <BsHandbagFill className="text-lg" />
