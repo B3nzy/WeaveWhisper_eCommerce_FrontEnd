@@ -12,7 +12,6 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { cardFooter } from "@material-tailwind/react";
 
 export default function Product() {
   const navigate = useNavigate();
@@ -33,11 +32,10 @@ export default function Product() {
   const params = useParams();
   const [sizeError, setSizeError] = useState(false);
   const [colorError, setColorError] = useState(false);
+  const [adding, setAdding] = useState(false);
   console.log(productDetails);
 
   const [cartDetail, setCartDetail] = useState({
-    size: "",
-    color: "",
     productId: params.productId,
     customerId: currentUser.id,
   });
@@ -47,15 +45,17 @@ export default function Product() {
     console.log(val);
     setCartDetail((prev) => ({
       ...prev,
-      productColor: val,
+      color: val,
     }));
+    setColorError(false);
   };
   const handleSizeChange = (val) => {
     console.log(val);
     setCartDetail((prev) => ({
       ...prev,
-      productSize: val,
+      size: val,
     }));
+    setSizeError(false);
   };
 
   useEffect(() => {
@@ -193,7 +193,39 @@ export default function Product() {
     }
   };
   console.log(reviews);
-  const handleAddToCart = () => {};
+  const handleAddToCart = async () => {
+    setAdding(true);
+    try {
+      if (cartDetail.size === undefined) {
+        setSizeError(true);
+      }
+      if (cartDetail.color === undefined) {
+        setColorError(true);
+      }
+      if (colorError || sizeError) {
+        setAdding(false);
+        return;
+      }
+
+      const res = await axios.post("/api/cart/add", cartDetail);
+      if (res.status !== 201) {
+        toast.error(res.data.message, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        return;
+      }
+      setColorError(false);
+      setSizeError(false);
+      setAdding(false);
+      setCartDetail({ productId: params.id, customerId: currentUser.id });
+      toast.success(res.data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } catch (err) {
+      console.log(err);
+      setAdding(false);
+    }
+  };
   return (
     <>
       <ToastContainer newestOnTop={true} className="top-16 w-fit" />
@@ -296,7 +328,7 @@ export default function Product() {
                   <li
                     key={size}
                     className={[
-                      cartDetail.productSize === size
+                      cartDetail.size === size
                         ? "text-pink-500  border-pink-500"
                         : "text-slate-600",
                       " border rounded-full h-12 w-12 flex items-center justify-center font-semibold  cursor-pointer hover:border-pink-500 hover:text-pink-500",
@@ -308,13 +340,15 @@ export default function Product() {
                   </li>
                 ))}
               </ul>
-              {sizeError && <p>*choose a size</p>}
+              {sizeError && (
+                <p className="ml-3 text-red-500 text-sm ">*choose a size</p>
+              )}
               <ul className="flex items-center gap-4 mt-2 flex-wrap">
                 {productDetails.colors.map((color) => (
                   <li
                     key={color}
                     className={[
-                      cartDetail.productColor === color
+                      cartDetail.color === color
                         ? "text-pink-500 border border-pink-500"
                         : "text-slate-600",
                       " capitalize border border-orange-50 rounded-lg p-1 flex items-center justify-center font-semibold  cursor-pointer hover:border-pink-500 hover:text-pink-500 bg-orange-50",
@@ -326,7 +360,9 @@ export default function Product() {
                   </li>
                 ))}
               </ul>
-              {colorError && <p>*choose a color</p>}
+              {colorError && (
+                <p className="ml-3 text-red-500 text-sm ">*choose a color</p>
+              )}
 
               {currentUser && currentUser.type === "MANUFACTURER" ? (
                 <div className="text-blue-600">
@@ -345,7 +381,8 @@ export default function Product() {
                 <div className="flex gap-4 my-5">
                   <button
                     onClick={handleAddToCart}
-                    className="flex items-center uppercase font-bold text-sm p-3 bg-pink-500 text-white w-full max-w-md hover:opacity-90 rounded-md gap-2 justify-center"
+                    disabled={adding}
+                    className="flex items-center uppercase font-bold text-sm p-3 bg-pink-500 text-white w-full max-w-md hover:opacity-90 rounded-md gap-2 justify-center disabled:opacity-70"
                   >
                     <BsHandbagFill className="text-lg" />
                     Add to bag
