@@ -217,7 +217,10 @@ export default function Product() {
       setColorError(false);
       setSizeError(false);
       setAdding(false);
-      setCartDetail({ productId: params.id, customerId: currentUser.id });
+      setCartDetail({
+        productId: productDetails.id,
+        customerId: currentUser.id,
+      });
       toast.success(res.data.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
