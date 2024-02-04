@@ -29,8 +29,8 @@ export default function DeleteBrandModal({ closeModalAction }) {
   }, []);
   return (
     <>
-      <div className="absolute top-0 z-40 w-full h-full bg-gray-800 blur opacity-40"></div>
-      <div className="absolute p-6 md:max-w-xl max-w-sm shadow-lg flex flex-col gap-3 m-auto top-0 left-0 right-0 bottom-0 h-fit z-50 bg-white rounded-md border ">
+      <div className="fixed top-0 z-40 w-full h-full bg-gray-800 blur opacity-40"></div>
+      <div className="fixed p-6 md:max-w-xl max-w-sm shadow-lg flex flex-col gap-3 m-auto top-0 left-0 right-0 bottom-0 h-fit z-50 bg-white rounded-md border ">
         <div className="flex flex-row justify-between items-center">
           <span className="text-red-600 text-xl font-semibold">
             Delete account
