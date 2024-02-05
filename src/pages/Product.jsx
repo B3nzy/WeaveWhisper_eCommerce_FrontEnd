@@ -9,9 +9,10 @@ import { TbMinusVertical } from "react-icons/tb";
 import { IoMdHeart } from "react-icons/io";
 import axios from "axios";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { updateCartSuccess } from "../redux/user/userSlice";
 
 export default function Product() {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ export default function Product() {
   const [sizeError, setSizeError] = useState(false);
   const [colorError, setColorError] = useState(false);
   const [adding, setAdding] = useState(false);
+  const dispatch = useDispatch();
   console.log(productDetails);
 
   const [cartDetail, setCartDetail] = useState({
@@ -224,6 +226,12 @@ export default function Product() {
       toast.success(res.data.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
+      const res1 = await axios.get(
+        `/api/cart/getcount/customer/${currentUser.id}`
+      );
+      if (res1.status === 200) {
+        dispatch(updateCartSuccess(res1.data.cartCount));
+      }
     } catch (err) {
       console.log(err);
       setAdding(false);

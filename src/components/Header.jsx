@@ -21,7 +21,6 @@ import { signOutSuccess } from "../redux/user/userSlice";
 import axios from "axios";
 
 export default function Header() {
-  const [cartItems, setCartItems] = useState([1, 2, 3]);
   const [searchTerm, setSearchTerm] = useState("");
   const [active, setActive] = useState(false);
   // const [checkWalletBalance, setCheckWalletBalance] = useState(false);
@@ -291,9 +290,13 @@ export default function Header() {
               <LiaShoppingBagSolid className="text-2xl" />
               <li className="text-xs font-semibold">Bag</li>
             </div>
-            {cartItems.length > 0 && (
+            {currentUser && currentUser.cartCount > 0 && (
               <span className="bg-green-500 text-white rounded-full w-5 h-5 ml-5 mt-[-5px] absolute text-xs flex items-center justify-center font-semibold">
-                {cartItems.length}
+                {currentUser.cartCount > 9 ? (
+                  <span className="text-[10px]">9+</span>
+                ) : (
+                  currentUser.cartCount
+                )}
               </span>
             )}
           </ul>

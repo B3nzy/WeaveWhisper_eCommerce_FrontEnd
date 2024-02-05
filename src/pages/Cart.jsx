@@ -1,11 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import CartProductCard from "../components/CartProductCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import RemoveFromCartModal from "../components/RemoveFromCartModal";
 import { ToastContainer, toast } from "react-toastify";
 import { FaIndianRupeeSign } from "react-icons/fa6";
+import { updateCartSuccess } from "../redux/user/userSlice";
 const APIkey = import.meta.env.VITE_OPENCAGE_API_KEY;
 
 export default function Cart() {
@@ -21,6 +22,7 @@ export default function Cart() {
   const [newAddress, setNewAddress] = useState("");
   const [count, setCount] = useState(0);
   const [placeOrderFlag, setPlaceOrderFlag] = useState(true);
+  const dispatch = useDispatch();
   console.log(placeOrderFlag);
   const [showAddShippingButton, setShowAddShippingButton] = useState(
     currentUser && currentUser.address ? true : false
@@ -90,6 +92,7 @@ export default function Cart() {
       setLoading(false);
       setCartItems(res.data);
       calculateMrps(res.data);
+      dispatch(updateCartSuccess(res.data.length));
     } catch (err) {
       console.log(err);
     }
@@ -208,7 +211,7 @@ export default function Cart() {
                     />
                   ))}
               </div>
-              <div className="flex flex-col flex-1 gap-2 p-3 text-slate-600 pl-4 sm:border-l ">
+              <div className="flex flex-col flex-1 gap-2 p-3 text-slate-600 pl-4 sm:border-l self-start sticky top-24 ">
                 <div className="border p-3 mb-5 gap-2 flex flex-row items-center">
                   {showAddShippingButton ? (
                     <>

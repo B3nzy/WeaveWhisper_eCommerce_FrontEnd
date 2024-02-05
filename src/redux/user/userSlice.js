@@ -27,6 +27,10 @@ const userSlice = createSlice({
     updateCustomerSuccess: (state, action) => {
       state.currentUser = action.payload;
     },
+
+    updateCartSuccess: (state, action) => {
+      state.currentUser.cartCount = action.payload;
+    },
   },
 });
 
@@ -37,6 +41,7 @@ export const {
   signOutSuccess,
   deleteBrandSuccess,
   updateCustomerSuccess,
+  updateCartSuccess,
 } = userSlice.actions;
 
 export default userSlice.reducer;
