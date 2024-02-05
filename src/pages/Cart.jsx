@@ -7,7 +7,9 @@ import RemoveFromCartModal from "../components/RemoveFromCartModal";
 import { ToastContainer, toast } from "react-toastify";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { updateCartSuccess } from "../redux/user/userSlice";
+import useRazorpay from "react-razorpay";
 const APIkey = import.meta.env.VITE_OPENCAGE_API_KEY;
+const razorpayKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID;
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -19,13 +21,20 @@ export default function Cart() {
   const [totalDiscount, setTotalDiscount] = useState(0);
   const [address, setAddress] = useState(currentUser.address);
   const [showChangeAddress, setShowChangeAddress] = useState(false);
+  const [showChangeContact, setShowChangeContact] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState(currentUser.phoneNumber);
+  const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [newAddress, setNewAddress] = useState("");
   const [count, setCount] = useState(0);
   const [placeOrderFlag, setPlaceOrderFlag] = useState(true);
   const dispatch = useDispatch();
+  const [Razorpay] = useRazorpay();
   console.log(placeOrderFlag);
   const [showAddShippingButton, setShowAddShippingButton] = useState(
     currentUser && currentUser.address ? true : false
+  );
+  const [showAddContactButton, setShowAddContactButton] = useState(
+    currentUser && currentUser.phoneNumber ? true : false
   );
   console.log(currentUser);
 
@@ -178,6 +187,72 @@ export default function Cart() {
       setShowAddShippingButton(false);
     }
   }, [address, count]);
+  useEffect(() => {
+    if (phoneNumber === "" || phoneNumber === null) {
+      setShowAddContactButton(false);
+    }
+  }, [phoneNumber, count]);
+
+  const handlePlaceOrderByRazor = async () => {
+    try {
+      const res = await axios.post("/api/cart/placeorderrequest", {
+        customerId: currentUser.id,
+        address,
+      });
+      if (res.status !== 200) {
+        //todo:toast msg
+        return;
+      }
+
+      const options = {
+        key: razorpayKeyId,
+        amount: res.data.totalAmount * 100,
+        currency: "INR",
+        name: "WeaveWhisper",
+        description: "Add balance to WeaveWhisper wallet.",
+        order_id: res.data.orderId,
+        handler: async function (response) {
+          console.log(res);
+          // const res = await axios.post("api/balance/addsuccess", response);
+          // if (res.status === 400) {
+          //   toast.error(res.data.message, {
+          //     position: toast.POSITION.TOP_RIGHT,
+          //   });
+          // } else if (res.status !== 200) {
+          //   toast.error("Something went wrong.", {
+          //     position: toast.POSITION.TOP_RIGHT,
+          //   });
+          //   const res = await axios.post("/api/balance/addfailure", response);
+          //   console.log(res);
+          // } else {
+          //   toast.success(res.data.message, {
+          //     position: toast.POSITION.TOP_RIGHT,
+          //   });
+          // }
+        },
+        prefill: {
+          name: res.data.fullName,
+          email: res.data.email,
+          contact: res.data.phoneNumber,
+        },
+        notes: {
+          address: res.data.address,
+        },
+        theme: {
+          // color: "#3399cc",
+          color: "#272829",
+        },
+      };
+
+      const rzp1 = new Razorpay(options);
+
+      rzp1.on("payment.failed", function (response) {});
+
+      rzp1.open();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <>
@@ -200,7 +275,7 @@ export default function Cart() {
               My Bag
             </h1>
             <div className="flex flex-col md:flex-row gap-10">
-              <div className="flex flex-col flex-1 gap-4 ">
+              <div className="flex flex-col flex-1 gap-4 w-full">
                 {!loading &&
                   cartItems &&
                   cartItems.map((item, index) => (
@@ -211,7 +286,7 @@ export default function Cart() {
                     />
                   ))}
               </div>
-              <div className="flex flex-col flex-1 gap-2 p-3 text-slate-600 pl-4 sm:border-l self-start sticky top-24 ">
+              <div className="flex flex-col flex-1 w-full gap-2 p-3 text-slate-600 pl-4 sm:border-l self-start sticky top-24 ">
                 <div className="border p-3 mb-5 gap-2 flex flex-row items-center">
                   {showAddShippingButton ? (
                     <>
@@ -222,6 +297,7 @@ export default function Cart() {
                             {currentUser.fullName}
                           </span>
                         </p>
+
                         {!showChangeAddress && (
                           <p>
                             Address:{" "}
@@ -295,6 +371,75 @@ export default function Cart() {
                     </button>
                   )}
                 </div>
+                <div className="border p-3 mb-5 justify-between flex flex-row items-center gap-4">
+                  {showAddContactButton ? (
+                    !showChangeContact ? (
+                      <>
+                        <p>
+                          Contact:{" "}
+                          <span className="font-semibold text-slate-500">
+                            {phoneNumber}
+                          </span>
+                        </p>
+                        <button
+                          onClick={() => {
+                            setShowChangeContact(true);
+                          }}
+                          className="border uppercase text-xs p-2 font-semibold text-orange-400 border-orange-400 cursor-pointer hover:shadow-md"
+                        >
+                          Change Phone Number
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <input
+                          type="text"
+                          placeholder="enter shipping contact number..."
+                          className="outline-none w-full p-2 border"
+                          maxLength={10}
+                          minLength={10}
+                          value={newPhoneNumber}
+                          onChange={(e) => {
+                            setNewPhoneNumber(e.target.value);
+                          }}
+                        />
+                        <button
+                          onClick={() => {
+                            setPhoneNumber(newPhoneNumber);
+                            setNewPhoneNumber("");
+                            setShowChangeContact(false);
+                            setCount(count + 1);
+                          }}
+                          className="rounded-sm border uppercase text-xs p-2 font-semibold text-green-400 border-green-400 cursor-pointer hover:shadow-md"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => {
+                            setNewPhoneNumber("");
+                            if (phoneNumber === "" || phoneNumber === null) {
+                              setShowAddContactButton(false);
+                            }
+                            setShowChangeContact(false);
+                          }}
+                          className="rounded-sm border uppercase text-xs p-2 font-semibold text-red-400 border-red-400 cursor-pointer hover:bg-red-500 hover:text-white"
+                        >
+                          Cancel
+                        </button>
+                      </>
+                    )
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setShowAddContactButton(true);
+                        setShowChangeContact(true);
+                      }}
+                      className="border mx-auto w-full uppercase text-sm p-2 font-semibold text-orange-400 border-orange-400 cursor-pointer hover:shadow-md"
+                    >
+                      Add Contact No
+                    </button>
+                  )}
+                </div>
                 <hr />
                 {cartItems && cartItems.length > 0 && (
                   <>
@@ -337,6 +482,7 @@ export default function Cart() {
                     </div>
                     <button
                       disabled={!placeOrderFlag}
+                      onClick={handlePlaceOrderByRazor}
                       className="uppercase p-3 bg-pink-600 rounded-sm text-white font-semibold hover:opacity-90 disabled:opacity-70 outline-none"
                     >
                       place order
