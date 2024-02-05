@@ -19,6 +19,8 @@ export default function Cart() {
   const [showChangeAddress, setShowChangeAddress] = useState(false);
   const [newAddress, setNewAddress] = useState("");
   const [count, setCount] = useState(0);
+  const [placeOrderFlag, setPlaceOrderFlag] = useState(true);
+  console.log(placeOrderFlag);
   const [showAddShippingButton, setShowAddShippingButton] = useState(
     currentUser && currentUser.address ? true : false
   );
@@ -91,6 +93,7 @@ export default function Cart() {
       console.log(err);
     }
   };
+
   useEffect(() => {
     fetchCartItems();
   }, []);
@@ -98,10 +101,12 @@ export default function Cart() {
   const calculateMrps = (cartItems) => {
     let totalPrice = 0;
     let totalSellingPrice = 0;
+    setPlaceOrderFlag(true);
     for (let i = 0; i < cartItems.length; i++) {
       totalPrice += cartItems[i].actualPrice;
-      if (cartItems[i].sellingPrice) {
-        totalSellingPrice += cartItems[i].sellingPrice;
+      totalSellingPrice += cartItems[i].sellingPrice;
+      if (cartItems[i].active === false || cartItems[i].inventoryCount === 0) {
+        setPlaceOrderFlag(false);
       }
     }
     let totalDiscount = totalPrice - totalSellingPrice;
@@ -326,7 +331,10 @@ export default function Cart() {
                         {totalMrp - totalDiscount}
                       </p>
                     </div>
-                    <button className="uppercase p-3 bg-pink-600 rounded-sm text-white font-semibold hover:opacity-90">
+                    <button
+                      disabled={!placeOrderFlag}
+                      className="uppercase p-3 bg-pink-600 rounded-sm text-white font-semibold hover:opacity-90 disabled:opacity-70 outline-none"
+                    >
                       place order
                     </button>
                   </>

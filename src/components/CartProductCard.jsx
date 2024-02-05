@@ -1,16 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { PiArrowUDownLeftFill } from "react-icons/pi";
 import { FaIndianRupeeSign } from "react-icons/fa6";
+import { IoWarningOutline } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { Link } from "react-router-dom";
 
 export default function CartProductCard({ cartItem, handleRemoveFromCart }) {
   //   console.log(cartItem);
   const discount = cartItem.actualPrice - cartItem.sellingPrice;
+  const [unavailable, setUnavailable] = useState(
+    cartItem.brandName === null || cartItem.inventoryCount === 0 ? true : false
+  );
 
   return (
     <>
-      <div className="border p-3 flex flex-row gap-2">
+      <div
+        className={[
+          unavailable && "bg-gray-50 opacity-80 ",
+          " border p-3 flex flex-row gap-2",
+        ].join("")}
+      >
         <div className="w-32">
           <Link to={`/product/${cartItem.productId}`}>
             <img
@@ -56,6 +65,21 @@ export default function CartProductCard({ cartItem, handleRemoveFromCart }) {
               </>
             )}
           </p>
+
+          {cartItem.brandName === null && (
+            <p className="flex items-baseline gap-2 mt-3 text-red-600">
+              <IoWarningOutline className="text-xl" /> Currently unavailable!
+              Please remove it from cart
+            </p>
+          )}
+
+          {cartItem.brandName !== null && cartItem.inventoryCount === 0 && (
+            <p className="flex items-baseline gap-2 mt-3 text-yellow-600">
+              <IoWarningOutline className="text-xl" /> Sold out! Please remove
+              it from cart
+            </p>
+          )}
+
           <div className="flex flex-row gap-2 items-center my-2">
             <PiArrowUDownLeftFill className="border border-black p-[2px] rounded-full text-lg text-slate-600" />
             <p className="text-slate-600 text-sm">
