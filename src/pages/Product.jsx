@@ -371,10 +371,15 @@ export default function Product() {
                 <div className="text-blue-600">
                   Stock : {productDetails.inventoryCount} pcs
                 </div>
+              ) : productDetails.inventoryCount < 6 &&
+                productDetails.inventoryCount > 0 ? (
+                <div className="text-red-600">
+                  Hurry! Only {productDetails.inventoryCount} products left
+                </div>
               ) : (
-                productDetails.inventoryCount < 6 && (
+                productDetails.inventoryCount === 0 && (
                   <div className="text-red-600">
-                    Hurry! Only {productDetails.inventoryCount} products left
+                    Sold out! Please revisit after couple of days.
                   </div>
                 )
               )}
@@ -384,7 +389,7 @@ export default function Product() {
                 <div className="flex gap-4 my-5">
                   <button
                     onClick={handleAddToCart}
-                    disabled={adding}
+                    disabled={adding || productDetails.inventoryCount < 1}
                     className="flex items-center uppercase font-bold text-sm p-3 bg-pink-500 text-white w-full max-w-md hover:opacity-90 rounded-md gap-2 justify-center disabled:opacity-70"
                   >
                     <BsHandbagFill className="text-lg" />
