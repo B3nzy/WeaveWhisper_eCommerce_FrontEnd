@@ -3,8 +3,6 @@ import { PiArrowUDownLeftFill } from "react-icons/pi";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
 import { Link } from "react-router-dom";
-import RemoveFromCartModal from "./RemoveFromCartModal";
-import { useSelector } from "react-redux";
 
 export default function CartProductCard({ cartItem, handleRemoveFromCart }) {
   //   console.log(cartItem);
