@@ -27,6 +27,15 @@ export default function ProductCard({
             alt="product cover"
             className="h-[350px] sm:h-[280px] w-full object-cover hover:scale-105 transition-scale duration-300"
           />
+          {listing.inventoryCount === 0 && (
+            <div className="absolute top-0 right-0">
+              <div className="w-36 h-8 absolute top-6 -right-8">
+                <div className="h-full w-full bg-red-500 text-white text-center leading-8 font-semibold transform rotate-45">
+                  Sold Out
+                </div>
+              </div>
+            </div>
+          )}
 
           {listing.reviewCount > 0 && (
             <div className="absolute bottom-1 left-2 gap-1 flex flex-row items-center text-slate-800 bg-white opacity-80 px-2 w-fit rounded-sm text-sm">
