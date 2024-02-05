@@ -76,7 +76,7 @@ export default function AllowAddress() {
         }
       });
     } else {
-      console.log("Geolocation bot supported");
+      console.log("Geolocation not supported");
     }
   };
 

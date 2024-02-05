@@ -5,6 +5,7 @@ import axios from "axios";
 import RemoveFromCartModal from "../components/RemoveFromCartModal";
 import { ToastContainer, toast } from "react-toastify";
 import { FaIndianRupeeSign } from "react-icons/fa6";
+const APIkey = import.meta.env.VITE_OPENCAGE_API_KEY;
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -17,6 +18,7 @@ export default function Cart() {
   const [address, setAddress] = useState(currentUser.address);
   const [showChangeAddress, setShowChangeAddress] = useState(false);
   const [newAddress, setNewAddress] = useState("");
+  const [count, setCount] = useState(0);
   const [showAddShippingButton, setShowAddShippingButton] = useState(
     currentUser && currentUser.address ? true : false
   );
@@ -107,6 +109,67 @@ export default function Cart() {
     setTotalDiscount(totalDiscount);
   };
 
+  const getLocationInfo = (latitude, longitude) => {
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude},${longitude}&key=${APIkey}`;
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status.code === 200) {
+          console.log("results:", data.results);
+          setNewAddress(data.results[0].formatted);
+        } else {
+          console.log("Reverse geolocation request failed.");
+        }
+      })
+      .catch((error) => console.error(error));
+  };
+  const success = (pos) => {
+    console.log(pos);
+    let crd = pos.coords;
+    console.log("Your current position is:");
+    console.log(`Latitude : ${crd.latitude}`);
+    console.log(`Longitude: ${crd.longitude}`);
+    console.log(`More or less ${crd.accuracy} meters.`);
+
+    getLocationInfo(crd.latitude, crd.longitude);
+  };
+
+  const errors = (err) => {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
+  };
+
+  const options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0,
+  };
+
+  const handleAddress = () => {
+    if (navigator.geolocation) {
+      navigator.permissions.query({ name: "geolocation" }).then((result) => {
+        console.log(result);
+        if (result.state === "granted") {
+          //If granted then you can directly call your function here
+          navigator.geolocation.getCurrentPosition(success, errors, options);
+        } else if (result.state === "prompt") {
+          //If prompt then the user will be asked to give permission
+          navigator.geolocation.getCurrentPosition(success, errors, options);
+        } else if (result.state === "denied") {
+          //If denied then you have to show instructions to enable location
+        }
+      });
+    } else {
+      console.log("Geolocation not supported");
+    }
+  };
+
+  useEffect(() => {
+    if (address === "" || address === null) {
+      setShowAddShippingButton(false);
+    }
+  }, [address, count]);
+
   return (
     <>
       <ToastContainer newestOnTop={true} className="top-16 w-fit" />
@@ -131,9 +194,9 @@ export default function Cart() {
               <div className="flex flex-col flex-1 gap-4 ">
                 {!loading &&
                   cartItems &&
-                  cartItems.map((item) => (
+                  cartItems.map((item, index) => (
                     <CartProductCard
-                      key={item}
+                      key={index}
                       cartItem={item}
                       handleRemoveFromCart={handleRemoveFromCart}
                     />
@@ -172,17 +235,20 @@ export default function Cart() {
                             <button
                               onClick={() => {
                                 setAddress(newAddress);
+                                console.log(address);
+                                console.log(newAddress);
                                 setNewAddress("");
+                                setCount(count + 1);
                                 setShowChangeAddress(false);
-                                if (address === "" || address === null) {
-                                  setShowAddShippingButton(false);
-                                }
                               }}
                               className="rounded-sm border uppercase text-xs p-2 font-semibold text-green-400 border-green-400 cursor-pointer hover:shadow-md"
                             >
                               Save
                             </button>
-                            <button className="rounded-sm border uppercase text-xs p-2 font-semibold text-green-400 border-green-400 cursor-pointer hover:shadow-md">
+                            <button
+                              onClick={handleAddress}
+                              className="rounded-sm border uppercase text-xs p-2 font-semibold text-green-400 border-green-400 cursor-pointer hover:shadow-md"
+                            >
                               Current Location
                             </button>
                             <button
@@ -214,12 +280,13 @@ export default function Cart() {
                         setShowAddShippingButton(true);
                         setShowChangeAddress(true);
                       }}
-                      className="border uppercase text-xs p-2 font-semibold text-orange-400 border-orange-400 cursor-pointer hover:shadow-md"
+                      className="border mx-auto w-full uppercase text-sm p-2 font-semibold text-orange-400 border-orange-400 cursor-pointer hover:shadow-md"
                     >
                       Add Shipping Address
                     </button>
                   )}
                 </div>
+                <hr />
                 {cartItems && cartItems.length > 0 && (
                   <>
                     <p className="uppercase font-bold">
