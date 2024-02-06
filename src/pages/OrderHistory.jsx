@@ -33,12 +33,12 @@ export default function OrderHistory() {
   const handleCancelOrder = async (item) => {
     console.log(item);
     try {
-      //   const res = await axios.post("/api/orderhistory/cancelorder", item);
-      //   if (res.status !== 200) {
-      //     console.log(res);
-      //     return;
-      //   }
-      //   console.log(res.data);
+      const res = await axios.post("/api/orderhistory/cancelorder", item);
+      if (res.status !== 200) {
+        console.log(res);
+        return;
+      }
+      console.log(res.data);
       setOrders((prev) =>
         prev.map((i) => {
           if (i.orderHistoryId === item.orderId) {
@@ -47,7 +47,7 @@ export default function OrderHistory() {
           return i;
         })
       );
-      toast.success("DELETED", {
+      toast.success(res.data.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
     } catch (err) {
@@ -66,7 +66,7 @@ export default function OrderHistory() {
           "Loading....."
         ) : orders && orders.length ? (
           <div className="flex flex-col">
-            <p className="mt-10 ml-1 uppercase font-bold text-xl text-slate-700 mb-2">
+            <p className="mt-10 ml-1 uppercase font-bold text-xl text-slate-500 mb-2">
               All Orders
             </p>
             <hr />

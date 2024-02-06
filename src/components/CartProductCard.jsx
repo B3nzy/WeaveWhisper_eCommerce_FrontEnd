@@ -30,7 +30,9 @@ export default function CartProductCard({ cartItem, handleRemoveFromCart }) {
           </Link>
         </div>
         <div className="p-1">
-          <p className="font-semibold truncate w-full">{cartItem.brandName}</p>
+          <p className="font-semibold truncate w-full text-slate-800">
+            {cartItem.brandName}
+          </p>
           <p className="text-md text-slate-700 truncate w-full">
             {cartItem.name}
           </p>

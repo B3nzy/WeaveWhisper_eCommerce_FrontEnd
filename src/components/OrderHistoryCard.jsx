@@ -36,7 +36,7 @@ export default function OrderHistoryCard({
         </p>
       </div>
       <div className="border p-3 flex flex-row gap-2 bg-white mt-3">
-        <div className="w-32 sm:ml-5">
+        <div className="w-32 md:ml-5">
           <Link to={`/product/${orderItem.productId}`}>
             <img
               className="cursor-pointer max-h-36 object-contain hover:shadow-lg"
@@ -49,7 +49,7 @@ export default function OrderHistoryCard({
         <div className="p-1">
           <div className="flex flex-row justify-between items-center ">
             <div className="">
-              <p className="font-semibold truncate w-full">
+              <p className="font-semibold truncate w-full text-slate-800">
                 {orderItem.brandName}
               </p>
               <p className="text-md text-slate-700 truncate w-full">
