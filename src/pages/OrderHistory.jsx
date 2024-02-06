@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -43,6 +44,7 @@ export default function OrderHistory() {
           if (i.orderHistoryId === item.orderId) {
             i.orderStatus = "CANCELLED";
           }
+          return i;
         })
       );
       toast.success("DELETED", {
