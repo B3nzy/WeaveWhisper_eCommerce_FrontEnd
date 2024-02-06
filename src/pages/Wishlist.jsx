@@ -94,8 +94,15 @@ export default function Wishlist() {
     fetchWishlistedItems();
   }, []);
   return (
-    <div className="p-3">
-      <div className="flex flex-wrap justify-evenly">
+    <div className="p-3 mt-10 max-w-6xl mx-auto">
+      <h1 className="uppercase text-lg font-bold text-slate-700 mb-2 ml-1">
+        My Wishlist{" "}
+        <span className="lowercase font-normal ml-1">
+          {products.length} items
+        </span>
+      </h1>
+      <hr />
+      <div className="flex flex-wrap justify-evenly mt-2">
         {products &&
           products.length > 0 &&
           products.map((item, id) => {
