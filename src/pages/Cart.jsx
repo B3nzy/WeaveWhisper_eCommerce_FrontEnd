@@ -4,10 +4,13 @@ import CartProductCard from "../components/CartProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import RemoveFromCartModal from "../components/RemoveFromCartModal";
+import { LiaShoppingBagSolid } from "react-icons/lia";
+import { HiShoppingBag } from "react-icons/hi2";
 import { ToastContainer, toast } from "react-toastify";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { updateCartSuccess } from "../redux/user/userSlice";
 import useRazorpay from "react-razorpay";
+import { Link } from "react-router-dom";
 const APIkey = import.meta.env.VITE_OPENCAGE_API_KEY;
 const razorpayKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID;
 
@@ -195,15 +198,17 @@ export default function Cart() {
 
   const handlePlaceOrderByRazor = async () => {
     try {
+      console.log(phoneNumber);
       const res = await axios.post("/api/cart/placeorderrequest", {
         customerId: currentUser.id,
         address,
+        phoneNumber,
       });
       if (res.status !== 200) {
         //todo:toast msg
         return;
       }
-
+      console.log(res.data);
       const options = {
         key: razorpayKeyId,
         amount: res.data.totalAmount * 100,
@@ -269,11 +274,11 @@ export default function Cart() {
       <div className="p-3 max-w-6xl mx-auto mb-10">
         {loading ? (
           "Loading....."
-        ) : (
+        ) : cartItems && cartItems.length > 0 ? (
           <>
-            <h1 className="text-center font-semibold text-3xl my-7 text-black">
-              My Bag
-            </h1>
+            <p className="text-center font-semibold text-3xl my-7 text-black flex items-center justify-center gap-2">
+              <LiaShoppingBagSolid className="text-4xl" /> My Bag
+            </p>
             <div className="flex flex-col md:flex-row gap-10">
               <div className="flex flex-col flex-1 gap-4 w-full">
                 {!loading &&
@@ -492,6 +497,22 @@ export default function Cart() {
               </div>
             </div>
           </>
+        ) : (
+          <div className="flex flex-col w-full h-96 items-center mt-32">
+            <HiShoppingBag className="text-9xl text-orange-100" />
+            <p className="mt-4 font-semibold text-slate-700 text-xl">
+              Hey, it feels so light!
+            </p>
+            <p className="text-sm text-slate-400">
+              There is nothing in your bag. Let's add some items.
+            </p>
+            <Link
+              to={"/wishlist"}
+              className="uppercase border p-3 mt-4 text-sm font-semibold text-orange-500 border-orange-500 hover:bg-orange-500 hover:text-white rounded-sm"
+            >
+              Add items from wishlist
+            </Link>
+          </div>
         )}
       </div>
     </>
