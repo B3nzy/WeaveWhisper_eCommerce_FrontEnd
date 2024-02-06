@@ -217,8 +217,8 @@ export default function Cart() {
         description: "Add balance to WeaveWhisper wallet.",
         order_id: res.data.orderId,
         handler: async function (response) {
-          console.log(res);
-          // const res = await axios.post("api/balance/addsuccess", response);
+          console.log(response);
+          const res = await axios.post("/api/cart/placeordersuccess", response);
           // if (res.status === 400) {
           //   toast.error(res.data.message, {
           //     position: toast.POSITION.TOP_RIGHT,
@@ -234,6 +234,7 @@ export default function Cart() {
           //     position: toast.POSITION.TOP_RIGHT,
           //   });
           // }
+          console.log(res.data);
         },
         prefill: {
           name: res.data.fullName,
