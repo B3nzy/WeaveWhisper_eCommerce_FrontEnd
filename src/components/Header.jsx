@@ -185,7 +185,7 @@ export default function Header() {
               <li className="text-xs font-semibold">Profile</li>
             </ul>
           </MenuHandler>
-          <MenuList className="p-6 flex flex-col gap-2 text-gray-600 outline-none shadow-md z-50">
+          <MenuList className="p-6 flex flex-col gap-[2px] text-gray-600 outline-none shadow-md z-50">
             {currentUser ? (
               <>
                 <MenuItem>
@@ -219,12 +219,14 @@ export default function Header() {
                   </Link>
                 </MenuItem>
                 {currentUser.type === "CUSTOMER" && (
-                  <MenuItem className="flex items-center gap-4 hover:text-orange-600">
-                    <LiaShoppingBagSolid className="text-2xl" />
-                    <Typography variant="small" className="font-medium">
-                      My Orders
-                    </Typography>
-                  </MenuItem>
+                  <Link to={"/order-history"}>
+                    <MenuItem className="flex items-center gap-4 hover:text-orange-600">
+                      <LiaShoppingBagSolid className="text-2xl" />
+                      <Typography variant="small" className="font-medium">
+                        My Orders
+                      </Typography>
+                    </MenuItem>
+                  </Link>
                 )}
                 {currentUser.type === "CUSTOMER" && (
                   <Link to={"/wallet"}>

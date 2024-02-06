@@ -34,7 +34,7 @@ export default function CartProductCard({ cartItem, handleRemoveFromCart }) {
           <p className="text-md text-slate-700 truncate w-full">
             {cartItem.name}
           </p>
-          <div className="my-2 flex flex-row items-center gap-4">
+          <div className="my-2 flex flex-row items-center gap-4 text-sm">
             <p className="border p-1 rounded-sm px-3 text-center">
               Size: {cartItem.size}
             </p>

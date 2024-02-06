@@ -21,6 +21,7 @@ import Search from "./pages/Search";
 import ManufacturerProfile from "./pages/ManufacturerProfile";
 import UpdateProduct from "./pages/UpdateProduct";
 import Wallet from "./pages/Wallet";
+import OrderHistory from "./pages/OrderHistory";
 
 export default function App() {
   return (
@@ -47,6 +48,7 @@ export default function App() {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/profile" element={<CustomerProfile />} />
           <Route path="/wallet" element={<Wallet />} />
+          <Route path="/order-history" element={<OrderHistory />} />
         </Route>
 
         <Route element={<PrivateRouteManufacturer />}>
