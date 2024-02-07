@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import OrderHistoryCard from "../components/OrderHistoryCard";
 import { ToastContainer, toast } from "react-toastify";
+import { RiEmotionSadFill } from "react-icons/ri";
+import { Link } from "react-router-dom";
 
 export default function OrderHistory() {
   const [loading, setLoading] = useState(false);
@@ -82,7 +84,19 @@ export default function OrderHistory() {
             </div>
           </div>
         ) : (
-          ""
+          <div className="flex flex-col w-full h-screen items-center ">
+            <RiEmotionSadFill className="text-9xl text-blue-100 mt-40" />
+            <p className="mt-4 font-semibold text-slate-700 text-xl">
+              No orders yet!
+            </p>
+
+            <Link
+              to={"/search"}
+              className="uppercase border p-3 mt-4 text-sm font-semibold text-blue-400 border-blue-400 hover:bg-blue-400 hover:text-white rounded-sm"
+            >
+              Continue Shopping
+            </Link>
+          </div>
         )}
       </div>
     </>
