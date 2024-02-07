@@ -130,7 +130,7 @@ export default function OrderHistoryCard({
         </div>
 
         <div className="p-1 w-full">
-          <div className="flex flex-row justify-between items-center ">
+          <div className="flex flex-col sm:flex-row gap-2 justify-between items-center ">
             <div className="">
               <p className="font-semibold truncate w-full text-slate-800">
                 {orderItem.brandName}
@@ -174,7 +174,7 @@ export default function OrderHistoryCard({
               )}
             </div>
           </div>
-          <div className="gap-1 font-semibold flex flex-row text-xs text-gray-500 items-start sm:text-sm">
+          <div className="gap-1 font-semibold flex flex-row text-xs text-gray-500 items-start sm:text-sm mt-2 sm:mt-0">
             <TbTruckDelivery className="text-lg" />
             <p>
               <span className="uppercase"> Shipping Details - </span>
