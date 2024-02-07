@@ -10,7 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { updateCartSuccess } from "../redux/user/userSlice";
 import useRazorpay from "react-razorpay";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const APIkey = import.meta.env.VITE_OPENCAGE_API_KEY;
 const razorpayKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID;
 
@@ -30,8 +30,11 @@ export default function Cart() {
   const [newAddress, setNewAddress] = useState("");
   const [count, setCount] = useState(0);
   const [placeOrderFlag, setPlaceOrderFlag] = useState(true);
+  const [phNoError, setPhNoError] = useState(false);
   const dispatch = useDispatch();
   const [Razorpay] = useRazorpay();
+  const navigate = useNavigate();
+  const [paymentProcessingFlag, setPaymentProcessingFlag] = useState(false);
   console.log(placeOrderFlag);
   const [showAddShippingButton, setShowAddShippingButton] = useState(
     currentUser && currentUser.address ? true : false
@@ -198,7 +201,18 @@ export default function Cart() {
 
   const handlePlaceOrderByRazor = async () => {
     try {
-      console.log(phoneNumber);
+      if (
+        currentUser.id === null ||
+        address === "" ||
+        phoneNumber === "" ||
+        address === null ||
+        phoneNumber === null
+      ) {
+        toast.warn("Please add address and phone number to place order!", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        return;
+      }
       const res = await axios.post("/api/cart/placeorderrequest", {
         customerId: currentUser.id,
         address,
@@ -217,23 +231,22 @@ export default function Cart() {
         description: "Add balance to WeaveWhisper wallet.",
         order_id: res.data.orderId,
         handler: async function (response) {
+          setPaymentProcessingFlag(true);
           console.log(response);
           const res = await axios.post("/api/cart/placeordersuccess", response);
-          // if (res.status === 400) {
-          //   toast.error(res.data.message, {
-          //     position: toast.POSITION.TOP_RIGHT,
-          //   });
-          // } else if (res.status !== 200) {
-          //   toast.error("Something went wrong.", {
-          //     position: toast.POSITION.TOP_RIGHT,
-          //   });
-          //   const res = await axios.post("/api/balance/addfailure", response);
-          //   console.log(res);
-          // } else {
-          //   toast.success(res.data.message, {
-          //     position: toast.POSITION.TOP_RIGHT,
-          //   });
-          // }
+          if (res.status === 400) {
+            setPaymentProcessingFlag(false);
+            toast.error(res.data.message, {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+          } else if (res.status !== 200) {
+            setPaymentProcessingFlag(false);
+            toast.error("Something went wrong.", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+          }
+          setPaymentProcessingFlag(false);
+          navigate("/order-history");
           console.log(res.data);
         },
         prefill: {
@@ -252,17 +265,30 @@ export default function Cart() {
 
       const rzp1 = new Razorpay(options);
 
-      rzp1.on("payment.failed", function (response) {});
+      rzp1.on("payment.failed", function (response) {
+        //   console.log("anything");
+        //   toast.error("Something went wrong.", {
+        //     position: toast.POSITION.TOP_RIGHT,
+        //   });
+      });
 
       rzp1.open();
     } catch (err) {
       console.log(err);
     }
   };
-
+  useEffect(() => {
+    if (paymentProcessingFlag) {
+      document.body.style.overflow = "hidden";
+      return () => (document.body.style.overflow = "unset");
+    }
+  }, [paymentProcessingFlag]);
   return (
     <>
       <ToastContainer newestOnTop={true} className="top-16 w-fit" />
+      {paymentProcessingFlag && (
+        <div className="fixed top-0 z-40 w-full h-full bg-gray-800 blur opacity-40"></div>
+      )}
       {showModal && (
         <RemoveFromCartModal
           item={cartItem}
@@ -403,20 +429,25 @@ export default function Cart() {
                           placeholder="enter shipping contact number..."
                           className="outline-none w-full p-2 border"
                           maxLength={10}
-                          minLength={10}
                           value={newPhoneNumber}
                           onChange={(e) => {
                             setNewPhoneNumber(e.target.value);
+                            !isFinite(e.target.value) ||
+                            e.target.value.length !== 10
+                              ? setPhNoError(true)
+                              : setPhNoError(false);
                           }}
                         />
+
                         <button
+                          disabled={phNoError}
                           onClick={() => {
                             setPhoneNumber(newPhoneNumber);
                             setNewPhoneNumber("");
                             setShowChangeContact(false);
                             setCount(count + 1);
                           }}
-                          className="rounded-sm border uppercase text-xs p-2 font-semibold text-green-400 border-green-400 cursor-pointer hover:shadow-md"
+                          className="rounded-sm border disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none uppercase text-xs p-2 font-semibold text-green-400 border-green-400 cursor-pointer hover:shadow-md"
                         >
                           Save
                         </button>
