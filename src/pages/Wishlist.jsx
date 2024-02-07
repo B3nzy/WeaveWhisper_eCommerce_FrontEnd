@@ -102,7 +102,9 @@ export default function Wishlist() {
     <>
       <ToastContainer newestOnTop={true} className="top-16 w-fit" />
       <div className="p-3 mt-10 max-w-6xl mx-auto">
-        {products && products.length > 0 ? (
+        {loading ? (
+          "Loading..."
+        ) : products && products.length > 0 ? (
           <>
             <h1 className="uppercase text-lg font-bold text-slate-700 mb-2 ml-1">
               My Wishlist{" "}
