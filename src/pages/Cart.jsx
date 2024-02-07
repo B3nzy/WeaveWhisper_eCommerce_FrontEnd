@@ -531,7 +531,7 @@ export default function Cart() {
             </div>
           </>
         ) : (
-          <div className="flex flex-col w-full h-screen items-center ">
+          <div className="flex flex-col w-full min-h-screen items-center ">
             <HiShoppingBag className="text-9xl text-orange-100 mt-40" />
             <p className="mt-4 font-semibold text-slate-700 text-xl">
               Hey, it feels so light!
