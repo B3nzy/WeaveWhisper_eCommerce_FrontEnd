@@ -7,29 +7,112 @@ export default function OrderHistoryCard({
   orderItem,
   cancelOrder,
   customerId,
+  returnOrder,
 }) {
   console.log(orderItem);
-  const cancelDetails = {
+  const orderDetails = {
     customerId: customerId,
     orderId: orderItem.orderHistoryId,
     productId: orderItem.productId,
   };
-  console.log(cancelDetails);
+  console.log(orderDetails);
 
   return (
     <div className="p-3 border rounded-sm bg-gray-50">
       <div className="flex flex-row gap-2 items-center">
         <PiPackageDuotone className="border rounded-full text-3xl text-amber-700 bg-white opacity-50" />
         <div className="flex flex-col uppercase text-xs text-slate-700 gap-1">
-          <p className="font-semibold">
-            <span>Order Status: </span>
-            <span>{orderItem.orderStatus}</span>
-          </p>
-          <p className="font-semibold text-slate-400 capitalize">
-            <span>Order Placed </span>
-            <span className="lowercase">on {orderItem.orderDate}</span>
-          </p>
+          {orderItem.returnStatus === "NOTREQUESTED" ? (
+            <>
+              <p className="font-semibold uppercase">
+                <span className="">Order Status: </span>
+                <span
+                  className={[
+                    (orderItem.orderStatus === "DELIVERED" ||
+                      orderItem.orderStatus === "CANCELLED") &&
+                      "hidden ",
+                    " text-yellow-400",
+                  ].join("")}
+                >
+                  Processing-
+                </span>
+                <span
+                  className={[
+                    (orderItem.orderStatus === "DELIVERED" ||
+                      orderItem.orderStatus === "CANCELLED") &&
+                      "hidden ",
+                    orderItem.orderStatus === "DISPATCHING" ||
+                    orderItem.orderStatus === "SHIPPED"
+                      ? " text-yellow-400"
+                      : " text-slate-400",
+                  ].join("")}
+                >
+                  -Dispatching-
+                </span>
+                <span
+                  className={[
+                    (orderItem.orderStatus === "DELIVERED" ||
+                      orderItem.orderStatus === "CANCELLED") &&
+                      "hidden ",
+                    orderItem.orderStatus === "SHIPPED"
+                      ? " text-yellow-400"
+                      : " text-slate-400",
+                  ].join("")}
+                >
+                  -Shipped--
+                </span>
+                <span
+                  className={[
+                    orderItem.orderStatus === "CANCELLED" && "hidden ",
+                    orderItem.orderStatus === "DELIVERED"
+                      ? " text-green-400"
+                      : " text-slate-400",
+                  ].join("")}
+                >
+                  Delivered
+                </span>
+                {orderItem.orderStatus === "CANCELLED" && (
+                  <span className="text-red-600">Cencelled</span>
+                )}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="font-semibold uppercase">
+                <span className="">Return Status: </span>
+                <span
+                  className={[
+                    orderItem.returnStatus === "RETURNED" && "hidden ",
+                    " text-yellow-400",
+                  ].join("")}
+                >
+                  REQUESTED--
+                </span>
+                <span
+                  className={[
+                    orderItem.returnStatus === "RETURNED"
+                      ? " text-blue-400"
+                      : " text-slate-400",
+                  ].join("")}
+                >
+                  RETURNED
+                </span>
+              </p>
+            </>
+          )}
+          {orderItem.orderStatus === "DELIVERED" ? (
+            <p className="font-semibold text-slate-400 capitalize">
+              <span>Delivered </span>
+              <span className="lowercase">on {orderItem.deliveryDate}</span>
+            </p>
+          ) : (
+            <p className="font-semibold text-slate-400 capitalize">
+              <span>Order Placed </span>
+              <span className="lowercase">on {orderItem.orderDate}</span>
+            </p>
+          )}
         </div>
+
         <p className="ml-auto text-xs text-slate-700">
           <span className="uppercase font-semibold">Receipt Id: </span>{" "}
           {orderItem.receipt}
@@ -72,11 +155,21 @@ export default function OrderHistoryCard({
               {orderItem.orderStatus === "PROCESSING" && (
                 <button
                   onClick={() => {
-                    cancelOrder(cancelDetails);
+                    cancelOrder(orderDetails);
                   }}
                   className="uppercase text-sm font-semibold text-red-600 border-red-600 border p-1 rounded-sm px-3 flex justify-center hover:bg-red-600 hover:text-white "
                 >
                   Cancel Order
+                </button>
+              )}
+              {orderItem.returnAvailable && (
+                <button
+                  onClick={() => {
+                    returnOrder(orderDetails);
+                  }}
+                  className="uppercase text-sm font-semibold text-blue-600 border-blue-600 border p-1 rounded-sm px-3 flex justify-center hover:bg-blue-600 hover:text-white "
+                >
+                  RETURN
                 </button>
               )}
             </div>

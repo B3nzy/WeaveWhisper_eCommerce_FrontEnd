@@ -276,7 +276,7 @@ export default function Search() {
   };
   console.log(sortBy);
   return (
-    <div className="flex flex-col md:flex-row mb-5">
+    <div className="flex flex-col md:flex-row mb-10">
       <div className=" border-b-2 md:w-72 md:min-h-screen md:sticky md:top-20 md:h-fit">
         <div className=" border-b-2 ">
           <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
@@ -524,6 +524,11 @@ export default function Search() {
               );
             })}
         </div>
+        {/* pagination */}
+        {/* <div>
+
+        </div> */}
+        <br />
         <hr />
       </div>
     </div>

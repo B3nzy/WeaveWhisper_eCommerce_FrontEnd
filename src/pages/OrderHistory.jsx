@@ -59,6 +59,36 @@ export default function OrderHistory() {
       });
     }
   };
+
+  const handleReturnOrder = async (item) => {
+    console.log(item);
+    try {
+      const res = await axios.post("/api/orderhistory/returnorder", item);
+      if (res.status !== 200) {
+        console.log(res);
+        return;
+      }
+      console.log(res.data);
+      setOrders((prev) =>
+        prev.map((i) => {
+          if (i.orderHistoryId === item.orderId) {
+            i.returnStatus = "REQUESTED";
+            i.returnAvailable = false;
+          }
+          return i;
+        })
+      );
+      toast.info(res.data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error("Something went wrong!", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+  };
+
   return (
     <>
       <ToastContainer newestOnTop={true} className="top-16 w-fit" />
@@ -78,6 +108,7 @@ export default function OrderHistory() {
                   key={index}
                   orderItem={item}
                   cancelOrder={handleCancelOrder}
+                  returnOrder={handleReturnOrder}
                   customerId={currentUser.id}
                 />
               ))}
