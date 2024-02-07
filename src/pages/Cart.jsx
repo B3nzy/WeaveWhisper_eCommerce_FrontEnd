@@ -246,6 +246,7 @@ export default function Cart() {
             });
           }
           setPaymentProcessingFlag(false);
+          dispatch(updateCartSuccess(0));
           navigate("/order-history");
           console.log(res.data);
         },
