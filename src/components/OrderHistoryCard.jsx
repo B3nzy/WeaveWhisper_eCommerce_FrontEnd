@@ -129,7 +129,7 @@ export default function OrderHistoryCard({
           </Link>
         </div>
 
-        <div className="p-1">
+        <div className="p-1 w-full">
           <div className="flex flex-row justify-between items-center ">
             <div className="">
               <p className="font-semibold truncate w-full text-slate-800">
