@@ -111,7 +111,7 @@ export default function Header() {
     <div
       className={[
         active ? "bg-black text-gray-50 " : "bg-white ",
-        " shadow-md p-4 flex flex-row items-center justify-between sticky top-0 left-0 z-10 transition-all ease",
+        " shadow-md p-4 flex flex-row gap-3 items-center justify-between sticky top-0 left-0 z-10 transition-all ease",
       ].join("")}
     >
       <Link to={"/"} className="font-bold sm:ml-10 sm:text-xl">
@@ -127,7 +127,7 @@ export default function Header() {
         <Link
           to="/search"
           state={{ genders: ["MEN"] }}
-          className="capitalize cursor-pointer hover:text-orange-600"
+          className="capitalize cursor-pointer hidden sm:inline hover:text-orange-600"
         >
           MEN
         </Link>
@@ -135,7 +135,7 @@ export default function Header() {
         <Link
           to="/search"
           state={{ genders: ["WOMEN"] }}
-          className="capitalize cursor-pointer hover:text-orange-600"
+          className="capitalize hidden sm:inline cursor-pointer hover:text-orange-600"
         >
           WOMEN
         </Link>
