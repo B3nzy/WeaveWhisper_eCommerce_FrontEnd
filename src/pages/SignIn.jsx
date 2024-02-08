@@ -26,6 +26,7 @@ export default function SignIn() {
       setLoading(true);
       dispatch(signInStart());
       const res = await axios.post("/api/users/sign-in", values);
+      console.log(res);
       if (res.status !== 200) {
         setLoading(false);
         setUserError(res.response.data.message);
@@ -39,8 +40,14 @@ export default function SignIn() {
       navigate("/");
     } catch (err) {
       setLoading(false);
-      setUserError(err.response.data.message);
       dispatch(signInFaliure());
+      if (err.request.status === 403) {
+        toast.warn(err.response.data.message, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      } else {
+        setUserError(err.response.data.message);
+      }
       console.log(err.response.data.message);
     }
   };

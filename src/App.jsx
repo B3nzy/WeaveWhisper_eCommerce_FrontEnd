@@ -23,6 +23,7 @@ import UpdateProduct from "./pages/UpdateProduct";
 import Wallet from "./pages/Wallet";
 import OrderHistory from "./pages/OrderHistory";
 import PageNotFound from "./pages/PageNotFound";
+import ManufacturerVerification from "./pages/ManufacturerVerification";
 
 export default function App() {
   return (
@@ -34,7 +35,10 @@ export default function App() {
         <Route path="/address" element={<AllowAddress />} />
         <Route path="/about" element={<About />} />
         <Route path="/search" element={<Search />} />
-        <Route path="*" element={<PageNotFound />} />
+        <Route
+          path="/manufacturer-verification"
+          element={<ManufacturerVerification />}
+        />
 
         <Route element={<LoggedOutRoute />}>
           <Route path="/sign-in" element={<SignIn />} />
@@ -61,8 +65,8 @@ export default function App() {
           <Route path="/brand" element={<ManufacturerProfile />} />
           <Route path="/update-product/:pId" element={<UpdateProduct />} />
         </Route>
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
-
       <Footer />
     </BrowserRouter>
   );

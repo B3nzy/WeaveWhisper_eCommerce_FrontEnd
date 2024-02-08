@@ -22,7 +22,7 @@ export default function SignUp() {
       }
       setLoading(false);
       console.log(res.data);
-      navigate("/sign-in", { state: res.data });
+      navigate("/manufacturer-verification");
     } catch (err) {
       setLoading(false);
       console.log(err.response.data.message);
