@@ -25,41 +25,24 @@ export default function Search() {
   const [allBrands, setAllBrands] = useState([]);
   const [COLORENUM, setCOLORENUM] = useState([]);
   const [maxPageNo, setMaxPageNo] = useState(1);
+  const [count, setCount] = useState(1);
   const navigate = useNavigate();
-  // const COLORENUM = [
-  //   "RED",
-  //   "BLUE",
-  //   "ORANGE",
-  //   "BLACK",
-  //   "WHITE",
-  //   "PINK",
-  //   "GREEN",
-  //   "YELLOW",
-  //   "PURPLE",
-  // ];
-  const [CATEGORYENUM, setCATEGORYENUM] = useState([]);
-  // const CATEGORYENUM = [
-  //   "PANT",
-  //   "SHIRT",
-  //   "TSHIRT",
-  //   "DRESS",
-  //   "SAREE",
-  //   "SWEATER",
-  //   "HOODIE",
-  //   "JACKET",
-  //   "TOP",
-  //   "JEANS",
-  // ];
-  const [SIZEENUM, setSIZEENUM] = useState([]);
-  // const SIZEENUM = ["S", "M", "L", "XL"];
 
+  const [CATEGORYENUM, setCATEGORYENUM] = useState([]);
+  const [SIZEENUM, setSIZEENUM] = useState([]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    fetchAllProducts();
+  }, [count]);
   const onSubmit = async () => {
+    setPageNmber(1);
+    setCount(count + 1);
     console.log({
       ...values,
       pageNumber,
       offset,
     });
-    fetchAllProducts();
   };
 
   const { values, handleChange, handleSubmit, setFieldValue } = useFormik({
@@ -114,9 +97,6 @@ export default function Search() {
       console.log(res.data);
       setProducts(res.data.productSearchResponseDto);
       setTotalElements(res.data.totalElements);
-      setPageNmber(res.data.pageNumber);
-      setOffset(res.data.offset);
-
       setMaxPageNo(Math.ceil(res.data.totalElements / res.data.offset));
     } catch (err) {
       console.log(err);
@@ -137,7 +117,7 @@ export default function Search() {
     } else {
       fetchAllProducts();
     }
-  }, [location, sortBy, pageNumber]);
+  }, [location, sortBy]);
 
   const onProductClick = () => {
     // TODO need to work on it, ISSUE when user clicks back button from product page to search page.
@@ -280,7 +260,7 @@ export default function Search() {
   };
   console.log(sortBy);
   return (
-    <div className="flex flex-col md:flex-row mb-10">
+    <div className="flex flex-col md:flex-row mb-10 min-h-screen">
       <div className=" border-b-2 md:w-72 md:min-h-screen md:sticky md:top-20 md:h-fit">
         <div className=" border-b-2 ">
           <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
@@ -534,6 +514,7 @@ export default function Search() {
             <button
               onClick={() => {
                 setPageNmber(pageNumber - 1);
+                setCount(count + 1);
               }}
               disabled={pageNumber === 1}
               className="text-4xl  p-1 items-center justify-center cursor-pointer disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed  text-pink-500 hover:shadow-lg"
@@ -553,6 +534,7 @@ export default function Search() {
             <button
               onClick={() => {
                 setPageNmber(pageNumber + 1);
+                setCount(count + 1);
               }}
               disabled={pageNumber === maxPageNo}
               className="text-4xl  p-1 items-center justify-center  cursor-pointer disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed  text-pink-500 hover:shadow-lg"
