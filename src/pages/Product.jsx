@@ -37,10 +37,7 @@ export default function Product() {
   const dispatch = useDispatch();
   console.log(productDetails);
 
-  const [cartDetail, setCartDetail] = useState({
-    productId: params.productId,
-    customerId: currentUser.id,
-  });
+  const [cartDetail, setCartDetail] = useState({});
   console.log(cartDetail);
 
   const handleColorChange = (val) => {
@@ -208,7 +205,14 @@ export default function Product() {
         setAdding(false);
         return;
       }
-
+      if (currentUser === null || currentUser === undefined) {
+        navigate("/sign-in");
+        return;
+      }
+      setCartDetail({
+        productId: productDetails.id,
+        customerId: currentUser.id,
+      });
       const res = await axios.post("/api/cart/add", cartDetail);
       if (res.status !== 201) {
         toast.error(res.data.message, {
@@ -219,10 +223,7 @@ export default function Product() {
       setColorError(false);
       setSizeError(false);
       setAdding(false);
-      setCartDetail({
-        productId: productDetails.id,
-        customerId: currentUser.id,
-      });
+
       toast.success(res.data.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
@@ -427,7 +428,7 @@ export default function Product() {
               <div className="text-slate-500 flex gap-4 items-center my-5">
                 <FaTruckArrowRight className="text-4xl " />
                 <p className="font-semibold">
-                  Easy 14 days return & exchange available
+                  Easy 15 days return & exchange available
                 </p>
               </div>
               <p className="text-slate-600">100% Original Products</p>
