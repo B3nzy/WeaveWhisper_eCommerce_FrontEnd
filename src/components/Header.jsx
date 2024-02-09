@@ -266,7 +266,7 @@ export default function Header() {
           </MenuList>
         </Menu>
 
-        {currentUser === null || currentUser.type === "CUSTOMER" ? (
+        {(currentUser === null || currentUser.type === "CUSTOMER") && (
           <ul
             className=" flex flex-col items-center hover:text-orange-600  cursor-pointer"
             onClick={handleWishlistClick}
@@ -274,7 +274,8 @@ export default function Header() {
             <CiHeart className="text-2xl" />
             <li className="text-xs font-semibold">Wishlist</li>
           </ul>
-        ) : (
+        )}
+        {currentUser && currentUser.type === "MANUFACTURER" && (
           <Link to={"/create-product-listing"}>
             {" "}
             <ul className=" flex flex-col items-center hover:text-orange-600 ">

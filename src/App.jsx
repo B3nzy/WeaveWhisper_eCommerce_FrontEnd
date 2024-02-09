@@ -24,6 +24,9 @@ import Wallet from "./pages/Wallet";
 import OrderHistory from "./pages/OrderHistory";
 import PageNotFound from "./pages/PageNotFound";
 import ManufacturerVerification from "./pages/ManufacturerVerification";
+import AdminSignIn from "./pages/admin_pages/AdminSignIn";
+import PrivateRouteAdmin from "./components/PrivateRouteAdmin";
+import AdminHomePage from "./pages/admin_pages/AdminHomePage";
 
 export default function App() {
   return (
@@ -47,6 +50,11 @@ export default function App() {
             path="/manufacturers/sign-up"
             element={<ManufacturerSignUp />}
           />
+          <Route path="/admin/sign-in" element={<AdminSignIn />} />
+        </Route>
+
+        <Route element={<PrivateRouteAdmin />}>
+          <Route path="/admin" element={<AdminHomePage />} />
         </Route>
 
         <Route element={<PrivateRouteCustomer />}>
@@ -65,6 +73,7 @@ export default function App() {
           <Route path="/brand" element={<ManufacturerProfile />} />
           <Route path="/update-product/:pId" element={<UpdateProduct />} />
         </Route>
+
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       <Footer />
