@@ -228,24 +228,35 @@ export default function Cart() {
         description: "Add balance to WeaveWhisper wallet.",
         order_id: res.data.orderId,
         handler: async function (response) {
-          setPaymentProcessingFlag(true);
-          console.log(response);
-          const res = await axios.post("/api/cart/placeordersuccess", response);
-          if (res.status === 400) {
+          try {
+            setPaymentProcessingFlag(true);
+            console.log(response);
+            const res = await axios.post(
+              "/api/cart/placeordersuccess",
+              response
+            );
+            if (res.status === 400) {
+              setPaymentProcessingFlag(false);
+              toast.error(res.data.message, {
+                position: toast.POSITION.TOP_RIGHT,
+              });
+            } else if (res.status !== 200) {
+              setPaymentProcessingFlag(false);
+              toast.error("Something went wrong.", {
+                position: toast.POSITION.TOP_RIGHT,
+              });
+            }
             setPaymentProcessingFlag(false);
-            toast.error(res.data.message, {
-              position: toast.POSITION.TOP_RIGHT,
-            });
-          } else if (res.status !== 200) {
+            dispatch(updateCartSuccess(0));
+            navigate("/order-history");
+            console.log(res.data);
+          } catch (err) {
+            console.log(err);
             setPaymentProcessingFlag(false);
-            toast.error("Something went wrong.", {
+            toast.error(err.response.message, {
               position: toast.POSITION.TOP_RIGHT,
             });
           }
-          setPaymentProcessingFlag(false);
-          dispatch(updateCartSuccess(0));
-          navigate("/order-history");
-          console.log(res.data);
         },
         prefill: {
           name: res.data.fullName,

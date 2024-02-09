@@ -94,7 +94,7 @@ export default function ManufacturerProfile() {
       {showModal && <DeleteBrandModal closeModalAction={closeDeleteModal} />}
 
       <ToastContainer newestOnTop={true} className="top-16 w-fit" />
-      <div className="p-6 max-w-5xl mx-auto flex flex-col sm:flex-row gap-2">
+      <div className="p-6 max-w-5xl mx-auto flex flex-col sm:flex-row gap-2 min-h-screen">
         <div className="p-3 flex flex-col flex-1">
           <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
           <form className="flex flex-col gap-4">
@@ -111,12 +111,12 @@ export default function ManufacturerProfile() {
               className=" border p-3 rounded-lg"
               disabled
             />
-            <input
+            {/* <input
               type="text"
               defaultValue={currentUser.email}
               className=" border p-3 rounded-lg"
               disabled
-            />
+            /> */}
             {/* <button
               disabled={loading}
               className=" bg-black text-white rounded-lg p-3 uppercase hover:opacity-85 hover:shadow-lg  disabled:opacity-80"
