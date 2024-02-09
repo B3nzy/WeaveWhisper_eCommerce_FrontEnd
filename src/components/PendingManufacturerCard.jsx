@@ -8,15 +8,15 @@ export default function PendingManufacturerCard({
 }) {
   console.log(item);
   return (
-    <div className="border w-full flex flex-row p-3 gap-3">
-      <div className="flex flex-col gap-2">
-        <span>Manufacturer Email : {item.email}</span>
-        <span>Manufacturer Brand name : {item.brandName}</span>
-        <span>Manufacturer Pan Number : {item.panNumber}</span>
+    <div className="flex flex-row p-4 gap-10 border-2 items-center rounded-sm justify-between pr-10">
+      <div className="flex flex-col gap-2 p-3 font-semibold text-slate-700">
+        <span>Email : {item.email}</span>
+        <span>Brand Name : {item.brandName}</span>
+        <span>Pan Number : {item.panNumber}</span>
       </div>
       <div className="flex flex-col gap-3 items-center">
         <button
-          className="p-3 border text-green-600 border-green-600"
+          className="uppercase font-semibold p-2 border bg-green-600 text-white border-green-600 w-20 rounded-sm hover:opacity-80"
           onClick={() => {
             registrationRequestsubmit({
               manufacturerId: item.id,
@@ -27,7 +27,7 @@ export default function PendingManufacturerCard({
           Accept
         </button>
         <button
-          className="p-3 border text-red-600 border-red-600"
+          className="uppercase font-semibold p-2 border text-red-600 border-red-600 w-20 rounded-sm hover:text-white hover:bg-red-600"
           onClick={() => {
             registrationRequestsubmit({
               manufacturerId: item.id,
