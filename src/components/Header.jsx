@@ -180,7 +180,7 @@ export default function Header() {
       <div className="flex gap-6 sm:mr-10 text-center">
         <Menu>
           <MenuHandler>
-            <ul className=" flex flex-col items-center cursor-pointer hover:text-orange-600">
+            <ul className=" flex flex-col w-fit items-center cursor-pointer hover:text-orange-600">
               <BsPerson className="text-2xl" />
               <li className="text-xs font-semibold">Profile</li>
             </ul>
@@ -188,55 +188,81 @@ export default function Header() {
           <MenuList className="p-6 flex flex-col gap-[2px] text-gray-600 outline-none shadow-md z-50">
             {currentUser ? (
               <>
-                <MenuItem>
-                  <Link
-                    className="flex items-center gap-4 hover:text-orange-600"
-                    to={
-                      currentUser.type === "MANUFACTURER"
-                        ? "/brand"
-                        : "/profile"
-                    }
-                  >
-                    <BsPerson className="text-xl" />
-                    <Typography variant="small" className="font-medium">
-                      My Profile
-                    </Typography>
-                  </Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link
-                    to={
-                      currentUser.type === "MANUFACTURER"
-                        ? "/brand"
-                        : "/profile"
-                    }
-                    className="flex items-center gap-4 hover:text-orange-600"
-                  >
-                    <IoSettingsOutline className="text-xl" />
-                    <Typography variant="small" className="font-medium">
-                      Edit Profile
-                    </Typography>
-                  </Link>
-                </MenuItem>
+                {(currentUser.type === "CUSTOMER" ||
+                  currentUser.type === "MANUFACTURER") && (
+                  <MenuItem>
+                    <Link
+                      className="flex items-center gap-4 hover:text-orange-600"
+                      to={
+                        currentUser.type === "MANUFACTURER"
+                          ? "/brand"
+                          : "/profile"
+                      }
+                    >
+                      <BsPerson className="text-xl" />
+                      <Typography variant="small" className="font-medium">
+                        My Profile
+                      </Typography>
+                    </Link>
+                  </MenuItem>
+                )}
+                {(currentUser.type === "CUSTOMER" ||
+                  currentUser.type === "MANUFACTURER") && (
+                  <MenuItem>
+                    <Link
+                      to={
+                        currentUser.type === "MANUFACTURER"
+                          ? "/brand"
+                          : "/profile"
+                      }
+                      className="flex items-center gap-4 hover:text-orange-600"
+                    >
+                      <IoSettingsOutline className="text-xl" />
+                      <Typography variant="small" className="font-medium">
+                        Edit Profile
+                      </Typography>
+                    </Link>
+                  </MenuItem>
+                )}
                 {currentUser.type === "CUSTOMER" && (
-                  <Link to={"/order-history"}>
-                    <MenuItem className="flex items-center gap-4 hover:text-orange-600">
+                  <MenuItem>
+                    <Link
+                      className="flex items-center gap-4 hover:text-orange-600"
+                      to={"/order-history"}
+                    >
                       <LiaShoppingBagSolid className="text-2xl" />
                       <Typography variant="small" className="font-medium">
                         My Orders
                       </Typography>
-                    </MenuItem>
-                  </Link>
+                    </Link>
+                  </MenuItem>
                 )}
                 {currentUser.type === "CUSTOMER" && (
-                  <Link to={"/wallet"}>
-                    <MenuItem className="flex items-center gap-4 hover:text-orange-600">
+                  <MenuItem>
+                    <Link
+                      className="flex items-center gap-4 hover:text-orange-600"
+                      to={"/wallet"}
+                    >
                       <IoWalletOutline className="text-2xl" />
                       <Typography variant="small" className="font-medium">
                         My Wallet
                       </Typography>
-                    </MenuItem>
-                  </Link>
+                    </Link>
+                  </MenuItem>
+                )}
+
+                {currentUser.type === "ADMIN" && (
+                  <MenuItem>
+                    <Link
+                      className="flex flex-nowrap w-fit items-center gap-4 hover:text-orange-600"
+                      to={"/admin"}
+                    >
+                      <IoWalletOutline className="text-2xl" />
+                      <Typography variant="small" className="font-medium">
+                        Admin Panel
+                      </Typography>
+                    </Link>
+                  </MenuItem>
                 )}
 
                 <hr className="my-2 border-blue-gray-50" />

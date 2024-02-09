@@ -24,9 +24,8 @@ import Wallet from "./pages/Wallet";
 import OrderHistory from "./pages/OrderHistory";
 import PageNotFound from "./pages/PageNotFound";
 import ManufacturerVerification from "./pages/ManufacturerVerification";
-import AdminSignIn from "./pages/admin_pages/AdminSignIn";
 import PrivateRouteAdmin from "./components/PrivateRouteAdmin";
-import AdminHomePage from "./pages/admin_pages/AdminHomePage";
+import AdminHomePage from "./pages/AdminHomePage";
 
 export default function App() {
   return (
@@ -50,7 +49,6 @@ export default function App() {
             path="/manufacturers/sign-up"
             element={<ManufacturerSignUp />}
           />
-          <Route path="/admin/sign-in" element={<AdminSignIn />} />
         </Route>
 
         <Route element={<PrivateRouteAdmin />}>
