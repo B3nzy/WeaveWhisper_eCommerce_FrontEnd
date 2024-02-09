@@ -80,8 +80,10 @@ export default function SignIn() {
   return (
     <>
       <ToastContainer newestOnTop={true} className="top-16 w-fit" />
-      <div className="max-w-lg mx-auto items-center p-3">
-        <h1 className="my-7 font-semibold text-2xl text-center">Sign In</h1>
+      <div className="max-w-lg mx-auto items-center p-3 min-h-screen">
+        <h1 className="mt-20 mb-7 font-semibold text-2xl text-center">
+          Sign In
+        </h1>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <input
             className={[
