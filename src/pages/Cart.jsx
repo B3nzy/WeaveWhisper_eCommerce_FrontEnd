@@ -8,9 +8,13 @@ import { LiaShoppingBagSolid } from "react-icons/lia";
 import { HiShoppingBag } from "react-icons/hi2";
 import { ToastContainer, toast } from "react-toastify";
 import { FaIndianRupeeSign } from "react-icons/fa6";
-import { updateCartSuccess } from "../redux/user/userSlice";
+import {
+  updateBalanceSuccess,
+  updateCartSuccess,
+} from "../redux/user/userSlice";
 import useRazorpay from "react-razorpay";
 import { Link, useNavigate } from "react-router-dom";
+import ChoosePaymentModal from "../components/ChoosePaymentModal";
 const APIkey = import.meta.env.VITE_OPENCAGE_API_KEY;
 const razorpayKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID;
 
@@ -35,6 +39,7 @@ export default function Cart() {
   const [Razorpay] = useRazorpay();
   const navigate = useNavigate();
   const [paymentProcessingFlag, setPaymentProcessingFlag] = useState(false);
+  const [showChoosePaymentModal, setShowChoosePaymentModal] = useState(false);
   console.log(placeOrderFlag);
   const [showAddShippingButton, setShowAddShippingButton] = useState(
     currentUser && currentUser.address ? true : false
@@ -93,6 +98,7 @@ export default function Cart() {
 
   const closeModalAction = () => {
     setShowModal(false);
+    setShowChoosePaymentModal(false);
   };
   const fetchCartItems = async () => {
     try {
@@ -201,18 +207,6 @@ export default function Cart() {
 
   const handlePlaceOrderByRazor = async () => {
     try {
-      if (
-        currentUser.id === null ||
-        address === "" ||
-        phoneNumber === "" ||
-        address === null ||
-        phoneNumber === null
-      ) {
-        toast.warn("Please add address and phone number to place order!", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-        return;
-      }
       const res = await axios.post("/api/cart/placeorderrequest", {
         customerId: currentUser.id,
         address,
@@ -220,7 +214,10 @@ export default function Cart() {
       });
       if (res.status !== 200) {
         //todo:toast msg
+        setShowChoosePaymentModal(false);
         return;
+      } else {
+        setShowChoosePaymentModal(false);
       }
       console.log(res.data);
       const options = {
@@ -284,6 +281,63 @@ export default function Cart() {
       return () => (document.body.style.overflow = "unset");
     }
   }, [paymentProcessingFlag]);
+
+  const handlePlaceOrderByWallet = async () => {
+    const totalAmount = totalMrp - totalDiscount;
+    console.log(totalAmount);
+    try {
+      setPaymentProcessingFlag(true);
+      const res = await axios.post("/api/cart/placeorderbywallet", {
+        customerId: currentUser.id,
+        address,
+        phoneNumber,
+      });
+      if (res.status !== 200) {
+        setShowChoosePaymentModal(false);
+        toast.error("Payment error", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        return;
+      } else {
+        setShowChoosePaymentModal(false);
+      }
+      setPaymentProcessingFlag(false);
+      dispatch(updateCartSuccess(0));
+      dispatch(updateBalanceSuccess(currentUser.balance - totalAmount));
+      console.log(res.data);
+      navigate("/order-history");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handlePlaceOrder = async () => {
+    try {
+      if (
+        currentUser.id === null ||
+        address === "" ||
+        phoneNumber === "" ||
+        address === null ||
+        phoneNumber === null
+      ) {
+        toast.warn("Please add address and phone number to place order!", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        return;
+      }
+
+      const totalAmount = totalMrp - totalDiscount;
+      console.log(totalAmount);
+
+      if (totalAmount > currentUser.balance) {
+        handlePlaceOrderByRazor();
+      } else {
+        setShowChoosePaymentModal(true);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
       <ToastContainer newestOnTop={true} className="top-16 w-fit" />
@@ -297,6 +351,13 @@ export default function Cart() {
           closeModalAction={closeModalAction}
           removeFromCart={removeFromCart}
           handleMoveToWishList={handleMoveToWishList}
+        />
+      )}
+      {showChoosePaymentModal && (
+        <ChoosePaymentModal
+          closeModalAction={closeModalAction}
+          handlePlaceOrderByRazor={handlePlaceOrderByRazor}
+          handlePlaceOrderByWallet={handlePlaceOrderByWallet}
         />
       )}
       <div className="p-3 max-w-6xl mx-auto mb-10">
@@ -520,7 +581,7 @@ export default function Cart() {
                     </div>
                     <button
                       disabled={!placeOrderFlag}
-                      onClick={handlePlaceOrderByRazor}
+                      onClick={handlePlaceOrder}
                       className="uppercase p-3 bg-pink-600 rounded-sm text-white font-semibold hover:opacity-90 disabled:opacity-70 outline-none"
                     >
                       place order

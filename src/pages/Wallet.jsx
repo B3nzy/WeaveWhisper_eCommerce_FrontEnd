@@ -1,12 +1,13 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useRazorpay from "react-razorpay";
 import { MdAccountBalanceWallet } from "react-icons/md";
 import { HiCurrencyRupee } from "react-icons/hi2";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { updateBalanceSuccess } from "../redux/user/userSlice";
 
 const razorpayKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID;
 
@@ -15,7 +16,7 @@ export default function Wallet() {
   const { currentUser } = useSelector((state) => state.user);
   const [amountError, setAmountError] = useState(false);
   const [Razorpay] = useRazorpay();
-
+  const dispatch = useDispatch();
   const [amount, setAmount] = useState();
 
   const handlePayment = async () => {
@@ -100,6 +101,7 @@ export default function Wallet() {
       }
       console.log(res.data);
       setBalance(res.data.balance);
+      dispatch(updateBalanceSuccess(res.data.balance));
     } catch (err) {
       console.log(err);
     }
