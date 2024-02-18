@@ -6,6 +6,7 @@ import { BsPerson } from "react-icons/bs";
 import { IoSearch } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
 import { IoWalletOutline } from "react-icons/io5";
+import { MdManageHistory } from "react-icons/md";
 import { GoSignOut } from "react-icons/go";
 import { IoShirtOutline } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
@@ -246,6 +247,20 @@ export default function Header() {
                       <IoWalletOutline className="text-2xl" />
                       <Typography variant="small" className="font-medium">
                         My Wallet
+                      </Typography>
+                    </Link>
+                  </MenuItem>
+                )}
+
+                {currentUser.type === "MANUFACTURER" && (
+                  <MenuItem>
+                    <Link
+                      className="flex flex-nowrap w-fit items-center gap-4 hover:text-orange-600"
+                      to={"/brand-dashboard"}
+                    >
+                      <MdManageHistory className="text-xl" />
+                      <Typography variant="small" className="font-medium">
+                        Dashboard
                       </Typography>
                     </Link>
                   </MenuItem>
