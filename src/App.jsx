@@ -26,6 +26,8 @@ import PageNotFound from "./pages/PageNotFound";
 import ManufacturerVerification from "./pages/ManufacturerVerification";
 import PrivateRouteAdmin from "./components/PrivateRouteAdmin";
 import AdminHomePage from "./pages/AdminHomePage";
+import VerifyManufacturers from "./pages/VerifyManufacturers";
+import AllManufacturers from "./pages/AllManufacturers";
 
 export default function App() {
   return (
@@ -53,6 +55,14 @@ export default function App() {
 
         <Route element={<PrivateRouteAdmin />}>
           <Route path="/admin" element={<AdminHomePage />} />
+          <Route
+            path="/admin-verify-manufacturer"
+            element={<VerifyManufacturers />}
+          />
+          <Route
+            path="/admin-list-manufacturer"
+            element={<AllManufacturers />}
+          />
         </Route>
 
         <Route element={<PrivateRouteCustomer />}>

@@ -18,25 +18,34 @@ export default function ManufacturerProfile() {
   const [listings, setListings] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const handleChange = () => {};
   const [showModal, setShowModal] = useState(false);
   console.log(showModal);
-  const handleDeleteBrand = async () => {
+  const openDeleteBrandModal = async () => {
     try {
-      // const res = await axios.delete(`/api/users/delete/${currentUser.id}`);
-      // if (res.status !== 200) {
-      //   console.log(res.response.data.message);
-      //   return;
-      // }
-      // dispatch(deleteBrandSuccess());
       setShowModal(true);
     } catch (err) {
-      console.log(err.response.data.message);
+      console.log(err);
     }
   };
 
   const closeDeleteModal = () => {
     setShowModal(false);
+  };
+
+  const handleDeleteBrand = async () => {
+    try {
+      const res = await axios.delete(`/api/users/delete/${currentUser.id}`);
+      if (res.status !== 200) {
+        console.log(res.response.data.message);
+        setShowModal(false);
+        return;
+      }
+      dispatch(deleteBrandSuccess());
+      setShowModal(false);
+    } catch (err) {
+      console.log(err);
+      setShowModal(false);
+    }
   };
 
   const handleListingDelete = async (productId) => {
@@ -91,8 +100,12 @@ export default function ManufacturerProfile() {
   console.log(currentUser);
   return (
     <>
-      {showModal && <DeleteBrandModal closeModalAction={closeDeleteModal} />}
-
+      {showModal && (
+        <DeleteBrandModal
+          closeModalAction={closeDeleteModal}
+          handleDeleteBrand={handleDeleteBrand}
+        />
+      )}
       <ToastContainer newestOnTop={true} className="top-16 w-fit" />
       <div className="p-6 max-w-5xl mx-auto flex flex-col sm:flex-row gap-2 min-h-screen">
         <div className="p-3 flex flex-col flex-1">
@@ -127,7 +140,7 @@ export default function ManufacturerProfile() {
           <hr className="my-4" />
           <div className="flex justify-between">
             <span
-              onClick={handleDeleteBrand}
+              onClick={openDeleteBrandModal}
               className="text-red-600 cursor-pointer border p-2 rounded-lg border-red-700 hover:shadow-md "
             >
               Delete account

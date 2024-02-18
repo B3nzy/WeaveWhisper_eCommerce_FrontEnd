@@ -4,24 +4,14 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteBrandSuccess } from "../redux/user/userSlice";
 
-export default function DeleteBrandModal({ closeModalAction }) {
+export default function DeleteBrandModal({
+  closeModalAction,
+  handleDeleteBrand,
+}) {
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-
-  const handleDeleteBrand = async () => {
-    try {
-      const res = await axios.delete(`/api/users/delete/${currentUser.id}`);
-      if (res.status !== 200) {
-        console.log(res.response.data.message);
-        return;
-      }
-      dispatch(deleteBrandSuccess());
-    } catch (err) {
-      console.log(err.response.data.message);
-    }
-  };
+  console.log(currentUser);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -33,7 +23,7 @@ export default function DeleteBrandModal({ closeModalAction }) {
       <div className="fixed p-6 md:max-w-xl max-w-sm shadow-lg flex flex-col gap-3 m-auto top-0 left-0 right-0 bottom-0 h-fit z-50 bg-white rounded-md border ">
         <div className="flex flex-row justify-between items-center">
           <span className="text-red-600 text-xl font-semibold">
-            Delete account
+            Delete Account
           </span>
           <IoClose
             onClick={closeModalAction}
@@ -43,11 +33,18 @@ export default function DeleteBrandModal({ closeModalAction }) {
 
         <hr />
         <div className="text-slate-700 flex flex-col gap-1">
-          <span className="text-slate-600">
-            Are you sure to delete your account permanently. This will delete
-            all your listing along with your account details. This step cant not
-            be undone.
-          </span>
+          {currentUser.type === "ADMIN" ? (
+            <span className="text-slate-600">
+              Deleting this brand will also delete all listing products
+              associated with this brand. Are you sure you want to delete?
+            </span>
+          ) : (
+            <span className="text-slate-600">
+              Are you sure to delete your account permanently? This will delete
+              all your listing along with your account details. This step can
+              not be undone.
+            </span>
+          )}
         </div>
         <div className="flex gap-6 justify-end w-full my-3">
           <button
