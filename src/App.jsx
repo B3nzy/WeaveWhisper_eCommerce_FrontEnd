@@ -30,6 +30,7 @@ import VerifyManufacturers from "./pages/VerifyManufacturers";
 import AllManufacturers from "./pages/AllManufacturers";
 import ManufacturerDashboard from "./pages/ManufacturerDashboard";
 import OrderTracking from "./pages/OrderTracking";
+import OrderReturn from "./pages/OrderReturn";
 
 export default function App() {
   return (
@@ -86,6 +87,10 @@ export default function App() {
           <Route
             path="/brand-dashboard/update-ordertracking"
             element={<OrderTracking />}
+          />
+          <Route
+            path="/brand-dashboard/update-orderreturn-status"
+            element={<OrderReturn />}
           />
         </Route>
 

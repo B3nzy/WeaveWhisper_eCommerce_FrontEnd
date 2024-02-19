@@ -20,7 +20,7 @@ export default function ManufacturerDashboard() {
           </div>
           <div className="bg-green-50 p-3 w-full flex flex-col items-center mx-auto justify-center gap-6">
             <MdOutlineManageHistory />
-            <Link to="/admin-list-manufacturer">
+            <Link to="/brand-dashboard/update-orderreturn-status">
               Change Product Return Status
             </Link>
           </div>
