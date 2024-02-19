@@ -29,6 +29,7 @@ import AdminHomePage from "./pages/AdminHomePage";
 import VerifyManufacturers from "./pages/VerifyManufacturers";
 import AllManufacturers from "./pages/AllManufacturers";
 import ManufacturerDashboard from "./pages/ManufacturerDashboard";
+import OrderTracking from "./pages/OrderTracking";
 
 export default function App() {
   return (
@@ -82,6 +83,10 @@ export default function App() {
           <Route path="/brand" element={<ManufacturerProfile />} />
           <Route path="/update-product/:pId" element={<UpdateProduct />} />
           <Route path="/brand-dashboard" element={<ManufacturerDashboard />} />
+          <Route
+            path="/brand-dashboard/update-ordertracking"
+            element={<OrderTracking />}
+          />
         </Route>
 
         <Route path="*" element={<PageNotFound />} />
