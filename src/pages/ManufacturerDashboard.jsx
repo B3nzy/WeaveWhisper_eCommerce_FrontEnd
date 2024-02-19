@@ -8,7 +8,7 @@ export default function ManufacturerDashboard() {
   return (
     <div className="min-h-screen">
       <div className="p-6 m-10 mt-14 ">
-        <p className="text-slate-500 font-semibold text-2xl flex items-center gap-1">
+        <p className="text-slate-500 font-semibold text-2xl mb-2 flex items-center gap-1">
           <RiBillLine className="text-4xl text-cyan-200" /> My Dashboard
         </p>
         <hr />
