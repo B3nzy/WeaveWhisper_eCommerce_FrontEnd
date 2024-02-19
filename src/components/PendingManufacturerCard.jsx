@@ -13,6 +13,7 @@ export default function PendingManufacturerCard({
         <span>Email : {item.email}</span>
         <span>Brand Name : {item.brandName}</span>
         <span>Pan Number : {item.panNumber}</span>
+        <span>Requested On : {item.createdDate}</span>
       </div>
       <div className="flex flex-col gap-3 items-center">
         <button

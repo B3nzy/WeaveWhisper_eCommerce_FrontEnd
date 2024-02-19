@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import { MdOutlinePendingActions } from "react-icons/md";
+import { SiSymantec } from "react-icons/si";
 import { Link } from "react-router-dom";
 import DeleteBrandModal from "../components/DeleteBrandModal";
 import { RiEmotionSadFill } from "react-icons/ri";
@@ -81,8 +81,8 @@ export default function AllManufacturers() {
           <div className="my-7 flex flex-col gap-3 max-w-4xl mx-auto items-center min-h-screen p-3">
             {brandList && brandList.length > 0 ? (
               <>
-                <p className="flex flex-row gap-2 text-slate-500 text-4xl items-center">
-                  <MdOutlinePendingActions />
+                <p className="flex flex-row gap-2 text-green-500 text-4xl items-center opacity-70">
+                  <SiSymantec />
                   <span className="font-semibold capitalize">
                     Registered Brands
                   </span>
@@ -98,6 +98,7 @@ export default function AllManufacturers() {
                         <span>Brand Name : {item.brandName}</span>
                         <span>Email : {item.email}</span>
                         <span>Pan Number : {item.panNumber}</span>
+                        <span>Registered On : {item.createdDate}</span>
                       </div>
                       <div className="flex flex-col gap-3 items-center">
                         <button
