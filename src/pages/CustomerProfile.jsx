@@ -250,7 +250,7 @@ export default function CustomerProfile() {
               <div
                 className={[
                   "w-full p-3 border rounded-lg flex flex-row justify-between ",
-                  errors.password && touched.password
+                  errors.password && touched.password && !disable
                     ? " border-red-600 border"
                     : " border-slate-300",
                   disable ? "bg-stone-100" : "bg-white",
@@ -277,7 +277,7 @@ export default function CustomerProfile() {
                   Show
                 </button>
               </div>
-              {errors.password && touched.password && (
+              {errors.password && touched.password && !disable && (
                 <div className="text-sm text-red-500">
                   {"*" + errors.password}
                 </div>
