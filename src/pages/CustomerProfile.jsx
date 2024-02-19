@@ -145,6 +145,7 @@ export default function CustomerProfile() {
 
         dispatch(updateCustomerSuccess(res.data));
         toast.success("Profile updated successfully");
+        setFieldValue("password", "");
         setDisable(true);
         setUpdate(false);
       } catch (err) {
