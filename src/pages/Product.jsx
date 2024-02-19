@@ -201,7 +201,7 @@ export default function Product() {
       if (cartDetail.color === undefined) {
         setColorError(true);
       }
-      if (colorError || sizeError) {
+      if (cartDetail.size === undefined || cartDetail.color === undefined) {
         setAdding(false);
         return;
       }
@@ -209,11 +209,11 @@ export default function Product() {
         navigate("/sign-in");
         return;
       }
-      setCartDetail({
+      const res = await axios.post("/api/cart/add", {
+        ...cartDetail,
         productId: productDetails.id,
         customerId: currentUser.id,
       });
-      const res = await axios.post("/api/cart/add", cartDetail);
       if (res.status !== 201) {
         toast.error(res.data.message, {
           position: toast.POSITION.TOP_RIGHT,
