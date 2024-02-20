@@ -34,6 +34,7 @@ export default function CustomerProfile() {
       type: currentUser.type,
       phoneNumber: currentUser.phoneNumber,
       address: currentUser.address,
+      balance: currentUser.balance,
     },
     validationSchema: CustomerProfileSchema,
   });

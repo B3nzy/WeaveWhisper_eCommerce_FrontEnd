@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import { PiArrowUDownLeftFill } from "react-icons/pi";
 import { FaIndianRupeeSign } from "react-icons/fa6";
