@@ -31,10 +31,12 @@ import AllManufacturers from "./pages/AllManufacturers";
 import ManufacturerDashboard from "./pages/ManufacturerDashboard";
 import OrderTracking from "./pages/OrderTracking";
 import OrderReturn from "./pages/OrderReturn";
+import RegistrationBonusHeader from "./components/RegistrationBonusHeader";
 
 export default function App() {
   return (
     <BrowserRouter>
+      <RegistrationBonusHeader />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
