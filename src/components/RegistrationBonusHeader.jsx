@@ -6,7 +6,7 @@ export default function RegistrationBonusHeader() {
   return (
     <>
       {currentUser === null && (
-        <div className="p-3 bg-cyan-700">
+        <div className="p-[6px] bg-cyan-700">
           <p className="text-center text-white font-semibold">
             Super Deal! Get Rs.200 wallet balance on sign up
           </p>

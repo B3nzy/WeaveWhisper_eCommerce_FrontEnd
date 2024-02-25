@@ -12,7 +12,7 @@ export default function Home() {
   const images = [
     "https://images.pexels.com/photos/1200637/pexels-photo-1200637.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     "https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    "https://images.pexels.com/photos/2062324/pexels-photo-2062324.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/1146813/pexels-photo-1146813.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
   ];
   return (
     <div className="min-h-screen">
