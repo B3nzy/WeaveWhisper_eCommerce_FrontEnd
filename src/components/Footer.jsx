@@ -1,9 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaHandHoldingHeart } from "react-icons/fa";
-import { HiOutlineArrowPathRoundedSquare } from "react-icons/hi2";
+import { IoLogoFacebook } from "react-icons/io5";
 import { FaTruckArrowRight } from "react-icons/fa6";
 import { FaCheckCircle } from "react-icons/fa";
+import { AiFillInstagram } from "react-icons/ai";
+import { MdEmail } from "react-icons/md";
 
 export default function () {
   return (
@@ -11,7 +13,6 @@ export default function () {
       <div className="flex justify-around mx-14 md:mx-40 items-center mb-2">
         <div className="flex items-center flex-col">
           <FaTruckArrowRight className="text-5xl text-green-300" />
-          {/* <HiOutlineArrowPathRoundedSquare /> */}
           <p className="uppercase text-sm text-slate-700 font-semibold">
             Easy Exchange
           </p>
@@ -66,7 +67,7 @@ export default function () {
             <div className="">
               <h1 className="font-semibold text-slate-700 mb-2">About</h1>
               <p className="text-sm text-slate-500 w-72 text-justify">
-                WaeveWhisper is not just an online clothing store; it's an
+                WeaveWhisper is not just an online clothing store; it's an
                 immersive journey into the world of fashion where every garment
                 tells a story. As you enter our digital realm, you'll be greeted
                 by a curated collection that transcends trends, blending
@@ -75,6 +76,11 @@ export default function () {
             </div>
             <div className="">
               <h1 className="font-semibold text-slate-700 mb-2">Contact</h1>
+              <div className="flex flex-row items-center gap-1">
+                <IoLogoFacebook />
+                <AiFillInstagram />
+                <MdEmail />
+              </div>
             </div>
           </div>
           <hr className="mt-10 " />
@@ -83,7 +89,7 @@ export default function () {
             <span className="text-lg font-bold text-gray-200 mr-2">
               Whisper{" "}
             </span>
-            &copy; Copyright 2023 All rights reserved.{" "}
+            &copy; Copyright 2024 All rights reserved.{" "}
             <span className="hidden md:inline">
               All transactions on WeaveWhisper are secured by SSL and protected
               via multiple payment gateways.
